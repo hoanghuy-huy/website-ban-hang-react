@@ -1,0 +1,27 @@
+.search-item {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        opacity: 0.95;
+        background-color:var(--normal-color);
+        cursor: pointer;
+    }
+
+    .icon-search {
+        padding-left: 10px;
+    }
+
+    .result-search {
+        color: rgb(39, 39, 42);
+        font-size: 14px;
+        line-height: 150%;
+        height: 36px;
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 0px 16px;
+    }
+}

@@ -1,0 +1,67 @@
+.container-header {
+    height: var(--default-height-header);
+    box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
+    display: flex;
+    align-items: center;
+
+    .inner-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        height: 72px;
+
+        .logo {
+            min-width: 64px;
+        }
+
+
+        .actions {
+            position: relative;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            padding-left: 3px;
+            .action-home {
+                padding: 8px 16px;
+                cursor: pointer;
+                color: var(--primary-color);
+
+                &:hover {
+                    background-color: var(--primary-light-color);
+                    border-radius: 8px;
+                }
+            }
+            .active {
+                color: var(--primary-color);
+
+            }
+
+
+            .action-cart {
+                padding: 8px 16px;
+
+                img {
+                    height: 24px;
+                    width: 24px;
+                }
+                &:hover {
+                    background-color: var(--primary-light-color);
+                    border-radius: 8px;
+                    cursor: pointer;
+                }
+
+                .start-100 {
+                    left: 76% !important;
+                }
+                .top-0 {
+                    top: 10px !important;
+                }
+            }
+        }
+    }
+}
+
+.search-box,
+.search-result-box {
+    width: 725px;
+}

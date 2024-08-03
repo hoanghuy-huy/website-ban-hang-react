@@ -1,0 +1,17 @@
+.role-container {
+    .role-actions {
+        padding-top: 14px;
+        font-size: 17px;
+        .icon {
+            padding-right: 10px;
+        }
+
+        .add {
+            color: green;
+        }
+        .delete {
+            color: rgb(226, 27, 27);
+        }
+    }
+
+}

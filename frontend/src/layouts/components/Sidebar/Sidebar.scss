@@ -1,0 +1,45 @@
+.side-bar {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 12px 0;
+    min-width: 224px;
+    .category-heading {
+        border-bottom: 1px solid var(--normal-color);
+        font-weight: 700;
+        font-size: 1.4rem;
+        line-height: 150%;
+        color: rgb(39, 39, 42);
+    }
+    .category-body {
+        .section {
+            margin-bottom: 10px;
+            .section-title {
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+            }
+
+            .section-title:hover {
+                color: #007bff;
+            }
+        }
+
+        .section-content {
+            padding-left: 15px;
+            margin-top: 5px;
+
+            .item {
+                padding: 5px 0;
+            }
+            
+            .item:hover {
+                color: #007bff;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            
+        }
+    }
+}
+

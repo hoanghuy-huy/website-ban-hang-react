@@ -1,0 +1,113 @@
+.action-user {
+    padding: 8px 16px;
+    cursor: pointer;
+    &:hover {
+        background-color: #f4f1f1;
+        border-radius: 8px;
+    }
+}
+.modal-dialog.modal-dialog-centered {
+    display: flex;
+    justify-content: center;
+
+    .modal-content {
+        height: 500px !important;
+        width: 800px !important;
+        .container-modal-account {
+            height: 100%;
+
+            .modal-account-left__loginStyled {
+                padding: 40px 45px 24px;
+                width: 490px;
+                .heading {
+                    margin: 0px 0px 10px;
+                    font-size: 24px;
+                    h4 {
+                        font-weight: 500;
+                    }
+                    p {
+                        margin: 0px;
+                        font-size: 15px;
+                    }
+                }
+
+                .input {
+                    position: relative;
+                    z-index: 1;
+                    margin: 0 25px 0 11px;
+                    &::before {
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        content: '';
+                        border-bottom: 2px solid rgb(224, 224, 224);
+                    }
+                    .username {
+                    }
+                    .passowrd {
+                        margin-top: 20px;
+                    }
+                    input {
+                        color: rgb(36, 36, 36);
+                        font-size: 20px;
+                        width: 100%;
+                        outline: none;
+                        border: none;
+                    }
+                }
+
+                .btn-continue {
+                    margin: 30px 20px 10px 0;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                }
+
+                .actions {
+                    display: flex;
+                    justify-content: center;
+
+                    span {
+                        margin: 10px 0px 0px;
+                        text-align: center;
+                        color: rgb(13, 92, 182);
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .modal-account-right {
+                position: relative;
+                border-top-right-radius: var(--bs-modal-border-radius);
+                border-bottom-right-radius:  var(--bs-modal-border-radius);
+                background: linear-gradient(136deg, rgb(240, 248, 255) -1%, rgb(219, 238, 255) 85%);
+                width: 300px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img {
+                    height: 203px;
+                    width: 203px;
+                }
+                .icon {
+                    position: absolute;
+                    top: -15px;
+                    right: -15px;
+                    background-color: var(--white);
+                    border-radius: 50%;
+                    height: 40px;
+                    width: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    .icon-close {
+                        svg{
+                            height: 20px;
+                            width: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

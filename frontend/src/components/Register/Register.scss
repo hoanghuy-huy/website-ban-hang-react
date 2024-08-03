@@ -1,0 +1,43 @@
+.green {
+    border: 1px solid green;
+}
+
+.blue {
+    border: 1px solid blue;
+}
+
+.register-container {
+    min-height: 100vh;
+    .content-left {
+        .brand {
+            color: blue;
+        }
+    }
+    .content-right {
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.14);
+        box-sizing: border-box;
+
+        .header-form-register {
+            
+        }
+        a {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .input {
+            height: 32px;
+            display: flex;
+            input {
+                padding: 12px;
+            }
+        }
+        button {
+        }
+    }
+}

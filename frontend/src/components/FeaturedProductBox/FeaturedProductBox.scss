@@ -1,0 +1,36 @@
+.product-box-hot {
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    margin-top: 20px;
+    .col-2 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+
+    .product-box-header {
+        padding: 0 20px;
+        .title {
+            img {
+                height: 32px;
+            }
+        }
+        .action {
+            a {
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 150%;
+                color: rgb(10, 104, 255);
+                text-decoration: none;
+            }
+        }
+    }
+
+    .product-box-slider {
+        display: block;
+        height: 32px;
+    }
+
+    .product-box-content {
+        display: block;
+    }
+}

@@ -1,0 +1,13 @@
+.product-box-container {
+    .col-2 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+    .content-view-more-btn {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+    }
+}

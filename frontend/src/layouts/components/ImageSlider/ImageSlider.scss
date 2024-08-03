@@ -1,0 +1,34 @@
+.container-slider {
+    position: relative;
+    width: 100%;
+    height: 85%;
+    outline: none;
+    img {
+        min-height: 204px;
+    }
+}
+
+.custom-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    opacity: 0.3;
+    z-index: 1;
+    transform: translateY(-50%);
+    transition: opacity 0.2s ease 0s;
+    background-color: #ccc;
+}
+
+.custom-arrow.custom-next-arrow {
+    right: 0;
+    z-index: 5;
+}
+
+.custom-arrow.custom-prev-arrow {
+    left: 0;
+    z-index: 5;
+}

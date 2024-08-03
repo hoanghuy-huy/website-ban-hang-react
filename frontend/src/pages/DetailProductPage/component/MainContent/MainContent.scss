@@ -1,0 +1,249 @@
+
+.detail-product-container {
+    .content-center {
+        min-width: 650px;
+        .information-product-contain {
+            background: var(--white);
+
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            gap: 4px;
+
+            .information-product-body {
+                .brand-styled {
+                    display: flex;
+                    gap: 8px;
+                    img {
+                        width: 89px;
+                        height: 20px;
+                        opacity: 1;
+                    }
+
+                    a {
+                        padding-left: 10px;
+                        color: var(--primary-color);
+                    }
+                }
+
+                .title-styled {
+                    margin: 0px;
+                    color: rgb(39, 39, 42);
+                    font-size: 20px;
+                    font-weight: 500;
+                    line-height: 150%;
+                    word-break: break-word;
+                    white-space: break-spaces;
+                }
+
+                .rating-styled {
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    -webkit-box-pack: justify;
+                    justify-content: space-between;
+                    .quantity-sold {
+                        font-size: 14px;
+                        line-height: 24px;
+                        color: rgb(120, 120, 120);
+                    }
+                }
+
+                .product-price {
+                    display: flex;
+                    gap: 16px;
+                    padding-bottom: 16px;
+                    align-items: center;
+                    .product-price__current-price {
+                        color: #ff424e;
+                        font-size: 24px;
+                    }
+                    .product-price__discount-rate {
+                        font-size: 12px;
+                        padding: 0px 4px;
+                        border-radius: 8px;
+                        color: rgb(39, 39, 42);
+                        background-color: var(--normal-color);
+                    }
+                }
+            }
+        }
+
+        // information delivery
+        .information-delivery-container {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            gap: 4px;
+            .information-delivery__header {
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 150%;
+                color: rgb(39, 39, 42);
+            }
+
+            .information-delivery__place-of-delivery {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid rgb(235, 235, 240);
+
+                span {
+                    color: var(--primary-color);
+                    cursor: pointer;
+                }
+            }
+
+            .information-delivery__shipping-information {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                font-size: 13px;
+                line-height: 20px;
+                width: 100%;
+
+                .shipping-information__header {
+                    .shipping-information__header-icon {
+                    }
+
+                    .shipping-information__header_content {
+                    }
+                }
+
+                .shipping-information__body {
+                }
+            }
+        }
+    }
+
+    .product-box-container {
+        background-color: var(--white);
+        margin-top: 10px;
+        border-radius: 8px;
+        padding-bottom: 10px;
+        .title {
+            font-weight: 600;
+            font-size: 16px;
+            color: rgb(39, 39, 42);
+        }
+        .product-box-body {
+            display: flex;
+
+
+        }
+    }
+
+    .detail-info-of-product {
+        background-color: var(--white);
+        border-radius: 8px;
+        margin-top: 10px;
+        .title {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 150%;
+            color: rgb(39, 39, 42);
+        }
+
+        .detail-info-of-product__item-contain {
+            margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            -webkit-box-align: center;
+            padding: 8px 0px;
+            font-size: 14px;
+            line-height: 150%;
+            font-weight: 400;
+            color: rgb(39, 39, 42);
+            gap: 8px;
+            .item {
+                display: grid;
+                grid-template-columns: 55% 45%;
+                gap: 4px;
+                .left {
+                    max-width: 300px;
+                    color: rgb(128, 128, 137);
+                    display: flex;
+                    align-items: center;
+                }
+                .right {
+                    word-break: break-word;
+                    color: rgb(39, 39, 42);
+                }
+            }
+
+            .item + .item {
+                padding-top: 10px;
+                border-top: 1px solid rgb(235, 235, 240);
+            }
+        }
+    }
+    // compare product
+
+    .product-comparison {
+        background-color: var(--white);
+        border-radius: 8px;
+        margin-top: 10px;
+        height: 500px;
+        .title {
+            padding: 10px 0 0 10px;
+            overflow: hidden;
+            color: rgb(39, 39, 42);
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 150%;
+        }
+        .product-comparison-table {
+
+            .product-comparison-table__item {
+                border: 1px solid var(--normal-color);
+                .product-comparison-table__item-header {
+                    .item-header__product-info {
+                        .product-image {
+                            display: flex;
+                            justify-content: center;
+                            img {
+                                height: 72px;
+                                width: 72px;
+                            }
+                        }
+                        .product-text {
+                            .product-name {
+                                color: rgb(39, 39, 42);
+                                text-align: center;
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 1.3rem;
+                                height: 2.6rem;
+                                overflow: hidden;
+                                display: block;
+                                display: -webkit-box;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 2;
+                            }
+                        }
+
+                        .actions {
+                            display: flex;
+                            justify-content: center;
+                            margin-top: 4px;
+                        }
+                    }
+                }
+
+                .product-comparison-table__item-attributes {
+
+                    .item-atribute {
+                        display: flex;
+                        color: rgb(39, 39, 42);
+                        padding: 12px 0 12px 8px;
+                        border: 1px solid var(--normal-color);
+
+                    }
+                }
+            }
+        }
+    }
+}

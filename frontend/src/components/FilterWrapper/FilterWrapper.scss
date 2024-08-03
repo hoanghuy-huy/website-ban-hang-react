@@ -1,0 +1,33 @@
+.filter-wrapper-container {
+    background-color: white;
+    border-radius: 8px;
+    min-height: 20px;
+    .filter-wrapper__header {
+        // margin: 8px 0 0 10px;
+        padding: 12px 23px;
+        color: rgb(39, 39, 42);
+        white-space: nowrap;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .filter-row {
+        .filter-row__name {
+            color: rgb(128, 128, 137);
+            font-size: 12px;
+            line-height: 18px;
+            margin-bottom: 4px;
+            margin-left: 13px;
+        }
+        .filter-row__value {
+
+        }
+    }
+
+    .divider {
+        margin: 24px 0 3px 16px;
+        width: 1px;
+        height: 30px;
+        background-color: rgb(235, 235, 240);
+        border: 1px solid #353535;
+    }
+}
