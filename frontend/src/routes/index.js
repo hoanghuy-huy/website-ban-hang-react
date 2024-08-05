@@ -14,6 +14,7 @@ import { LayoutClient, LayoutClientNoSidebar, LayoutNoHeader } from '~/layouts';
 import routes from '~/config/routes';
 import GroupRole from '~/components/GroupRole';
 import ProductPageChild from '~/pages/ProductPageChild';
+import CartPage from '~/pages/CartPage';
 
 //Public Routes
 const publicRoutes = [
@@ -23,6 +24,7 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
+    { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
 ];
 
 const privateRoutes = [

@@ -3,6 +3,7 @@ const config = {
         home: '/',
         product: '/products/',
         productDetail: '/detail-product/',
+        cartPage:'/cart/'
     },
 };
 

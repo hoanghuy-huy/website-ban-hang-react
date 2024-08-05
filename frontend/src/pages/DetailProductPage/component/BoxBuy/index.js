@@ -19,6 +19,10 @@ const BoxBuy = ({ item }) => {
             clearTimeout(timer);
         };
     };
+
+    const handleAddItemToCart = (item) => {
+        console.log(quantity,item.id)
+    }
     return (
         <div className="content-right col-3 gap-5">
             <div className="content-right__quantity-input mx-3">
@@ -54,8 +58,8 @@ const BoxBuy = ({ item }) => {
                 </div>
             </div>
             <div className="content-right__group-button mx-3 mt-4">
-                <Button primary>Mua Ngay</Button>
-                <Button normal>Thêm Vào Giỏ Hàng</Button>
+                <Button primary >Mua Ngay</Button>
+                <Button normal onClick={() => handleAddItemToCart(item)}>Thêm Vào Giỏ Hàng</Button>
             </div>
         </div>
     );

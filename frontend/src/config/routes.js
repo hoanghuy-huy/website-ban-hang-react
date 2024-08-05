@@ -7,6 +7,7 @@ const routes = {
     groupRole: '/group-role',
     product:'/products/:categories',
     detailProduct:'/detail-product/:productId',
+    cartPage:'/cart/:userId'
 };
 
 export default routes;
