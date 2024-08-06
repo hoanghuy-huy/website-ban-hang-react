@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import Button from '~/components/Button/Button';
 import './BoxBuy.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProductToCart } from '~/redux/features/cartSlice';
+import { showLoginForm } from '~/redux/features/accountSlice';
 
 const BoxBuy = ({ item }) => {
+    const userId = useSelector((state) => state.account.account.userId)
+    const auth = useSelector((state) => state.account.auth);
     const [quantity, setQuantity] = useState(1);
     const originalPrice = item?.price;
     const [price, setPrice] = useState(originalPrice);
+    const dispatch = useDispatch()
     const handlePrice = (_quantity) => {
         if (_quantity < 1) {
             return;
@@ -21,8 +27,16 @@ const BoxBuy = ({ item }) => {
     };
 
     const handleAddItemToCart = (item) => {
-        console.log(quantity,item.id)
+        let productId = item.id
+        if(auth) {
+            dispatch(addProductToCart({productId,userId, quantity}))
+            console.log(quantity,item.id,userId)
+        }else {
+            dispatch(showLoginForm())
+        }
+        
     }
+    
     return (
         <div className="content-right col-3 gap-5">
             <div className="content-right__quantity-input mx-3">

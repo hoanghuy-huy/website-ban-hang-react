@@ -5,6 +5,7 @@ import roleRouter from './role.js'
 import groupRoleRouter from './groupRole.js'
 import productRouter from './product.js'
 import categoryRouter from './category.js'
+import cartRouter from './cart.js'
 
 function initApiRoutes(app) {
   app.use("/api/v1", authRouter);
@@ -14,6 +15,7 @@ function initApiRoutes(app) {
   app.use("/api/v1", groupRoleRouter);
   app.use("/api/v1", productRouter);
   app.use("/api/v1", categoryRouter);
+  app.use("/api/v1/cart",cartRouter)
 }
 
 module.exports = initApiRoutes;

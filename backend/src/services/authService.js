@@ -115,6 +115,7 @@ class authService {
           });
           
           let payload = {
+            id: user.id,
             email: user.email,
             username: user.username,
             groupWithRoleUser: roles,
@@ -128,6 +129,7 @@ class authService {
             EM: "Sign in successfully !!",
             EC: 0,
             DT: {
+              userId: user.id, 
               token,
               groupWithRoleUser: roles,
               email: user.email,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Fragment } from 'react';
@@ -8,13 +8,18 @@ import { DefaultLayout } from '~/layouts';
 import { PrivateRoute } from './routes/PrivateRoute';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-toastify/dist/ReactToastify.css';
-import 'nprogress/nprogress.css'
+import 'nprogress/nprogress.css';
+import { useDispatch } from 'react-redux';
+import { fetchDataAccount } from './redux/features/accountSlice';
 function App() {
     const user = true;
-
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchDataAccount({}));
+        
+    },[]);
     return (
         <>
-
             {user.isLoading ? (
                 <div
                     className="d-flex flex-column justify-content-center align-items-center"
