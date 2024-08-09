@@ -1,57 +1,59 @@
 import React, { useEffect, useState, memo } from 'react';
 import { convertPrice } from '~/utils/convert';
-import { changeQuantity } from '~/redux/features/cartSlice';
+import { changeQuantity, deleteOneProductFromCart, fetchAllCart } from '~/redux/features/cartSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '~/components/Button/Button';
 import Modal from 'react-bootstrap/Modal';
-import _ from 'lodash'
+import _ from 'lodash';
 import './ProductList.scss';
-function ProductList({ item, isSelected, onChange, setSelected, selected }) {
+
+function ProductList({
+    item,
+    isSelected,
+    onChange,
+    setSelected,
+    selected,
+    handleRemoveProductFromCart,
+    handleCloseModal,
+    showModal,
+    setShowModal,
+}) {
     const defaultQuantity = item?.quantity;
     const [quantity, setQuantity] = useState(defaultQuantity);
     const defaultTotalPrice = quantity * item?.Product.price;
     const [totalPrice, setTotalPrice] = useState(defaultTotalPrice);
     const { userId, productId } = item;
-    const [showModal, setShowModal] = useState(false);
-    const dispatch = useDispatch();
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
+    const dispatch = useDispatch();
     const handleChangeQuantity = (productId, quantity) => {
         let priceOrigin = item?.Product.price;
         if (quantity === 0) {
             setShowModal(true);
             return;
         }
-        let _selected = _.cloneDeep(selected)
-        
+        let _selected = _.cloneDeep(selected);
 
-        setSelected(_selected.map((item) => {
-            if(item.productId === productId) {
-                return ({
-                    ...item,      
-                    quantity: quantity
-                })
-            }
-            return item
-        }))
-        setQuantity(quantity);  
-        
+        setSelected(
+            _selected.map((item) => {
+                if (item.productId === productId) {
+                    return {
+                        ...item,
+                        quantity: quantity,
+                    };
+                }
+                return item;
+            }),
+        );
+        setQuantity(quantity);
+
         setTimeout(() => {
             setTotalPrice(quantity * priceOrigin);
-            
+
             dispatch(changeQuantity({ userId, productId, quantity }));
         }, 300);
     };
-
-    const handleRemoveProductFromCart = () => {
-        setShowModal(false);
-    };
- 
-
     return (
         <>
             <div className="cart-item-container mt-4" key={item?.id}>
@@ -97,7 +99,7 @@ function ProductList({ item, isSelected, onChange, setSelected, selected }) {
                             </div>
                         </div>
                         <div className="price-end">{convertPrice(totalPrice)}</div>
-                        <div className="icon-trash mb-2" onClick={() => setShowModal(true)}>
+                        <div className="icon-trash mb-2" onClick={() => handleCloseModal(productId)}>
                             <FontAwesomeIcon icon={faTrashCan} />
                         </div>
                     </div>
@@ -112,7 +114,7 @@ function ProductList({ item, isSelected, onChange, setSelected, selected }) {
                 </Modal.Header>
                 <Modal.Body>Bạn có muốn xóa sản phẩm đang chọn không ?</Modal.Body>
                 <Modal.Footer>
-                    <Button outline onClick={handleRemoveProductFromCart}>
+                    <Button outline onClick={() => handleRemoveProductFromCart()}>
                         Xác nhận
                     </Button>
                     <Button normal onClick={handleCloseModal}>
