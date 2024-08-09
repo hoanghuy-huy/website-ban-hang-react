@@ -1,0 +1,56 @@
+.product-comparison-table {
+    .col-3 {
+        padding: 0;
+    }
+    .product-comparison-table__item {
+        border: 1px solid var(--normal-color);
+        .product-comparison-table__item-header {
+            .item-header__product-info {
+                .product-image {
+                    display: flex;
+                    justify-content: center;
+                    img {
+                        height: 72px;
+                        width: 72px;
+                    }
+                }
+                .product-text {
+                    .product-name {
+                        color: rgb(39, 39, 42);
+                        text-align: center;
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 1.3rem;
+                        height: 2.6rem;
+                        overflow: hidden;
+                        display: block;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                    }
+                }
+
+                .actions {
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 4px;
+                }
+            }
+        }
+
+        .product-comparison-table__item-attributes {
+
+            .item-atribute {
+                display: flex;
+                color: rgb(39, 39, 42);
+                padding: 12px 0 12px 8px;
+                border: 1px solid var(--normal-color);
+
+            }
+        }
+    }
+
+    .product-comparison-table__add-item {
+        border: 1px solid var(--normal-color);
+    }
+}

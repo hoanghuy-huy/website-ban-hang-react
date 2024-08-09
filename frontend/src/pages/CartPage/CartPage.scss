@@ -75,6 +75,7 @@
                         font-weight: 600;
                         color: rgb(39, 39, 42);
                         margin-left: 7px;
+                        width: 60px;
                     }
                     .price-end {
                         color: rgb(255, 66, 78);
@@ -83,6 +84,7 @@
                         line-height: 150%;
                         white-space: nowrap;
                         margin-right: 10px;
+                        width: 73px;
                     }
                     .item-quantity {
                         .quantity {
@@ -121,6 +123,7 @@
 
     .cart-page__content-right {
         .right-inner {
+            min-height: 200vh;
             .voucher-box {
                 background-color: var(--white);
                 margin-top: 40px;

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
-
+import NProgress from 'nprogress';
 // First, create the thunk
 export const fetchAllCategories = createAsyncThunk('categories/fetchAllCategories', async () => {
     const response = await httpRequest.get('categories');
@@ -33,11 +33,13 @@ const initialState = {
             .addCase(fetchAllCategories.pending, (state, action) => {
                 state.loading = true
                 state.error = false
+                NProgress.start()
             })
             .addCase(fetchAllCategories.fulfilled, (state, action) => {
                 state.loading = false
                 state.error = false
                 state.categoryList = action.payload
+                NProgress.done()
             })
             .addCase(fetchAllCategories.rejected, (state, action) => {
                 state.loading = false

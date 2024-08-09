@@ -32,9 +32,9 @@
 }
 
 .normal {
-    color: rgb(10, 104, 255);
-    border-color: var(--primary-color);
-    background-color: var(--white);
+    color: var(--white);
+    // border-color: var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 .rounded {

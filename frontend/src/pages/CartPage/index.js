@@ -4,22 +4,62 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeQuantity, getAllCart } from '~/redux/features/cartSlice';
+import { getAllCart } from '~/redux/features/cartSlice';
 import ProductList from './ProductList';
+import _ from 'lodash';
+import { convertPrice } from '~/utils/convert';
 const CartPage = () => {
     const dispatch = useDispatch();
-    // const cartList = useSelector((state) => state.cart.cartList)
     const { cartList, loading, error } = useSelector((state) => state.cart);
     const userId = useSelector((state) => state.account.account.userId);
-    
+    const defaultArraySelected = new Array(cartList.length);
+    const [selectedProducts, setSelectedProducts] = useState(defaultArraySelected.fill(false));
+    const [selected, setSelected] = useState(cartList);
 
+    const handleOnChangeSelectedProduct = (e, index) => {
+        const updatedSelection = [...selectedProducts];
+        updatedSelection[index] = !updatedSelection[index];
 
+        setSelectedProducts(updatedSelection);
 
+        let _update = _.cloneDeep(selected);
+        _update[index].selected = !_update[index].selected;
+        setSelected(_update);
+
+        setSelectedProducts(updatedSelection);
+
+        const allChecked = updatedSelection.every((selected) => selected);
+        document.getElementById('checkAll').checked = allChecked;
+    };
+
+    const checkAll = (e) => {
+        let isChecked = e.target.checked;
+        setSelectedProducts(defaultArraySelected.fill(isChecked));
+        let _update = _.cloneDeep(selected);
+        setSelected( _update.map((item) => ({...item, selected : isChecked})))
+    };
     useEffect(() => {
         dispatch(getAllCart(userId));
+
+        // eslint-disable-next-line
     }, []);
 
+    const countSelectedProduct = selectedProducts.reduce((acc, cur) => {
+        return (acc = cur ? acc + 1 : acc);
+    }, 0);
 
+    const handleCalculateTotalPrice = () => {
+        let totalPrice
+        totalPrice = selected.reduce((total, current) => {
+            if(current.selected) {
+                return total + (current.quantity * current.Product.price)
+            }
+            return total
+        },0) 
+        
+        return totalPrice
+    };
+    
     if (loading === true && error === false) {
         return <div>loading...</div>;
     } else if (loading === false && error === true) {
@@ -34,16 +74,9 @@ const CartPage = () => {
                         <h4>Giỏ hàng</h4>
                     </div>
                     <div className="heading d-flex align-items-center justify-content-between">
-                        <div class="form-check ">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                id="check1"
-                                name="option1"
-                                value="something"
-                                checked
-                            />
-                            <label class="form-check-label">Tất cả ({cartList?.length} sản phẩm)</label>
+                        <div className="form-check ">
+                            <input className="form-check-input" type="checkbox" id="checkAll" onChange={checkAll} />
+                            <label className="form-check-label">Tất cả ({cartList?.length} sản phẩm)</label>
                         </div>
                         <div>
                             <span>Đơn giá</span>
@@ -63,7 +96,14 @@ const CartPage = () => {
                         cartList.length > 0 &&
                         cartList.map((item, index) => {
                             return (
-                                <ProductList item={item} />
+                                <ProductList
+                                    key={item.id}
+                                    item={item}
+                                    isSelected={selectedProducts[index]}
+                                    onChange={(e) => handleOnChangeSelectedProduct(e, index)}
+                                    setSelected={setSelected}
+                                    selected={selected}
+                                />
                             );
                         })}
                 </div>
@@ -80,13 +120,8 @@ const CartPage = () => {
                                 <li className="buy-box__prices-item">
                                     <div className="prices-item_text">Tạm tính</div>
                                     <div className="prices-item_value">
-                                        0<sup>₫</sup>
-                                    </div>
-                                </li>
-                                <li className="buy-box__prices-item">
-                                    <div className="prices-item_text">Tạm tính</div>
-                                    <div className="prices-item_value">
-                                        0<sup>₫</sup>
+                                        {convertPrice(handleCalculateTotalPrice())}
+                                        <sup>₫</sup>
                                     </div>
                                 </li>
                             </ul>
@@ -101,7 +136,7 @@ const CartPage = () => {
                                 </div>
                             </div>
                             <div className="me-3">
-                                <Button primary>Mua hàng (0)</Button>
+                                <Button primary>Mua hàng ({countSelectedProduct})</Button>
                             </div>
                         </div>
                     </div>

@@ -1,11 +1,13 @@
 // import ImageSlider from '~/layouts/components/ImageSlider';
-import './Home.scss';
 import ProductBox from '~/components/ProductBox';
 import ImageSlider from './Sections/ImageSlider';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProductHot, fetchAllProductPagination } from '~/redux/features/productSlice/productSlice';
 import HotProductBox from './Sections/HotProductBox';
+import NProgress from 'nprogress';
+
+import './Home.scss';
 
 function Home() {
     const [limit, setLimit] = useState(5);

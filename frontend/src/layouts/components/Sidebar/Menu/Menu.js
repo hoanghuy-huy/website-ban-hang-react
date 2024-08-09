@@ -13,12 +13,21 @@ const Menu = ({ item }) => {
     const handleFetchDataProduct = (pathCategory) => {
         dispatch(fetchAllProductWithCategory(pathCategory));
     };
-  
+    if (!item.ChildCategories.length > 0) {
+        return (
+            <div className="menu py-2">
+                <div className="d-flex align-items-center justify-content-between gap-3">
+                    <MenuItem item={item} className="item-parent" onClick={() => handleFetchDataProduct(item.path)} />
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="menu py-2">
             <div className="d-flex align-items-center justify-content-between gap-3">
                 <MenuItem item={item} className="item-parent" onClick={() => handleFetchDataProduct(item.path)} />
-                {item?.ChildCategories.length > 0  && showChild ? (
+
+                {!!item.ChildCategories && showChild ? (
                     <FontAwesomeIcon icon={faChevronUp} className="icon" onClick={() => setShowChild(!showChild)} />
                 ) : (
                     <FontAwesomeIcon icon={faChevronDown} className="icon" onClick={() => setShowChild(!showChild)} />

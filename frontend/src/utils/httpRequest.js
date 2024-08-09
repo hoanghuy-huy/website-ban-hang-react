@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import NProgress from 'nprogress';
 const httpRequest = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
     timeout: 2000,
@@ -55,7 +54,6 @@ export const Delete = async (path) => {
 // // Add a httpRequest interceptor
 httpRequest.interceptors.request.use(function (config) {
     // Do something before httpRequest is sent
-    NProgress.start();
     return config;
   }, function (error) {
     // Do something with httpRequest error
@@ -65,7 +63,6 @@ httpRequest.interceptors.request.use(function (config) {
 // // Add a response interceptor
 httpRequest.interceptors.response.use(
     function (response) {
-        NProgress.done();
 
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
