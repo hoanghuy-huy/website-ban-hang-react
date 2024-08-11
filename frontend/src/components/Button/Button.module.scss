@@ -9,6 +9,7 @@
 .wrapper-button.wrapper-button {
     margin-left: 10px;
 }
+
 .primary {
     background: rgb(255, 66, 78);
     border-color: var(--primary-color);
@@ -35,6 +36,8 @@
     color: var(--white);
     // border-color: var(--primary-color);
     background-color: var(--primary-color);
+    width: 100%;
+
 }
 
 .rounded {
@@ -54,6 +57,9 @@
     &:hover {
         background-color: var(--primary-light-color) !important;
     }
+
+    width: 100%;
+
 }
 
 .active {

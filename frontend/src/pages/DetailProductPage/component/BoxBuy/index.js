@@ -73,7 +73,7 @@ const BoxBuy = ({ item }) => {
             </div>
             <div className="content-right__group-button mx-3 mt-4">
                 <Button primary >Mua Ngay</Button>
-                <Button normal onClick={() => handleAddItemToCart(item)}>Thêm Vào Giỏ Hàng</Button>
+                <Button normal outline onClick={() => handleAddItemToCart(item)}>Thêm Vào Giỏ Hàng</Button>
             </div>
         </div>
     );

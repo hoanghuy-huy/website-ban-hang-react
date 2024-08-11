@@ -48,7 +48,7 @@ const HeaderClient = () => {
                         <Link to={'/cart'}>
                             <div className="icon cart-icon action-cart position-relative">
                                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                   {cartItem.length}
+                                   {cartItem?.length}
                                 </span>
                                 <img
                                     src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"

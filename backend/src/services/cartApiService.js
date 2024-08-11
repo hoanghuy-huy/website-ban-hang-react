@@ -40,6 +40,7 @@ let handleAddProductToCart = (productId, userId, quantity) => {
             productId,
             userId,
             quantity,
+            selected: false,
           });
           resolve({
             EC: 0,
@@ -62,6 +63,7 @@ let handleGetAllFunc = (userId) => {
       if (userId) {
         data = await db.Cart.findAll({
           where: { userId },
+          attributes:["id", "productId","userId", "quantity", "selected"],
           include: [
             {
               model: db.Product,
@@ -125,16 +127,12 @@ let handleChangeQuantityProduct = (userId, productId, quantity) => {
   });
 };
 
-const handleDeleteOneProduct = (userId, productId) => {
+const handleRemoveOneProductFromCart = (cartId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (userId && productId) {
+      if (cartId) {
         const cartItem = await db.Cart.findOne({
-          where: [
-            {
-              [Op.and]: [{ userId, productId }],
-            },
-          ],
+          where: {id: cartId} 
         });
         if (cartItem) {
           await cartItem.destroy();
@@ -147,7 +145,7 @@ const handleDeleteOneProduct = (userId, productId) => {
         }
 
         return resolve({
-          EM: "error",
+          EM: "Cart Id Not Found",
           EC: 1,
           DT: "",
         });
@@ -164,24 +162,19 @@ const handleDeleteOneProduct = (userId, productId) => {
   });
 };
 
-const handleDeleteMultiple = (itemsToDelete) => {
+const handleRemoveMultipleProductFromCart = (itemsToDelete) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (itemsToDelete && itemsToDelete.length > 0) {
         for (let item of itemsToDelete) {
-          let { userId, productId } = item;
-          if (userId && productId) {
+          let { id } = item;
+          if (id) {
             const cartItem = await db.Cart.findOne({
-              where: [
-                {
-                  [Op.and]: [{ userId, productId }],
-                },
-              ],
+              where: {id : id}
             });
             if (cartItem) {
               await cartItem.destroy();
             }
-
           }
         }
         return resolve({
@@ -190,8 +183,37 @@ const handleDeleteMultiple = (itemsToDelete) => {
           DT: "",
         });
       }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
+const handleSelectedProduct = (cartId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (cartId) {
+        let cart = await db.Cart.findOne({
+          where: {id: cartId}
+        })
+        
+        await cart.update({
+          selected: !cart.selected
+        })
 
+        return resolve({
+          EC: 0,
+          EM: "ok",
+          DT: cart,
+        });
+
+      }
+
+      return resolve({
+        EC: 1,
+        EM: "Invalid value",
+        DT: [],
+      });
     } catch (error) {
       reject(error);
     }
@@ -202,6 +224,7 @@ module.exports = {
   handleAddProductToCart,
   handleGetAllFunc,
   handleChangeQuantityProduct,
-  handleDeleteOneProduct,
-  handleDeleteMultiple,
+  handleRemoveOneProductFromCart,
+  handleRemoveMultipleProductFromCart,
+  handleSelectedProduct,
 };

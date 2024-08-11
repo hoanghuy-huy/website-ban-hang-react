@@ -1,76 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '~/components/Button/Button';
-import { fetchAllCart, deleteOneProductFromCart, deleteMultipleProductFormCart } from '~/redux/features/cartSlice';
-import ProductList from './ProductList';
-import _ from 'lodash';
+import {
+    fetchAllCart,
+    handleOnChangeSelectedAll,
+    handleShowModalDelete,
+} from '~/redux/features/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import { convertPrice } from '~/utils/convert';
 import { faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-
+import ProductList from './ProductList';
+import _ from 'lodash'
 import './CartPage.scss';
-import { toast } from 'react-toastify';
 
 const CartPage = () => {
-    const [showModal, setShowModal] = useState(false);
+    const { loading, error, cartList } = useSelector((state) => state.cart);
+    const { userId } = useSelector((state) => state.account.account);
+    
     const dispatch = useDispatch();
-    const { cartList, loading, error } = useSelector((state) => state.cart);
-    const userId = useSelector((state) => state.account.account.userId);
-    const defaultArraySelected = new Array(cartList.length);
-    const [selectedProducts, setSelectedProducts] = useState(defaultArraySelected.fill(false));
-    const [selected, setSelected] = useState(cartList);
-    const [id, setId] = useState(null);
-    const [showModalDeleteMultiple, setShowModalDeleteMultiple] = useState(false);
-
-    const handleOnChangeSelectedProduct = (e, index) => {
-        const updatedSelection = [...selectedProducts];
-        updatedSelection[index] = !updatedSelection[index];
-
-        setSelectedProducts(updatedSelection);
-
-        let _update = _.cloneDeep(selected);
-        _update[index].selected = !_update[index].selected;
-        setSelected(_update);
-
-        setSelectedProducts(updatedSelection);
-
-        const allChecked = updatedSelection.every((selected) => selected);
-        document.getElementById('checkAll').checked = allChecked;
-    };
-
-    const checkAll = (e) => {
-        let isChecked = e.target.checked;
-        setSelectedProducts(defaultArraySelected.fill(isChecked));
-        let _update = _.cloneDeep(selected);
-        setSelected(_update.map((item) => ({ ...item, selected: isChecked })));
-    };
-
-    const handleRemoveProductFromCart = () => {
-        setShowModal(false);
-        dispatch(deleteOneProductFromCart({ userId, productId: id }));
-    };
-
-    const handleCloseModal = (productId) => {
-        setId(productId);
-        setShowModal(!showModal);
-    };
 
     useEffect(() => {
-        dispatch(fetchAllCart(userId));
+        dispatch(fetchAllCart(userId))
+        
 
-        // eslint-disable-next-line
     }, []);
 
-    const countSelectedProduct = selectedProducts.reduce((acc, cur) => {
-        return (acc = cur ? acc + 1 : acc);
-    }, 0);
+    const checkSelectedAll = () => {
+        const checkAll = cartList?.every((item) => item?.selected === true)
+        // document.getElementById('checkAll').checked = checkAll
+        return checkAll
+    }
 
     const handleCalculateTotalPrice = () => {
-        let totalPrice;
-        totalPrice = selected.reduce((total, current) => {
-            if (current.selected) {
-                return total + current.quantity * current.Product.price;
+        let totalPrice = cartList?.reduce((total, currentValue) => {
+            if (currentValue?.selected === true) {
+                return (total += currentValue.quantity * currentValue.Product.price);
             }
             return total;
         }, 0);
@@ -78,28 +43,24 @@ const CartPage = () => {
         return totalPrice;
     };
 
-    const handleCloseModalDeleteMultiple = () => {
-        setShowModalDeleteMultiple(false);
+    const quantityProductSelected = () => {
+        let itemSelected = cartList?.filter((item) => item?.selected === true);
+
+        return itemSelected ? itemSelected?.length : 0 ;
     };
 
     const handleRemoveMultipleItemFromCart = () => {
-        let _selected = _.cloneDeep(selected);
+        let _cartList = _.cloneDeep(cartList)
+        
+        let itemsToRemove = _cartList.filter((item) => {
+            if(item.selected === true) {
+                return item
+            }
+            return false;
+        })
 
-        let itemsToDelete = _selected.filter((item) => item.selected === true);
-
-        console.log(itemsToDelete);
-        if (itemsToDelete.length === 0) {
-            toast.error('Vui Lòng chọn sản phẩm cần xóa');
-            setShowModalDeleteMultiple(false);
-            return;
-        }
-        dispatch(deleteMultipleProductFormCart(itemsToDelete));
-        setShowModalDeleteMultiple(false);
-        setTimeout(() => {
-            dispatch(fetchAllCart(userId));
-        }, 300);
-    };
-
+        return itemsToRemove
+    }   
     if (loading === true && error === false) {
         return <div>loading...</div>;
     } else if (loading === false && error === true) {
@@ -116,8 +77,14 @@ const CartPage = () => {
                         </div>
                         <div className="heading d-flex align-items-center justify-content-between">
                             <div className="form-check ">
-                                <input className="form-check-input" type="checkbox" id="checkAll" onChange={checkAll} />
-                                <label className="form-check-label">Tất cả ({cartList?.length} sản phẩm)</label>
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id="checkAll"
+                                    checked={checkSelectedAll()}
+                                    onChange={(e) => dispatch(handleOnChangeSelectedAll(e.target.checked))}
+                                />
+                                <label className="form-check-label">Tất cả ( sản phẩm)</label>
                             </div>
                             <div>
                                 <span>Đơn giá</span>
@@ -128,7 +95,7 @@ const CartPage = () => {
                             <div>
                                 <span>Thành tiền</span>
                             </div>
-                            <div className="icon-trash" onClick={() => setShowModalDeleteMultiple(true)}>
+                            <div className="icon-trash" onClick={() => dispatch(handleShowModalDelete(handleRemoveMultipleItemFromCart()))}>
                                 <FontAwesomeIcon icon={faTrashCan} />
                             </div>
                         </div>
@@ -136,21 +103,7 @@ const CartPage = () => {
                         {cartList &&
                             cartList.length > 0 &&
                             cartList.map((item, index) => {
-                                return (
-                                    <ProductList
-                                        key={item.id}
-                                        item={item}
-                                        isSelected={selectedProducts[index]}
-                                        onChange={(e) => handleOnChangeSelectedProduct(e, index)}
-                                        setSelected={setSelected}
-                                        selected={selected}
-                                        handleCloseModal={handleCloseModal}
-                                        handleRemoveProductFromCart={() => handleRemoveProductFromCart(index)}
-                                        showModal={showModal}
-                                        setShowModal={setShowModal}
-                                        setId={setId}
-                                    />
-                                );
+                                return <ProductList key={item?.id} item={item} />;
                             })}
                     </div>
                     <div className="cart-page__content-right col-4">
@@ -166,6 +119,7 @@ const CartPage = () => {
                                     <li className="buy-box__prices-item">
                                         <div className="prices-item_text">Tạm tính</div>
                                         <div className="prices-item_value">
+                                            {' '}
                                             {convertPrice(handleCalculateTotalPrice())}
                                             <sup>₫</sup>
                                         </div>
@@ -184,36 +138,13 @@ const CartPage = () => {
                                     </div>
                                 </div>
                                 <div className="me-3">
-                                    <Button primary>Mua hàng ({countSelectedProduct})</Button>
+                                    <Button primary>Mua hàng ({quantityProductSelected()})</Button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <Modal
-                show={showModalDeleteMultiple}
-                onHide={handleCloseModalDeleteMultiple}
-                size="sm"
-                className="d-flex align-items-center"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        <FontAwesomeIcon icon={faTriangleExclamation} className="me-2 text-warning" />
-                        Xóa sản phẩm
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Bạn có muốn xóa sản phẩm đang chọn không ?</Modal.Body>
-                <Modal.Footer>
-                    <Button outline onClick={() => handleRemoveMultipleItemFromCart()}>
-                        Xác nhận
-                    </Button>
-                    <Button normal onClick={handleCloseModalDeleteMultiple}>
-                        Hủy
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </>
     );
 };
