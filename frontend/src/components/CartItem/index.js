@@ -3,6 +3,8 @@ import classNames from 'classnames/bind';
 import style from './CartItem.module.scss';
 import { Link } from 'react-router-dom';
 import config from '~/config';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(style);
 const CartItem = ({ item, onClick }) => {
@@ -44,6 +46,20 @@ const CartItem = ({ item, onClick }) => {
                         )}
                     </div>
                     <div className={cx('title')}>{item?.name}</div>
+                    
+                    <div className={cx('average-rating')}>
+                        <div className={cx('number-start-container')}>
+                            <div className='d-flex gap-1 py-1'>
+                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
+                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
+                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
+                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
+                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div className={cx('price-and-discount-style')}>
                         <div className={cx('price')}>
                             {item?.price.toLocaleString('vi-VN', {

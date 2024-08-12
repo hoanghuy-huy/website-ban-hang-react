@@ -1,11 +1,11 @@
 import { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { UserContext } from '~/hooks/userContext';
 
 export const PrivateRoute = ({ children }) => {
-    const { user } = useContext(UserContext);
-
-    if (user && user.auth) {
+    const auth = localStorage.getItem('auth')
+    
+    if (auth) {
         return children;
     }
 

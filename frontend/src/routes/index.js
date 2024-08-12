@@ -24,10 +24,10 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
-    { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
 ];
 
 const privateRoutes = [
+    { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
     { path: routes.user, component: MangerUsersPage },
     { path: routes.role, component: RoleUser },
     { path: routes.groupRole, component: GroupRole },

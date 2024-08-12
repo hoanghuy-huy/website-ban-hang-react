@@ -120,6 +120,7 @@ export const cartSlice = createSlice({
                 return item;
             });
             state.cartList = updateStatusSelected;
+            
             const checkAll = state.cartList.every((item) => item.selected === true);
             document.getElementById('checkAll').checked = checkAll;
         },
@@ -135,14 +136,15 @@ export const cartSlice = createSlice({
             state.showModalDelete = false
         },
         handleShowModalDelete: (state, action) => {
-            console.log(action.payload)
-            state.itemsToRemove = action.payload
-            state.showModalDelete = true
+            if(action.payload.length === 0) {
+                toast.error('Vui lòng chọn sản phầm cần xóa')
+                return;
+            }else {
+                state.itemsToRemove = action.payload
+                state.showModalDelete = true
+            }
         },
 
-        handleRemoveItemFromCart: (state, action) => {
-
-        }
         
     },
     extraReducers: (builder) => {
@@ -236,6 +238,6 @@ export const cartSlice = createSlice({
             });
     },
 });
-export const { handleOnClickChangeQuantity, handleOnChangeSelected, handleOnChangeSelectedAll, handleShowModalDelete, handleRemoveItemFromCart, handleCloseModalDelete } = cartSlice.actions;
+export const { handleOnClickChangeQuantity, handleOnChangeSelected, handleOnChangeSelectedAll, handleShowModalDelete, handleCloseModalDelete } = cartSlice.actions;
 
 export default cartSlice.reducer;

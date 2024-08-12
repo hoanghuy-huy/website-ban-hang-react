@@ -6,7 +6,7 @@ import Button from '../Button/Button';
 import ReactPaginate from 'react-paginate';
 
 const ProductBox = ({ listProductPagination, handlePageClick, limit }) => {
-    const { products } = listProductPagination || {}
+    const { products } = listProductPagination || {};
     return (
         <div className="product-box-container mt-4">
             <FilterWrapper />
@@ -25,9 +25,11 @@ const ProductBox = ({ listProductPagination, handlePageClick, limit }) => {
             </div>
             <div className="content-view-more-btn">
                 {limit <= products?.length && (
-                    <Button medium outline onClick={() => handlePageClick()}>
-                        Xem Thêm
-                    </Button>
+                    <div>
+                        <Button medium outline onClick={() => handlePageClick()}>
+                            Xem Thêm
+                        </Button>
+                    </div>
                 )}
             </div>
         </div>

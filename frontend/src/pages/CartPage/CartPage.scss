@@ -1,21 +1,20 @@
-
 .cart-page-container {
     min-height: 200vh;
     display: flex;
     flex-direction: column;
-    .main-content {
-        .main-title {
-            h4 {
-                font-size: 20px;
-                font-weight: 500;
-                margin: 0px;
-                color: rgb(0, 0, 0);
-                line-height: 28px;
-                text-transform: uppercase;
-                flex: 1 1 0%;
-            }
+    .main-title {
+        h4 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0px;
+            color: rgb(0, 0, 0);
+            line-height: 28px;
+            text-transform: uppercase;
+            flex: 1 1 0%;
+            margin-left: 10px;
         }
-
+    }
+    .main-content {
         .heading {
             width: 100%;
             margin-top: 15px;
@@ -127,7 +126,6 @@
             min-height: 200vh;
             .voucher-box {
                 background-color: var(--white);
-                margin-top: 40px;
                 border-radius: 4px;
 
                 padding: 20px 20px;
@@ -217,5 +215,24 @@
         height: 17px;
         color: #898989;
         cursor: pointer;
+    }
+
+    .empty-product-cart {
+        background-color: var(--white);
+        border-radius: 8px;
+        min-height: 200px;
+        .cart-img {
+            img {
+                width: 160px;
+                height: 160px;
+            }
+        }
+        p{
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 150%;
+            color: rgb(39, 39, 42);
+            margin-left: 14px;
+        }
     }
 }

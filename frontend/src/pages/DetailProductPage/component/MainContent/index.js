@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './MainContent.scss';
 import Sidebar from '../Sidebar';
-import CartItem from '~/components/CartItem';
 import ComparisonProduct from '../ComparisonProduct';
+import SimilarProductBox from '../SimilarProductBox';
 
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const {ProductImages} = item && item.ProductImages ? item : ''
@@ -58,7 +58,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                         </div>
                     </div>
 
-                    <div className="information-delivery-container mt-3">
+                    {/* <div className="information-delivery-container mt-3">
                         <div className="information-delivery__header">Thông tin vận chuyển</div>
                         <div className="information-delivery__place-of-delivery">
                             Giao đến TP. Quảng Ngãi, P. Trần Phú, Quảng Ngãi
@@ -73,23 +73,9 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                 <span>Trước 19h, 29/07: 7.000</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="product-box-container">
-                        <div className="title ps-3 py-3">Sản phẩm tương tự</div>
-                        <div className="product-box-body">
-                            <div className="row mx-3">
-                                {productList &&
-                                    productList.map((item, index) => {
-                                        return (
-                                            <div className="col-3" key={index}>
-                                                <CartItem item={item} onClick={() => handleFetchData(+item.id)} />
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-                        </div>
-                    </div>
+                    <SimilarProductBox productList={productList} handleFetchData={handleFetchData}/>
 
                     {detailProduct && (
                         <div className="detail-info-of-product">
@@ -110,7 +96,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                 </div>
             </div>
 
-            <ComparisonProduct />
+            {/* <ComparisonProduct /> */}
         </div>
     );
 };

@@ -88,7 +88,7 @@ export const accountSlice = createSlice({
                     state.auth = true;
                     state.showLogin = false;
                     if (state.navigate) {
-                        window.location.href = '/cart/:123';
+                        window.location.href = '/cart';
                     }
                 }
             })

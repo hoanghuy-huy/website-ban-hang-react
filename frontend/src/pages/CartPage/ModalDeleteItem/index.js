@@ -9,6 +9,7 @@ import {
     handleCloseModalDelete,
     removeOneProductFromCart,
 } from '~/redux/features/cartSlice';
+import { toast } from 'react-toastify';
 function ModalDeleteItem() {
     const { showModalDelete, itemsToRemove } = useSelector((state) => state.cart);
     const { userId } = useSelector((state) => state.account.account);
