@@ -61,8 +61,8 @@ const HotProductBox = ({ listHotProduct }) => {
                         <Slider {...settings}>
                             {listHotProduct?.map((item, index) => {
                                 return (
-                                    <div className="customize-item ">
-                                        <CartItem key={item.id} item={item} />
+                                    <div className="customize-item" key={item.id}>
+                                        <CartItem  item={item} />
                                     </div>
                                 );
                             })}

@@ -15,6 +15,7 @@ import routes from '~/config/routes';
 import GroupRole from '~/components/GroupRole';
 import ProductPageChild from '~/pages/ProductPageChild';
 import CartPage from '~/pages/CartPage';
+import NotFoundPage from '~/pages/NotFoundPage';
 
 //Public Routes
 const publicRoutes = [
@@ -24,6 +25,7 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
+    { path: '*', component: NotFoundPage, layout: LayoutClientNoSidebar },
 ];
 
 const privateRoutes = [

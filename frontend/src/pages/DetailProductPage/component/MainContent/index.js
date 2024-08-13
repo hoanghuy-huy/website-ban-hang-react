@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './MainContent.scss';
 import Sidebar from '../Sidebar';
 import SimilarProductBox from '../SimilarProductBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ComparisonProduct from './ComparisonProduct';
 import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch, useSelector } from 'react-redux';
+
+import ComparisonProduct from './ComparisonProduct';
 import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features/detailProductSlice';
 import Button from '~/components/Button/Button';
+import './MainContent.scss';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const { ProductImages } = item && item.ProductImages ? item : '';
     const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
         (state) => state.detailProduct,
     );
     const dispatch = useDispatch();
-
+    console.log(detailProduct);
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product.id === item.id);
 
         return check;
     };
-
+    console.log(detailProduct);
     if (!item) {
         return <div>error from server.</div>;
     }
@@ -114,15 +115,54 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                         <div className="detail-info-of-product">
                             <div className="title ms-2 py-3">Thông tin chi tiết</div>
                             <div className="detail-info-of-product__item-contain">
-                                {detailProduct.ValueDetailProducts &&
-                                    detailProduct.ValueDetailProducts.map((item, index) => {
-                                        return (
-                                            <div className="item">
-                                                <span className="left">{item.name}</span>
-                                                <span className="right">{item.value.replace(/<\/?p>/g, '')}</span>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="item">
+                                    <span className="left">Thương hiệu</span>
+                                    <span className="right">{detailProduct?.brand ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Xuất xứ thương hiệu</span>
+                                    <span className="right">{detailProduct?.brandCountry ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Dung tích</span>
+                                    <span className="right">{detailProduct?.capacity ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Chất liệu lòng nồi</span>
+                                    <span className="right">{detailProduct?.material ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Công suất</span>
+                                    <span className="right">{detailProduct?.power ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Xuất xứ (Made in)</span>
+                                    <span className="right">{detailProduct?.origin ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Trọng lượng sản phẩm</span>
+                                    <span className="right">{detailProduct?.productWeight ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Chế độ an toàn</span>
+                                    <span className="right">{detailProduct?.safeMode ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Chế độ hẹn giờ</span>
+                                    <span className="right">{detailProduct?.timer ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Loại nồi</span>
+                                    <span className="right">{detailProduct?.brand ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Sản phẩm có được bảo hành không?</span>
+                                    <span className="right">{detailProduct?.isWarrantyApplied ?? '--'}</span>
+                                </div>
+                                <div className="item">
+                                    <span className="left">Thời gian bảo hành</span>
+                                    <span className="right">{detailProduct?.warrantyTimePeriod ?? '--'}</span>
+                                </div>
                             </div>
                         </div>
                     )}

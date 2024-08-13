@@ -10,19 +10,19 @@ import { useContext } from 'react';
 import { UserContext } from '~/hooks/userContext';
 
 function NavHeader() {
-    const { logoutContext } = useContext(UserContext);
+    // const { logoutContext } = useContext(UserContext);
     const navigate = useNavigate()
-    const handleLogout = async () => {
-        const res = await apiLogout(); // remove token in server
-        localStorage.removeItem('token'); // remove token in local store
-        logoutContext() // set default auth user
-        if (res && res.EC === 0) {
-            toast.success('Logout success !');
-            navigate('/login')
-        } else {
-            toast.error(' Something wrong in server');
-        }
-    };
+    // const handleLogout = async () => {
+    //     const res = await apiLogout(); // remove token in server
+    //     localStorage.removeItem('token'); // remove token in local store
+    //     logoutContext() // set default auth user
+    //     if (res && res.EC === 0) {
+    //         toast.success('Logout success !');
+    //         navigate('/login')
+    //     } else {
+    //         toast.error(' Something wrong in server');
+    //     }
+    // };
     return (
         <div className="container-nav-header">
             <Navbar expand="lg" className="bg-body-tertiary">
@@ -54,7 +54,7 @@ function NavHeader() {
                                 <NavDropdown.Item href="#action/3.2">Change password</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item>
-                                    <span onClick={() => handleLogout()}>Logout</span>
+                                    {/* <span onClick={() => handleLogout()}>Logout</span> */}
                                 </NavDropdown.Item>
                             </NavDropdown>
                         </Nav>

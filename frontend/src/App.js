@@ -16,8 +16,7 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchDataAccount({}));
-        
-    },[]);
+    }, []);
     return (
         <>
             {user.isLoading ? (
@@ -50,7 +49,8 @@ function App() {
 
                                 return (
                                     <Route
-                                        key={index}
+                                    key={index}
+                                    exact={true}
                                         path={route.path}
                                         element={
                                             <Layout>

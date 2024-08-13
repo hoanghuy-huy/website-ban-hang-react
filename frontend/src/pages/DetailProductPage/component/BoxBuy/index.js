@@ -50,7 +50,7 @@ const BoxBuy = ({ item }) => {
                             height="20"
                         />
                     </button>
-                    <input type="text" value={quantity} class="input" tabIndex="-1" />
+                    <input type="text" value={quantity} className="input" tabIndex="-1" />
                     <button onClick={() => handlePrice(quantity + 1)}>
                         <img
                             src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"

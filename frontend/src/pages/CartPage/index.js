@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '~/components/Button/Button';
 import { fetchAllCart, handleOnChangeSelectedAll, handleShowModalDelete } from '~/redux/features/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Modal from 'react-bootstrap/Modal';
 import { convertPrice } from '~/utils/convert';
-import { faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ProductList from './ProductList';
 import _ from 'lodash';
 import './CartPage.scss';
-import { toast } from 'react-toastify';
 
 const CartPage = () => {
     const { loading, error, cartList } = useSelector((state) => state.cart);
@@ -137,7 +135,7 @@ const CartPage = () => {
                                         </div>
                                     </div>
                                     <div className="me-3">
-                                        <Button primary>Mua hàng ({quantityProductSelected()})</Button>
+                                        <Button primary onClick={() => alert('me')}>Mua hàng ({quantityProductSelected()})</Button>
                                     </div>
                                 </div>
                             </div>
