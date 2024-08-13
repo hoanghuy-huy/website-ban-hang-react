@@ -1,15 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './MainContent.scss';
 import Sidebar from '../Sidebar';
-import ComparisonProduct from '../ComparisonProduct';
 import SimilarProductBox from '../SimilarProductBox';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ComparisonProduct from './ComparisonProduct';
+import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features/detailProductSlice';
+import Button from '~/components/Button/Button';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
-    const {ProductImages} = item && item.ProductImages ? item : ''
-    if(!item) {
-        return <div>error from server.</div>
+    const { ProductImages } = item && item.ProductImages ? item : '';
+    const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
+        (state) => state.detailProduct,
+    );
+    const dispatch = useDispatch();
+
+    const checkedCompare = () => {
+        const check = listProductToCompare.some((product) => product.id === item.id);
+
+        return check;
+    };
+
+    if (!item) {
+        return <div>error from server.</div>;
     }
+
     return (
         <div className="col-9-md">
             <div className="d-flex">
@@ -17,7 +33,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                 <div className="content-center col-7 ms-3">
                     <div className="information-product-contain">
                         <div className="information-product-body">
-                            <div className="brand-styled">
+                            <div className="brand-styled d-flex align-items-center">
                                 {item?.hot && (
                                     <img
                                         src="https://salt.tikicdn.com/ts/upload/0f/59/82/795de6da98a5ac81ce46fb5078b65870.png"
@@ -30,10 +46,27 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                         alt="img-genuine"
                                     />
                                 )}
-                                <h6>
+                                <div>
                                     Thương hiệu:
                                     <Link to="#brand">{item?.brandName}</Link>
-                                </h6>
+                                </div>
+                                {checkedCompare() ? (
+                                    <div
+                                        className="comparison-icon d-flex align-items-center ms-1 gap-1"
+                                        onClick={() => dispatch(handleDeleteItemCompare(item))}
+                                    >
+                                        <FontAwesomeIcon icon={faCheck} />
+                                        <span>Đã thêm</span>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="comparison-icon d-flex align-items-center ms-1 gap-1"
+                                        onClick={() => dispatch(handleShowFromCompare(item))}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} />
+                                        <span>So sánh</span>
+                                    </div>
+                                )}
                             </div>
                             <div className="title-styled">{item?.name}</div>
                             <div className="rating-styled">
@@ -75,7 +108,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                         </div>
                     </div> */}
 
-                    <SimilarProductBox productList={productList} handleFetchData={handleFetchData}/>
+                    <SimilarProductBox productList={productList} handleFetchData={handleFetchData} />
 
                     {detailProduct && (
                         <div className="detail-info-of-product">
@@ -96,7 +129,16 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                 </div>
             </div>
 
-            {/* <ComparisonProduct /> */}
+            {showFormCompare && <ComparisonProduct />}
+            {listProductToCompare.length > 0 && showFormShrinkCompare && !showFormCompare && (
+                <div className="shrink-compare-form">
+                    <div className="show-more" onClick={() => dispatch(handleShowFromCompare())}>
+                        <Button rounded outline>
+                            So Sánh ({listProductToCompare?.length})
+                        </Button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -39,19 +39,19 @@ const SearchBox = () => {
         setShowResult(false);
     };
 
-    const fetchData = async () => {
-        setLoading(true);
-        const res = await apiSearchUser(searchValue);
+    // const fetchData = async () => {
+    //     setLoading(true);
+    //     const res = await apiSearchUser(searchValue);
 
-        setSearchResult(res.data.data);
-        setLoading(false);
-    };
+    //     setSearchResult(res.data.data);
+    //     setLoading(false);
+    // };
 
     useEffect(() => {
         if (!valueDebounce.trim()) {
             return;
         }
-        fetchData();
+        // fetchData();
         // eslint-disable-next-line
     }, [valueDebounce]);
 

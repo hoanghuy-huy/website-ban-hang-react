@@ -45,7 +45,7 @@ export const removeOneProductFromCart = createAsyncThunk(
 
 export const deleteMultipleProductFormCart = createAsyncThunk(
     'cart/deleteMultipleProductFormCart',
-    async ({itemsToDelete, userId}, thunkAPI) => {
+    async ({ itemsToDelete, userId }, thunkAPI) => {
         const res = await httpRequest.put(`cart/delete-multiple`, { itemsToDelete });
         if (res && res.EC === 0) {
             toast.success('Xóa sản phẩm thành công');
@@ -78,7 +78,7 @@ export const cartSlice = createSlice({
         error: false,
         showModalDelete: false,
         cartList: [],
-        itemsToRemove: []
+        itemsToRemove: [],
     },
     reducers: {
         handleOnClickChangeQuantity: (state, action) => {
@@ -97,8 +97,8 @@ export const cartSlice = createSlice({
                     const updatedQuantityMinus = current(state.cartList).map((item) => {
                         if (item.id === action.payload.id) {
                             if (item.quantity === 1) {
-                                state.showModalDelete = true
-                                state.itemsToRemove = action.payload.id
+                                state.showModalDelete = true;
+                                state.itemsToRemove = action.payload.id;
                                 return item;
                             }
                             return { ...item, quantity: item.quantity - 1 };
@@ -120,7 +120,7 @@ export const cartSlice = createSlice({
                 return item;
             });
             state.cartList = updateStatusSelected;
-            
+
             const checkAll = state.cartList.every((item) => item.selected === true);
             document.getElementById('checkAll').checked = checkAll;
         },
@@ -132,20 +132,18 @@ export const cartSlice = createSlice({
             state.cartList = updateStatusSelected;
         },
         handleCloseModalDelete: (state, action) => {
-            state.itemsToRemove = null
-            state.showModalDelete = false
+            state.itemsToRemove = null;
+            state.showModalDelete = false;
         },
         handleShowModalDelete: (state, action) => {
-            if(action.payload.length === 0) {
-                toast.error('Vui lòng chọn sản phầm cần xóa')
+            if (action.payload.length === 0) {
+                toast.error('Vui lòng chọn sản phầm cần xóa');
                 return;
-            }else {
-                state.itemsToRemove = action.payload
-                state.showModalDelete = true
+            } else {
+                state.itemsToRemove = action.payload;
+                state.showModalDelete = true;
             }
         },
-
-        
     },
     extraReducers: (builder) => {
         builder
@@ -217,7 +215,6 @@ export const cartSlice = createSlice({
                 state.showModalDelete = false;
 
                 state.error = false;
-
             })
             .addCase(deleteMultipleProductFormCart.rejected, (state, action) => {
                 // state.loading = true;
@@ -238,6 +235,12 @@ export const cartSlice = createSlice({
             });
     },
 });
-export const { handleOnClickChangeQuantity, handleOnChangeSelected, handleOnChangeSelectedAll, handleShowModalDelete, handleCloseModalDelete } = cartSlice.actions;
+export const {
+    handleOnClickChangeQuantity,
+    handleOnChangeSelected,
+    handleOnChangeSelectedAll,
+    handleShowModalDelete,
+    handleCloseModalDelete,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

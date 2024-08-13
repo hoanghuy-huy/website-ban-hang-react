@@ -23,12 +23,13 @@ const HeaderClient = () => {
             <div className="inner-header col-12 gap-5">
                 <div className="logo col-2 ps-4">
                     <Link to={routes.home}>
-                        <img
+                        {/* <img
                             src="https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png"
                             alt="logo"
                             width="96"
                             height="40"
-                        />
+                        /> */}
+                        <h2 style={{fontWeight: 600,color: 'var(--primary-color)'}}>TIKI</h2>
                     </Link>
                 </div>
 
