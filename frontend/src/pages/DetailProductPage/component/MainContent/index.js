@@ -10,19 +10,18 @@ import ComparisonProduct from './ComparisonProduct';
 import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features/detailProductSlice';
 import Button from '~/components/Button/Button';
 import './MainContent.scss';
+import ModalAddProductToCompare from './ModalAddProductToCompare';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const { ProductImages } = item && item.ProductImages ? item : '';
     const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
         (state) => state.detailProduct,
     );
     const dispatch = useDispatch();
-    console.log(detailProduct);
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product.id === item.id);
 
         return check;
     };
-    console.log(detailProduct);
     if (!item) {
         return <div>error from server.</div>;
     }
@@ -128,7 +127,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                     <span className="right">{detailProduct?.capacity ?? '--'}</span>
                                 </div>
                                 <div className="item">
-                                    <span className="left">Chất liệu lòng nồi</span>
+                                    <span className="left">Chất liệu</span>
                                     <span className="right">{detailProduct?.material ?? '--'}</span>
                                 </div>
                                 <div className="item">
@@ -150,10 +149,6 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                 <div className="item">
                                     <span className="left">Chế độ hẹn giờ</span>
                                     <span className="right">{detailProduct?.timer ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Loại nồi</span>
-                                    <span className="right">{detailProduct?.brand ?? '--'}</span>
                                 </div>
                                 <div className="item">
                                     <span className="left">Sản phẩm có được bảo hành không?</span>
@@ -179,6 +174,9 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                     </div>
                 </div>
             )}
+
+
+            <ModalAddProductToCompare />
         </div>
     );
 };

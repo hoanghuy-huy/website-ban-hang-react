@@ -7,6 +7,7 @@ import {
     handleAddItemCompare,
     handleDeleteAllItemCompare,
     handleDeleteItemCompare,
+    handleShowModalAddProductToCompare,
     handleShrinkFormCompare,
 } from '~/redux/features/detailProductSlice';
 
@@ -37,7 +38,7 @@ const ComparisonProduct = () => {
                 })}
 
                 {Array.from({ length: totalItems - listProductToCompare.length }).map((_, index) => (
-                    <li className="list-compare__add-item">
+                    <li className="list-compare__add-item" onClick={() => dispatch(handleShowModalAddProductToCompare())}>
                         <div className="icon-add">
                             <FontAwesomeIcon icon={faPlus} />
                         </div>

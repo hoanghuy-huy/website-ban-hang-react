@@ -43,3 +43,12 @@ button {
 .modal-backdrop {
     --bs-backdrop-bg: rgba(39, 39, 42, 0.7);
 }
+
+input {
+    outline: none;
+    border: none;
+}
+
+li {
+    list-style: none;
+}

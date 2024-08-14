@@ -7,6 +7,7 @@ const initialState = {
     error: false,
     loading: false,
     showFormShrinkCompare: false,
+    showModalAddProductToCompare: false,
 };
 
 export const detailProductSlice = createSlice({
@@ -24,9 +25,12 @@ export const detailProductSlice = createSlice({
                 state.showFormCompare = true;
                 return;
             }
+            if (state.listProductToCompare.length === 4) {
+                toast.error('Vui lòng xóa bớt sản phẩm để tiếp tục so sánh');
+                return;
+            }
             state.showFormCompare = true;
             state.listProductToCompare.push(action.payload);
-            console.log(current(state.listProductToCompare));
         },
         handleDeleteItemCompare: (state, action) => {
             const updateListProductCompare = current(state.listProductToCompare).filter(
@@ -50,6 +54,9 @@ export const detailProductSlice = createSlice({
         handleDeleteAllItemCompare: (state, action) => {
             state.listProductToCompare = [];
         },
+        handleShowModalAddProductToCompare: (state, action) => {
+            state.showModalAddProductToCompare = !state.showModalAddProductToCompare;
+        },
     },
 });
 
@@ -59,6 +66,7 @@ export const {
     handleAddItemCompare,
     handleShrinkFormCompare,
     handleDeleteAllItemCompare,
+    handleShowModalAddProductToCompare
 } = detailProductSlice.actions;
 
 export default detailProductSlice.reducer;

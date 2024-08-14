@@ -10,7 +10,7 @@ const Image = forwardRef(({src, alt, ...props }, ref) => {
         setFallBack(images.noImage)
     }
 
-    return <img ref={ref}  style={{overflow: 'hidden'}} {...props} src={ fallBack || src} alt={alt} onError={handleError}/>;
+    return <img ref={ref}  style={{overflow: 'hidden'}} {...props} src={ fallBack || src } alt={alt} onError={handleError}/>;
 });
 
 export default Image;
