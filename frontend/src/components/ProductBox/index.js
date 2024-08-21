@@ -4,12 +4,13 @@ import CartItem from '../CartItem';
 import FilterWrapper from '../FilterWrapper';
 import Button from '../Button/Button';
 import ReactPaginate from 'react-paginate';
+import SuggestProduct from '../SuggestProduct';
 
 const ProductBox = ({ listProductPagination, handlePageClick, limit }) => {
     const { products } = listProductPagination || {};
     return (
         <div className="product-box-container mt-4">
-            <FilterWrapper />
+            <SuggestProduct />
             <div className="col-12">
                 <div className="row">
                     {products &&

@@ -8,7 +8,7 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutClient, LayoutClientNoSidebar, LayoutNoHeader } from '~/layouts';
+import { LayoutClient, LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -25,6 +25,7 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
+    { path: '/home', component: Home, layout: MainLayout },
     { path: '*', component: NotFoundPage, layout: LayoutClientNoSidebar },
 ];
 

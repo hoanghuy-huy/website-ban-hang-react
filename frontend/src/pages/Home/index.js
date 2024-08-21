@@ -8,6 +8,10 @@ import HotProductBox from './Sections/HotProductBox';
 import NProgress from 'nprogress';
 
 import './Home.scss';
+import FlashSales from '~/components/FlashSales';
+import { CircularProgress } from '@mui/material';
+import FeaturedCategory from '~/components/FeaturedCategory';
+import Product from '~/components/Product';
 
 function Home() {
     const [limit, setLimit] = useState(5);
@@ -30,30 +34,60 @@ function Home() {
         dispatch(fetchAllProductPagination({ limit, page }));
 
         // eslint-disable-next-line
-        
     }, [limit]);
 
     if (state.loading === true && state.error === false) {
-        return <div>loading...</div>;
+        return <div>Loading...</div>;
     }
 
     if (state.loading === false && state.error === true) {
         return <div>Something wrong with server</div>;
     }
 
-    if(!listProductHot || !listProductPagination) {
-        return <div>Fetching data...</div>
+    if (!listProductHot || !listProductPagination) {
+        return <div>Fetching data...</div>;
     }
     return (
         <div className="content-home">
-
-            <ImageSlider />
-            <HotProductBox listHotProduct={listProductHot} />
-            <ProductBox
-                listProductPagination={listProductPagination}
-                handlePageClick={(e) => handlePageClick(e)}
-                limit={limit}
-            />
+            <div className="img-slider-container">
+                <ImageSlider />
+            </div>
+            <div>
+                <FeaturedCategory />
+            </div>
+            <div>
+                <HotProductBox listHotProduct={listProductHot} />
+            </div>
+            <div>
+                <FlashSales items={listProductHot} />
+            </div>
+            <div>
+                <ProductBox
+                    listProductPagination={listProductPagination}
+                    handlePageClick={(e) => handlePageClick(e)}
+                    limit={limit}
+                />
+            </div>
+            <div className="productRow">
+                <div className="item">
+                    <Product />
+                </div>
+                <div className="item">
+                    <Product />
+                </div>
+                <div className="item">
+                    <Product />
+                </div>
+                <div className="item">
+                    <Product />
+                </div>
+                <div className="item">
+                    <Product />
+                </div>
+                <div className="item">
+                    <Product />
+                </div>
+            </div>
         </div>
     );
 }

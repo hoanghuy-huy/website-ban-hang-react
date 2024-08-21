@@ -1,6 +1,15 @@
 .content-home {
-    min-height: 2000px;
+    min-height: 4000px;
     border-radius: 8px;
-
-
+    .img-slider-container {
+        padding-bottom: 50px;
+    }
+    .productRow {
+        display: flex;
+        .item {
+            width: 20%;
+            height: 200px;
+            padding: 0 10px;
+        }
+    }
 }

@@ -1,0 +1,27 @@
+.card-item-flash-sale-container {
+    .content-item {
+        height: 100%;
+        img {
+            width: 240px;
+            height: 240px;
+        }
+        .item-info {
+            .title {
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: break-word;
+                align-self: stretch;
+                color: var(--Alias-Primary---On-Theme, #27272a);
+                font-size: 14px;
+                font-weight: 400;
+                margin: 0px;
+            }
+            .price {
+                color: rgb(255, 66, 78);;
+            }
+        }
+    }
+}

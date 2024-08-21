@@ -1,0 +1,141 @@
+.flash-sales-section {
+    margin: 30px 0 0 0;
+    width: 1200px;
+    height: 435px;
+    .flash-sales-content {
+        position: relative;
+        .title {
+            margin-right: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 150%;
+            color: rgb(39, 39, 42);
+        }
+        .custom-arrow {
+            background-color: var(--white);
+            color: var(--primary-color);
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            transform: translateY(-50%);
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            cursor: pointer;
+        }
+
+        .custom-prev-arrow {
+            z-index: 10;
+            left: 0;
+            margin-left: 10px;
+        }
+
+        .custom-next-arrow {
+            right: 0;
+            z-index: 10;
+            margin-right: 10px;
+        }
+
+        .customize-item {
+            background: var(--white);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            box-sizing: content-box;
+            height: 400px;
+            width: 177px;
+        }
+    }
+    // header flash sales
+    .flash-sales-header {
+        font-size: 28px;
+        width: 100%;
+        text-decoration: underline;
+        font-weight: 700;
+        margin: 0 30px 20px 0;
+        text-decoration: none;
+        padding-top: 15px;
+        display: flex;
+        align-items: center;
+        .flash-sales-header-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .see-more {
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 150%;
+                color: rgb(10, 104, 255);
+                cursor: pointer;
+            }
+        }
+
+    }
+
+    .timer span,
+    .timer strong {
+        font-size: 15px;
+        display: block;
+        float: left;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .timer strong {
+        background-color: rgb(255, 66, 78);
+        color: var(--white);
+        width: 15px;
+        border-radius: 5px;
+    }
+
+    .timer span {
+        color: rgb(255, 66, 78);
+
+    }
+
+    // content
+
+    .flash-sales-content {
+        background-color: var(--white);
+        height: 420px;
+        width: 1190px;
+        padding: 10px 50px;
+        background: #fff;
+        box-shadow: 0 4px 6px #00000029;
+        border-radius: 8px;
+        margin: 0px -5px;
+    }
+}
+
+// .custom-arrow {
+//     position: absolute;
+//     top: 50%;
+//     transform: translateY(-50%);
+//     z-index: 1;
+//     cursor: pointer;
+//     font-size: 50px;
+//     color: #c2c2c273;
+//     padding: 8px;
+//     border-radius: 50%;
+//     &:hover {
+//         color: #e6e4e473;
+//     }
+// }
+
+// .custom-prev-arrow {
+//     left: -45px;
+// }
+
+// .custom-next-arrow {
+//     right: -45px;
+// }
+
+// .arrow {
+//     font-size: 50px;
+// }

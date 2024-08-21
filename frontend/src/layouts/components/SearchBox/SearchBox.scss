@@ -31,7 +31,7 @@
         cursor: pointer;
     }
     .me-5 {
-        margin-right: 5rem !important;
+        margin-right: 6rem !important;
     }
 
     &:focus-within {
@@ -41,7 +41,7 @@
     .search-btn {
         padding: 7px 5px;
         border-radius: 8px;
-        color: var(--primary-light-color);
+        color: var(--primary-color);
         user-select: none;
         &:hover {
             background-color: var(--primary-light-color);
@@ -59,7 +59,7 @@
         content: '';
         position: absolute;
         top: 5px;
-        right: 64px;
+        right: 84px;
         width: 1px;
         border-left: 1px solid rgb(221, 221, 227);
         height: 24px;
