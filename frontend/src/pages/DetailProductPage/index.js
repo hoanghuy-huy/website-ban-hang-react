@@ -41,7 +41,7 @@ const DetailProductPage = () => {
     }
 
     return (
-        <div className="detail-product-container d-flex gap-3">
+        <div className="detail-product-container d-flex gap-3 mx-3">
             <MainContent
                 item={product}
                 productList={categoryProduct?.Products}

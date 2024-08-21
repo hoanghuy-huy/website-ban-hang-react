@@ -37,7 +37,6 @@
     // border-color: var(--primary-color);
     background-color: var(--primary-color);
     width: 100%;
-
 }
 
 .rounded {
@@ -69,6 +68,9 @@
 }
 // size
 .small {
+   height: 28px !important;
+   width: 80px !important;
+   line-height: 16px;
 }
 
 .medium {

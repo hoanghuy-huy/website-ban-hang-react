@@ -10,10 +10,7 @@
     background: rgb(255, 255, 255);
     overflow: hidden;
     cursor: pointer;
-    &:hover {
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
-        z-index: 1;
-    }
+
     .img-product {
 
         img {
@@ -75,5 +72,11 @@
                 
             }
         }
+    }
+
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
+        z-index: 1;
+
     }
 }

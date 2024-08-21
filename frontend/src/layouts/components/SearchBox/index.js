@@ -5,9 +5,9 @@ import { faSpinner, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-s
 
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import SearchItem from '~/components/SearchItem';
-import './SearchBox.scss';
 import { apiSearchUser } from '~/services/testService';
 import { useDebounce } from '~/hooks';
+import './SearchBox.scss';
 
 const SearchBox = () => {
     const [searchResult, setSearchResult] = useState([]);
@@ -15,16 +15,12 @@ const SearchBox = () => {
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    const valueDebounce = useDebounce(searchValue, 600)
-
-
-
-
+    const valueDebounce = useDebounce(searchValue, 600);
 
     const refInput = useRef();
 
     const handleOnChangeResultValue = (searchValue) => {
-        if(searchValue.startsWith(' ')) {
+        if (searchValue.startsWith(' ')) {
             return;
         }
         setSearchValue(searchValue);
@@ -73,7 +69,7 @@ const SearchBox = () => {
                 </div>
             )}
         >
-            <div className="search-box col-6 rounded-2 position-relative">
+            <div className="search-box col-sm-6 rounded-2 position-relative">
                 <div className="ps-3">
                     {' '}
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -88,7 +84,7 @@ const SearchBox = () => {
                     onFocus={() => setShowResult(true)}
                 />
 
-                <div className=" position-absolute top-50 end-0 translate-middle-y me-5">
+                <div className="position-absolute top-50 end-0 translate-middle-y me-5">
                     {loading && <FontAwesomeIcon className="loading-icon" icon={faSpinner} />}
                 </div>
 
@@ -101,7 +97,10 @@ const SearchBox = () => {
                     )}
                 </div>
 
-                <button className="search-btn pe-2 ">Search</button>
+                <button className="search-btn pe-2" style={{ fontSize: 16, 
+                    }}>
+                    Tìm
+                </button>
             </div>
         </Tippy>
     );

@@ -9,8 +9,8 @@ import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ComparisonProduct from './ComparisonProduct';
 import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features/detailProductSlice';
 import Button from '~/components/Button/Button';
-import './MainContent.scss';
 import ModalAddProductToCompare from './ModalAddProductToCompare';
+import './MainContent.scss';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const { ProductImages } = item && item.ProductImages ? item : '';
     const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
@@ -27,7 +27,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     }
 
     return (
-        <div className="col-9-md">
+        <div className="col-9-sm">
             <div className="d-flex">
                 <Sidebar listImg={ProductImages} />
                 <div className="content-center col-7 ms-3">

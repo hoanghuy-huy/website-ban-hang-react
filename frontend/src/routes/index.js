@@ -8,7 +8,7 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutClient, LayoutClientNoSidebar, LayoutNoHeader } from '~/layouts';
+import { LayoutClient, LayoutClientNoSidebar, LayoutCustomerAccount, LayoutNoHeader } from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -16,6 +16,9 @@ import GroupRole from '~/components/GroupRole';
 import ProductPageChild from '~/pages/ProductPageChild';
 import CartPage from '~/pages/CartPage';
 import NotFoundPage from '~/pages/NotFoundPage';
+import CustomerAccountPage from '~/pages/InformationUserPage';
+import InformationUserPage from '~/pages/InformationUserPage';
+import LayoutMain from '~/layouts/LayoutMain';
 
 //Public Routes
 const publicRoutes = [
@@ -25,6 +28,8 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
+    { path: routes.informationUserPage, component: InformationUserPage, layout: LayoutCustomerAccount },
+    { path: '/home', component: '', layout: LayoutMain },
     { path: '*', component: NotFoundPage, layout: LayoutClientNoSidebar },
 ];
 

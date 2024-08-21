@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 import { useDispatch } from 'react-redux';
 import { fetchDataAccount } from './redux/features/accountSlice';
+
 function App() {
     const user = true;
     const dispatch = useDispatch();

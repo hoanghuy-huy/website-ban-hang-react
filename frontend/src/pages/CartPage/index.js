@@ -66,7 +66,7 @@ const CartPage = () => {
                 <div className="main-title ms-4">
                     <h4>Giỏ hàng</h4>
                 </div>
-                {cartList && cartList.length > 0 ? (
+                {cartList && cartList?.length > 0 ? (
                     <div className="row mx-4">
                         <div className="main-content col-8">
                             <div className="heading d-flex align-items-center justify-content-between">
@@ -78,7 +78,7 @@ const CartPage = () => {
                                         checked={checkSelectedAll()}
                                         onChange={(e) => dispatch(handleOnChangeSelectedAll(e.target.checked))}
                                     />
-                                    <label className="form-check-label">Tất cả ( sản phẩm)</label>
+                                    <label className="form-check-label">Tất cả (sản phẩm)</label>
                                 </div>
                                 <div>
                                     <span>Đơn giá</span>
@@ -98,7 +98,7 @@ const CartPage = () => {
                             </div>
 
                             {cartList &&
-                                cartList.length > 0 &&
+                                cartList?.length > 0 &&
                                 cartList.map((item, index) => {
                                     return <ProductList key={item?.id} item={item} />;
                                 })}

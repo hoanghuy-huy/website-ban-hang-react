@@ -12,9 +12,11 @@
     --white: rgb(255, 255, 255);
     --background-color: #f5f5fa;
     --text-color: rgb(39, 39, 42);
-    --normal-border-color:rgb(221, 221, 227);
+    --normal-border-color: rgb(221, 221, 227);
 }
 * {
+    padding: 0px;
+    margin: 0px;
     box-sizing: border-box;
 }
 body {
@@ -29,6 +31,18 @@ body {
     color: red;
 }
 
+.bg-color {
+    background-color:  rgb(10, 104, 255) !important;
+}
+
+.text-color-white {
+    color: #fff !important;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     color: rgb(39, 39, 42);
@@ -38,7 +52,6 @@ button {
     border: none;
     background-color: transparent;
 }
-
 
 .modal-backdrop {
     --bs-backdrop-bg: rgba(39, 39, 42, 0.7);
@@ -51,4 +64,8 @@ input {
 
 li {
     list-style: none;
+}
+
+ul {
+    padding: 0;
 }

@@ -9,6 +9,8 @@ import routes from '~/config/routes';
 import config from '~/config';
 import AccountActions from './AccountAction';
 import { showLoginForm } from '~/redux/features/accountSlice';
+import images from '~/assets/images';
+import Image from '~/components/Image';
 import AuthForm from './AuthForm';
 const HeaderClient = () => {
     const dispatch = useDispatch();
@@ -16,26 +18,20 @@ const HeaderClient = () => {
     const handleShowLoginForm = () => {
         dispatch(showLoginForm('cart'));
     };
-    const cartItem = useSelector((state) => state.cart.cartList)
+    const cartItem = useSelector((state) => state.cart.cartList);
 
     return (
         <header className="container-header">
             <div className="inner-header col-12 gap-5">
-                <div className="logo col-2 ps-4">
-                    <Link to={routes.home}>
-                        {/* <img
-                            src="https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png"
-                            alt="logo"
-                            width="96"
-                            height="40"
-                        /> */}
-                        <h2 style={{fontWeight: 600,color: 'var(--primary-color)'}}>TIKI</h2>
+                <div className="logo col-sm-2 ps-4">
+                    <Link to={config.routes.home}>
+                    <Image style={{height: 70, width: 70}} src={images.logoImage} />
                     </Link>
                 </div>
 
                 <SearchBox />
 
-                <div className="actions col-3 gap-3">
+                <div className="actions col-sm-3 gap-3">
                     <div className="action-home ">
                         <NavLink to={config.routes.home}>
                             {' '}
@@ -49,7 +45,7 @@ const HeaderClient = () => {
                         <Link to={'/cart'}>
                             <div className="icon cart-icon action-cart position-relative">
                                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                   {cartItem?.length}
+                                    {cartItem?.length}
                                 </span>
                                 <img
                                     src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
