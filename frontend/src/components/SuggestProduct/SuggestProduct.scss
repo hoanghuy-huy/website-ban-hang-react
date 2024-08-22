@@ -18,8 +18,19 @@
         height: 84px;
         background: white;
         margin-bottom: 15px;
+        .active {
+            background-color: var(--primary-light-color);
+            border-bottom: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            &:hover {
+                background-color: var(--primary-light-color) !important;
+            }
+            .action_text {
+                color: var(--primary-color) !important;
+            }
+        }
         .tab {
-            &:hover{
+            &:hover {
                 background-color: var(--normal-color);
                 cursor: pointer;
             }
@@ -37,12 +48,15 @@
                 word-break: break-word;
             }
             .action_icon {
-               
                 img {
                     height: 40px;
                     width: 40px;
                 }
-    
+                svg {
+                    height: 40px;
+                    width: 40px;
+                    color: var(--primary-color);
+                }
             }
         }
     }

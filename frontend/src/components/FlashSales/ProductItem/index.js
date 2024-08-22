@@ -13,9 +13,9 @@ function ProductItemFashSale({ item }) {
                     <h3 className={cx('title')}>{item?.name}</h3>
                     <span className={cx('price')}>
                         <strong>{convertPrice(item?.price)}</strong>
-                        <strike>{item?.discountPrice}</strike>
                     </span>
                 </div>
+                    <span class={cx("deals__price__discount")}>{item?.discountRate +'%'}</span>
             </div>
         </div>
     );

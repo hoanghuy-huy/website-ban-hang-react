@@ -3,6 +3,8 @@
     background: var(--white);
     margin-top: 20px;
     border-radius: 8px;
+    box-shadow: 0 4px 6px #00000029;
+    margin-right: 10px;
     .product-box-header {
         padding: 0 20px;
         .title {
@@ -22,10 +24,15 @@
     }
 
     .hot-product-section {
-
-
         .hot-product-content {
             position: relative;
+            .slider-container {
+                .hot-product-slider {
+                    .slick-slide {
+                        padding-right: 10px !important;
+                    }
+                }
+            }
             .custom-arrow {
                 background-color: var(--white);
                 color: var(--primary-color);
@@ -61,7 +68,6 @@
                 box-sizing: content-box;
                 height: 400px;
                 width: 177px;
-   
             }
         }
     }

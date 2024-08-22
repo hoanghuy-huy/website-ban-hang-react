@@ -40,7 +40,7 @@ const AccountActions = (props) => {
                             <div onClick={() => dispatch(showLoginForm())}>
                                 <FontAwesomeIcon className="icon user pe-1" icon={faUser} />
                                 <span title="account" className="d-none d-xxl-inline">
-                                    Xin Chào
+                                    Xin Chào 
                                 </span>
                             </div>
                         </div>

@@ -2,14 +2,13 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import config from '~/config';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faStar } from '@fortawesome/free-regular-svg-icons';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import style from './CartItem.module.scss';
-import { Rating } from '@mui/material';
-
+import { IconButton, Rating, Tooltip } from '@mui/material';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 const cx = classNames.bind(style);
 const CartItem = ({ item, onClick }) => {
-    console.log(item)
+    console.log(item);
     return (
         <>
             <div className={cx('card-item')} style={{ position: 'relative' }}>
@@ -107,9 +106,19 @@ const CartItem = ({ item, onClick }) => {
                         color: 'var(--primary-color)',
                     }}
                 >
-                    <FontAwesomeIcon icon={faHeart} />
+                    <Tooltip title="Thêm vào yêu thích">
+                        <IconButton color="primary" aria-label="add to shopping cart">
+                            <FavoriteBorderOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
                 </div>
-                <div className={cx('add-to-cart')}>Thêm vào giỏ hàng</div>
+                <div className={cx('add-to-cart')}>
+                    <Tooltip title="Thêm vào giỏ hàng">
+                        <IconButton color="primary" aria-label="add to shopping cart">
+                            <ShoppingCartOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             </div>
         </>
     );

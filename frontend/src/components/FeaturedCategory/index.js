@@ -21,7 +21,7 @@ const FeaturedCategory = () => {
                     <div className="item">
                         <div className="info">
                             <img
-                                src="https://salt.tikicdn.com/cache/w280/ts/tikimsp/c4/c1/51/d6e393ad26199edbc5d5edf1cebc66c7.png.webp"
+                                src="https://vcdn.tikicdn.com/ts/seller/e6/d1/51/f7e8b6c959e6df9086dff65e6378d832.jpg"
                                 alt=""
                             />
                         </div>

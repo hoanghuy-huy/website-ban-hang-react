@@ -57,7 +57,7 @@ const HotProductBox = ({ listHotProduct }) => {
             <div className="hot-product-section mt-3">
                 <div className="hot-product-content mx-4">
                     <div className="slider-container">
-                        <Slider {...settings}>
+                        <Slider {...settings} className='hot-product-slider'>
                             {listHotProduct?.map((item, index) => {
                                 return (
                                     <div className="customize-item" key={item.id}>

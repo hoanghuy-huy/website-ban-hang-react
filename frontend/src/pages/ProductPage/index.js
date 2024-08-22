@@ -34,7 +34,7 @@ const ProductPage = () => {
                 <div className="col-12">
                     <div className="row">
                         {products &&
-                            products?.Products.map((item, index) => {
+                            products?.Products?.map((item, index) => {
                                 return (
                                     <div className="col-3" key={index}>
                                         <CartItem item={item} />

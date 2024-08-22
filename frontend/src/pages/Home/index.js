@@ -68,7 +68,7 @@ function Home() {
                     limit={limit}
                 />
             </div>
-            <div className="productRow">
+            {/* <div className="productRow">
                 <div className="item">
                     <Product />
                 </div>
@@ -87,7 +87,7 @@ function Home() {
                 <div className="item">
                     <Product />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

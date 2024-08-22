@@ -1,10 +1,10 @@
-import HeaderClient from '~/layouts/components/HeaderClient';
+import Header from '../MainLayout/Header';
 import './LayoutClientNoSidebar.scss';
 
 function LayoutClientNoSidebar({ children }) {
     return (
         <div className="wrapper-layout">
-            <HeaderClient />
+            <Header />
             <div className="col-12 container-body">
                 <div className="row">
                     <div className="content mt-5">{children}</div>

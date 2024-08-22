@@ -47,7 +47,9 @@ const Header = () => {
                         </Badge>
                         <div className="d-none d-xxl-inline ps-2">Yêu thích</div>
                     </div>
+
                     <AccountActions />
+                    
                     {auth ? (
                         <Link to={'/cart'}>
                             <div className="icon cart-icon action-cart position-relative">

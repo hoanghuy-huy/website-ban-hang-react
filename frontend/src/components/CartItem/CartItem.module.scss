@@ -12,11 +12,16 @@
         overflow: hidden;
         animation: all 0.3s ease-in-out;
         cursor: pointer;
-
+        &:hover {
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0.0625rem 20px 0 rgba(0, 0, 0, 0.05);
+            transform: translateY(-0.0625rem);
+    
+            z-index: 1;
+        }
         .img-product {
             width: 100%;
             overflow: hidden;
-
             animation: all 0.3s ease-in-out;
 
             img {
@@ -94,27 +99,27 @@
         }
     }
 
-    &:hover .container-cart-item {
-        border: 1px solid var(--primary-color);
-        box-shadow: 0 0.0625rem 20px 0 rgba(0, 0, 0, 0.05);
-        /* -webkit-transform: translateY(-.0625rem); */
-        transform: translateY(-0.0625rem);
-
-        z-index: 1;
-    }
+ 
 
     .add-to-cart {
-        font-size: 16px;
-        visibility: hidden;
-        padding: 6px 10px;
-        color: var(--primary-color);
-        background-color: var(--white);
+        position: absolute;
+        bottom: 10px;
+        right: 3px;
     }
-    &:hover .add-to-cart {
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
-        z-index: 1;
-        visibility: visible;
-        cursor: pointer;
-        user-select: none;
-    }
+    // &:hover .add-to-cart {
+    //     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
+    //     z-index: 1;
+    //     visibility: visible;
+    //     cursor: pointer;
+    //     user-select: none;
+    // }
+
+    // .icon-favorite {
+    //     position: absolute;
+    //     top: 10px;
+    //     right: 10px;
+    //     font-size: 20px;
+    //     cursor: 'pointer';
+    //     color: var(--primary-color);
+    // }
 }

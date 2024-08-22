@@ -36,12 +36,10 @@ function FlashSales({ props, startTime, endTime, items }) {
     const settings = {
         // dots: true,
         infinite: true,
-        speed: 700,
-        slidesToShow: 5,
-        slidesToScroll: 5,
+        speed: 500,
+        slidesToShow: 6,
+        slidesToScroll: 1,
         autoplay: false,
-        autoplaySpeed: 3000,
-        cssEase: 'linear',
         prevArrow: <CustomPrevArrow />,
         nextArrow: <CustomNextArrow />,
         style: {},
@@ -52,7 +50,7 @@ function FlashSales({ props, startTime, endTime, items }) {
 
             <div className={cx('flash-sales-content')}>
             <Header endTime={endTime} startTime={startTime} />
-                <Slider {...settings}>{renderItem()}</Slider>
+                <Slider {...settings} className={cx('flash-sales-slider')}>{renderItem()}</Slider>
             </div>
         </div>
     );
