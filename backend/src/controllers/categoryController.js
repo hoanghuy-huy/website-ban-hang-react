@@ -1,23 +1,21 @@
-import categoryApiService from '../services/categoryApiService'
+import categoryApiService from "../services/categoryApiService";
 class categoryController {
-    
   async getAllCategory(req, res) {
     try {
-      let data = await categoryApiService.handleGetAllCategory()
-
+      let data = await categoryApiService.handleGetAllCategory();
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
 

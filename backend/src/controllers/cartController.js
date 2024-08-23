@@ -71,7 +71,7 @@ let changeQuantityProduct = async (req, res) => {
 let removeOneProductFromCart = async (req, res) => {
   try {
     let { cartId } = req.body;
-    console.log(cartId)
+    console.log(cartId);
 
     let data = await cartApiService.handleRemoveOneProductFromCart(cartId);
 
@@ -94,7 +94,9 @@ let removeMultipleProductFromCart = async (req, res) => {
   try {
     let { itemsToDelete } = req.body;
 
-    let data = await cartApiService.handleRemoveMultipleProductFromCart(itemsToDelete);
+    let data = await cartApiService.handleRemoveMultipleProductFromCart(
+      itemsToDelete
+    );
 
     return res.status(200).json({
       EM: data.EM,

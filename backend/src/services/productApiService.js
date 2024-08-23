@@ -3,8 +3,7 @@ import db from "../models/index";
 class productApiService {
   async handleGetAllProductPagination(page, limit) {
     try {
-
-      console.log(page, limit)
+      console.log(page, limit);
       let offset = (page - 1) * limit;
 
       const { count, rows } = await db.Product.findAndCountAll({
@@ -149,12 +148,13 @@ class productApiService {
 
       let product1 = await db.Product.findOne({
         where: { id: _productId },
-        include: [{model: db.DetailProduct, include: [{model: db.ValueDetailProduct}]}]
+        include: [{ model: db.DetailProduct }],
       });
-      let {DetailProduct} = product1
+      let { DetailProduct } = product1;
       data = {
-          product, DetailProduct
-      }
+        product,
+        DetailProduct,
+      };
       if (data) {
         return {
           EM: "ok",

@@ -9,11 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      path: {
+        type: Sequelize.STRING,
+      },
       name: {
         type: Sequelize.STRING,
       },
       hot: {
         type: Sequelize.BOOLEAN,
+      },
+      urlImg: {
+        type: Sequelize.STRING,
       },
       description: {
         type: Sequelize.STRING,

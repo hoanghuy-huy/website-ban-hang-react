@@ -9,7 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      childCategoryId: {
+      categoryId: {
+        type: Sequelize.INTEGER,
+      },
+      brandId: {
         type: Sequelize.INTEGER,
       },
       name: {

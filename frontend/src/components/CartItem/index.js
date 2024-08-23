@@ -6,6 +6,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import style from './CartItem.module.scss';
 import { IconButton, Rating, Tooltip } from '@mui/material';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Image from '../Image';
 const cx = classNames.bind(style);
 const CartItem = ({ item, onClick }) => {
     console.log(item);
@@ -17,12 +18,12 @@ const CartItem = ({ item, onClick }) => {
                     onClick={onClick}
                     className={cx('container-cart-item')}
                 >
-                    <img className={cx('img-product')} src={item?.thumbnailUrl} alt="img-product" />
+                    <Image className={cx('img-product')} src={item?.thumbnailUrl} alt="img-product" />
                     <div className={cx('information-cart-item')}>
                         <div className={cx('icon')}>
                             <div className={cx('icon-top-deal')}>
                                 {item?.hot ? (
-                                    <img
+                                    <Image
                                         src="https://salt.tikicdn.com/ts/upload/0f/59/82/795de6da98a5ac81ce46fb5078b65870.png"
                                         alt="img-top-deal"
                                     />
@@ -32,7 +33,7 @@ const CartItem = ({ item, onClick }) => {
                             </div>
                             <div className={cx('icon-authentic')}>
                                 {item?.authentic ? (
-                                    <img
+                                    <Image
                                         src="https://salt.tikicdn.com/ts/upload/d7/56/04/b93b8c666e13f49971483596ef14800f.png"
                                         alt="img-top-deal"
                                     />
@@ -43,7 +44,7 @@ const CartItem = ({ item, onClick }) => {
                         </div>
                         <div className={cx('icon-genuine')}>
                             {item?.genuine ? (
-                                <img
+                                <Image
                                     src="https://salt.tikicdn.com/ts/tka/69/cf/22/1be823299ae34c7ddcd922e73abd4909.png"
                                     alt="img-genuine"
                                 />

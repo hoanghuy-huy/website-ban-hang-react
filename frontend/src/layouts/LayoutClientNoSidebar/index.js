@@ -7,7 +7,7 @@ function LayoutClientNoSidebar({ children }) {
             <Header />
             <div className="col-12 container-body">
                 <div className="row">
-                    <div className="content mt-5">{children}</div>
+                    <div className="content">{children}</div>
                 </div>
             </div>
         </div>

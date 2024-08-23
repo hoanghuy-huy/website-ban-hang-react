@@ -18,7 +18,7 @@ const DetailProductPage = () => {
 
     useEffect(() => {
         dispatch(fetchOneProduct(+productId));
-        dispatch(fetchProductWithCategory(+productId));
+        // dispatch(fetchProductWithCategory(+productId));
 
 
         // eslint-disable-next-line
