@@ -65,9 +65,10 @@ class productController {
   
   async getProductWithCategory(req, res) {
     try {
-      let categoryPath = req.params.category;
+      let categoryId = req.params.category;
+
       let data = await productApiService.handleGetProductWithCategory(
-        categoryPath
+        categoryId
       );
 
       return res.status(200).json({
@@ -84,6 +85,29 @@ class productController {
       });
     }
   }
+
+  async getProductWithCategoryId(req, res) {
+    try {
+      let categoryId = req.params.categoryId;
+      let { page, limit } = req.query;
+      let data = await productApiService.handleGetProductWithCategoryId(
+        categoryId, +page, +limit
+      );
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
 
   async getOneProduct(req, res) {
     try {

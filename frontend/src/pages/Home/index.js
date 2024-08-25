@@ -21,7 +21,7 @@ function Home() {
     const listProductPagination = useSelector((state) => state.products.listProductPagination);
     const state = useSelector((state) => state.products);
     useEffect(() => {
-        // dispatch(fetchAllProductHot());
+        dispatch(fetchAllProductHot());
         dispatch(fetchAllProductPagination({ limit, page }));
         // eslint-disable-next-line
     }, []);

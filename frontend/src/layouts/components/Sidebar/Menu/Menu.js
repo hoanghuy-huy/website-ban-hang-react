@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './Menu.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllProductWithCategory } from '~/redux/features/productSlice/productSlice';
+// import { fetchAllProductWithCategory } from '~/redux/features/productSlice/productSlice';
 import { useParams } from 'react-router-dom';
 
 const Menu = ({ item }) => {
     const [showChild, setShowChild] = useState(false);
     const dispatch = useDispatch();
     const handleFetchDataProduct = (pathCategory) => {
-        dispatch(fetchAllProductWithCategory(pathCategory));
+        // dispatch(fetchAllProductWithCategory(pathCategory));
     };
     if (!item.ChildCategories.length > 0) {
         return (

@@ -1,14 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
-export const fetchAllProductWithCategory = createAsyncThunk(
-    'products/fetchAllProductWithCategory',
-    async (pathCategory) => {
-        const res = await httpRequest.get(`products/get-one-category/${pathCategory}`);
+export const fetchOneCategory = createAsyncThunk('products/fetchOneCategory', async (pathCategory) => {
+    const res = await httpRequest.get(`categories/get-one/${pathCategory}`);
 
-        return res ? res.DT : [];
-    },
-);
+    return res ? res.DT : [];
+});
 
 export const fetchOneProduct = createAsyncThunk('products/fetchOneProduct', async (productId) => {
     const res = await httpRequest.get(`products/get-one/${productId}`);
@@ -28,19 +25,34 @@ export const fetchAllProductHot = createAsyncThunk('products/fetchAllProductHot'
     return res ? res.DT : [];
 });
 
-export const fetchAllProductPagination = createAsyncThunk('products/fetchAllProductPagination', async ({limit, page}) => {
-    const res = await httpRequest.get(`products/get-all-pagination?limit=${limit}&page=${page}`);
+export const fetchAllProductPagination = createAsyncThunk(
+    'products/fetchAllProductPagination',
+    async ({ limit, page }) => {
+        const res = await httpRequest.get(`products/get-all-pagination?limit=${limit}&page=${page}`);
 
-    return res ? res.DT : [];
-});
+        return res ? res.DT : [];
+    },
+);
+
+export const fetchProductPaginationWithCategoryId = createAsyncThunk(
+    'products/fetchProductPaginationWithCategoryId',
+    async ({ categoryId, limit, page }) => {
+        const res = await httpRequest.get(
+            `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
 
 const initialState = {
-    productList: [],
+    category: [],
     product: [],
     categoryProduct: [],
     listProductHot: [],
     productDetail: [],
     listProductPagination: [],
+    listProductPaginationWithCategory: [],
     error: false,
     loading: false,
 };
@@ -53,18 +65,18 @@ export const productSlice = createSlice({
         // Add reducers for additional action types here, and handle loading state as needed
         builder
             //get all product
-            .addCase(fetchAllProductWithCategory.pending, (state, action) => {
+            .addCase(fetchOneCategory.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
-                NProgress.start()
+                NProgress.start();
             })
-            .addCase(fetchAllProductWithCategory.fulfilled, (state, action) => {
+            .addCase(fetchOneCategory.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = false;
-                state.productList = action.payload;
-                NProgress.done()
+                state.category = action.payload;
+                NProgress.done();
             })
-            .addCase(fetchAllProductWithCategory.rejected, (state, action) => {
+            .addCase(fetchOneCategory.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             })
@@ -121,6 +133,20 @@ export const productSlice = createSlice({
                 state.listProductPagination = action.payload;
             })
             .addCase(fetchAllProductPagination.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //get product pagination with category id
+            .addCase(fetchProductPaginationWithCategoryId.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchProductPaginationWithCategoryId.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPaginationWithCategory = action.payload;
+            })
+            .addCase(fetchProductPaginationWithCategoryId.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             });

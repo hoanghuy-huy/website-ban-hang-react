@@ -9,6 +9,7 @@ import _ from 'lodash';
 import './ProductList.scss';
 import { handleOnChangeSelected, handleOnClickChangeQuantity, handleShowModalDelete } from '~/redux/features/cartSlice';
 import ModalDeleteItem from '../ModalDeleteItem';
+import Image from '~/components/Image';
 
 function ProductList({ item }) {
     const dispatch = useDispatch();
@@ -29,7 +30,7 @@ function ProductList({ item }) {
                                 />
                             </div>
                             <div className="thumbnail-img">
-                                <img src={item?.Product?.thumbnailUrl} alt="thumbnail" />
+                                <Image src={item?.Product?.thumbnailUrl} alt="thumbnail" />
                             </div>
                             <div className="name">{item?.Product?.name}</div>
                         </div>

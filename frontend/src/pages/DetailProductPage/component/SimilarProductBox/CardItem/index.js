@@ -6,13 +6,14 @@ import { convertPrice } from '~/utils/convert';
 import style from './CardItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import Image from '~/components/Image';
 
 const cx = classNames.bind(style);
 const CardItem = ({ item, onClick }) => {
     return (
         <Link to={config.routes.productDetail + item?.id} onClick={onClick}>
             <div className={cx('container-cart-item')}>
-                <img className={cx('img-product')} src={item?.thumbnailUrl} alt="img-product" />
+                <Image className={cx('img-product')} src={item?.thumbnailUrl} alt="img-product" />
                 <div className={cx('information-cart-item')}>
                     <div className={cx('icon')}>
                         <div className={cx('icon-top-deal')}>

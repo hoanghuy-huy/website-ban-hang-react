@@ -16,7 +16,7 @@ const FeaturedCategory = () => {
     return (
         <div className="FeaturedCategory-section my-2">
             <div className="container-fluid">
-                <h4 className="title">Danh mục nổi bật</h4>
+                <h4 className="title">Thương hiệu nỗi bật</h4>
                 <Slider {...settings} className="cat_slider-main">
                     <div className="item">
                         <div className="info">

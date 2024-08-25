@@ -49,11 +49,11 @@ const Header = () => {
                     </div>
 
                     <AccountActions />
-                    
+
                     {auth ? (
                         <Link to={'/cart'}>
                             <div className="icon cart-icon action-cart position-relative">
-                                <Badge badgeContent={cartItem?.length} color="primary">
+                                <Badge badgeContent={cartItem?.length !== 0 ? cartItem.length : '0'} color="primary">
                                     <img
                                         src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
                                         alt="cart"
@@ -66,13 +66,12 @@ const Header = () => {
                             className="icon cart-icon action-cart position-relative"
                             onClick={() => handleShowLoginForm()}
                         >
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                0
-                            </span>
-                            <img
-                                src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
-                                alt="cart"
-                            />
+                            <Badge badgeContent={'0'} color="primary">
+                                <img
+                                    src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
+                                    alt="cart"
+                                />
+                            </Badge>
                         </div>
                     )}
                 </div>

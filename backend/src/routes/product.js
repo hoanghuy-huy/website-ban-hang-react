@@ -9,4 +9,5 @@ router.get("/products/get-one/:productId",productController.getOneProduct)
 router.get("/products/categories/:productId",productController.getCategoryWithProduct)
 // router.get("/products?", productController.getAllProductPagination);
 router.get("/products/get-one-category/:category", productController.getProductWithCategory)
+router.get("/products/get-product-with-category-id/:categoryId", productController.getProductWithCategoryId)
 module.exports = router;

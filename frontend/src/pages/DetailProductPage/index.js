@@ -14,12 +14,11 @@ const DetailProductPage = () => {
     
     const dataProduct = useSelector((state) => state.products?.product);
     const { product, DetailProduct } = dataProduct || []
-    const categoryProduct = useSelector((state) => state.products.categoryProduct);
+    const categoryProduct = useSelector((state) => state.products?.categoryProduct);
 
     useEffect(() => {
         dispatch(fetchOneProduct(+productId));
-        // dispatch(fetchProductWithCategory(+productId));
-
+        dispatch(fetchProductWithCategory(+productId));
 
         // eslint-disable-next-line
     }, []);
@@ -39,7 +38,7 @@ const DetailProductPage = () => {
     if(!dataProduct) {
         return <div>Loading....</div>
     }
-
+    
     return (
         <div className="detail-product-container d-flex gap-3">
             <MainContent

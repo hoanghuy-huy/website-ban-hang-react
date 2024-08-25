@@ -22,6 +22,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
 
         return check;
     };
+
     if (!item) {
         return <div>error from server.</div>;
     }
@@ -107,7 +108,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                             </div>
                         </div>
                     </div> */}
-
+            
                     <SimilarProductBox productList={productList} handleFetchData={handleFetchData} />
 
                     {detailProduct && (

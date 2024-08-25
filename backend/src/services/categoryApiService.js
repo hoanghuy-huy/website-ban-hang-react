@@ -32,15 +32,16 @@ class categoryApiService {
         where: { path: '/' + categoryPath },
       });
 
+      
       if (category) {
-        data = await db.Category.findOne({
-          include: [{ model: db.Product }],
-        });
+        // data = await db.Category.findOne({
+        //   include: [{ model: db.Product }],
+        // });
 
         return {
           EM: "Get All products Success",
           EC: 0,
-          DT: data,
+          DT: category,
         };
       }
 

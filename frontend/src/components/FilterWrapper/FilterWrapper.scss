@@ -1,33 +1,77 @@
 .filter-wrapper-container {
-    background-color: white;
-    border-radius: 8px;
-    min-height: 20px;
-    .filter-wrapper__header {
-        // margin: 8px 0 0 10px;
-        padding: 12px 23px;
-        color: rgb(39, 39, 42);
-        white-space: nowrap;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .filter-row {
-        .filter-row__name {
-            color: rgb(128, 128, 137);
-            font-size: 12px;
-            line-height: 18px;
-            margin-bottom: 4px;
-            margin-left: 13px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 2px;
+    display: flex;
+    font-weight: 400;
+    justify-content: space-between;
+    padding: 0.8125rem 1.25rem;
+    .row {
+        .col-1 {
+            flex: 0 0 auto;
+            width: 10.333333%;
         }
-        .filter-row__value {
-
+        .col-8 {
+            flex: 0 0 auto;
+            width: 72.666667%;
         }
-    }
+        .btn-filter__label {
+            font-size: 14px;
+            color: #555;
+        }
+        .btn-filter {
+            .btn-filter__sort-by-options {
+                .sort-by-options__option-group {
+                    display: flex;
+                    gap: 10px;
+                    button {
+                        background-color: var(--white) !important;
+                        span {
+                            color: #434141 !important;
+                            text-transform: capitalize !important;
+                        }
+                        &.active {
+                            background-color: var(--primary-color) !important;
 
-    .divider {
-        margin: 24px 0 3px 16px;
-        width: 1px;
-        height: 30px;
-        background-color: rgb(235, 235, 240);
-        border: 1px solid #353535;
+                            span {
+                                color: var(--white) !important;
+                                text-transform: capitalize !important;
+                            }
+                        }
+                    }
+
+                    .sort-by-options__option-select {
+                        div {
+                            margin: 0 !important;
+                            width: 100%;
+                            background-color: var(--white) !important;
+                        }
+                    }
+                }
+            }
+        }
+        .btn-pagination {
+            .btn-pagination__state {
+                margin-right: 1.25rem !important;
+
+                .btn-pagination__current-page {
+                    color: var(--primary-color);
+                }
+            }
+
+            .btn-pagination-style {
+                button {
+                    background-color: var(--white) !important;
+                    border-radius: 2px !important;
+                    height: 2.125rem !important;
+                    width: 2.25rem !important;
+                    margin-right: 0.5rem !important;
+                }
+            }
+
+            .btn-pagination-style + .btn-pagination-style {
+                margin-right: 0.5rem;
+            }
+        }
     }
 }
