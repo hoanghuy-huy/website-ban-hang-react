@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
+
 export const fetchOneCategory = createAsyncThunk('products/fetchOneCategory', async (pathCategory) => {
     const res = await httpRequest.get(`categories/get-one/${pathCategory}`);
 
@@ -34,6 +35,34 @@ export const fetchAllProductPagination = createAsyncThunk(
     },
 );
 
+export const fetchAllProductHotPagination = createAsyncThunk(
+    'products/fetchAllProductHotPagination',
+    async ({ limit, page }) => {
+        const res = await httpRequest.get(`products/get-all-hot-pagination?limit=${limit}&page=${page}`);
+
+        return res ? res.DT : [];
+    },
+);
+
+export const fetchAllProductDiscountPagination = createAsyncThunk(
+    'products/fetchAllProductDiscountPagination',
+    async ({ limit, page }) => {
+        const res = await httpRequest.get(`products/get-all-discount-pagination?limit=${limit}&page=${page}`);
+
+        return res ? res.DT : [];
+    },
+);
+
+export const fetchAllProductAuthenticPagination = createAsyncThunk(
+    'products/fetchAllProductAuthenticPagination',
+    async ({ limit, page }) => {
+        const res = await httpRequest.get(`products/get-all-authentic-pagination?limit=${limit}&page=${page}`);
+
+        return res ? res.DT : [];
+    },
+);
+
+
 export const fetchProductPaginationWithCategoryId = createAsyncThunk(
     'products/fetchProductPaginationWithCategoryId',
     async ({ categoryId, limit, page }) => {
@@ -53,6 +82,7 @@ const initialState = {
     productDetail: [],
     listProductPagination: [],
     listProductPaginationWithCategory: [],
+    actionFetchProductHome: { type: 'fetch all product' },
     error: false,
     loading: false,
 };
@@ -60,11 +90,22 @@ const initialState = {
 export const productSlice = createSlice({
     name: 'products',
     initialState,
-    reducers: {},
+    reducers: {
+        handleReassignDataProductHome: (state, action) => {
+            if (action.payload.type === 'dataAllProductHot') {
+                state.actionFetchProductHome = { type: 'fetch all product hot' };
+            } else if (action.payload.type === 'dataAllProductAuthentic') {
+                state.actionFetchProductHome = { type: 'fetch all product authentic' };
+            } else if (action.payload.type === 'dataAllProductDiscount') {
+                state.actionFetchProductHome = { type: 'fetch all product discount' };
+            } else {
+                state.actionFetchProductHome = { type: 'fetch all product' };
+            }
+        },
+    },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder
-            //get all product
             .addCase(fetchOneCategory.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -136,6 +177,48 @@ export const productSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
+            //get all product hot pagination
+            .addCase(fetchAllProductHotPagination.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllProductHotPagination.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPagination = action.payload;
+            })
+            .addCase(fetchAllProductHotPagination.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //get all product hot pagination
+            .addCase(fetchAllProductAuthenticPagination.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllProductAuthenticPagination.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPagination = action.payload;
+            })
+            .addCase(fetchAllProductAuthenticPagination.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //get all product hot pagination
+            .addCase(fetchAllProductDiscountPagination.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllProductDiscountPagination.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPagination = action.payload;
+            })
+            .addCase(fetchAllProductDiscountPagination.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
             //get product pagination with category id
             .addCase(fetchProductPaginationWithCategoryId.pending, (state, action) => {
                 state.loading = true;
@@ -152,5 +235,6 @@ export const productSlice = createSlice({
             });
     },
 });
+export const { handleReassignDataProductHome } = productSlice.actions;
 
 export default productSlice.reducer;

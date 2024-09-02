@@ -1,16 +1,18 @@
-import React from 'react';
-import Header from './Header';
-import './MainLayout.scss';
-import Sidebar from '~/components/Sidebar';
+import Header from '~/components/Header';
 
-const MainLayout = ({ children }) => {
+import './LayoutCategoryProduct.scss';
+import Sidebar from './Sidebar';
+import SidebarFilter from './SidebarFilter';
+
+function LayoutCategoryProduct({ children }) {
     return (
-        <div className="MainLayout">
+        <div className="LayoutCategoryProduct">
             <Header />
             <div className="body-container">
                 <div className="row px-4">
                     <div className="col-sm-2 mt-3 ">
                         <Sidebar />
+                        <SidebarFilter />
                     </div>
                     <div className="col-sm-10 mt-3 main-content">
                         {children}
@@ -19,6 +21,6 @@ const MainLayout = ({ children }) => {
             </div>
         </div>
     );
-};
+}
 
-export default MainLayout;
+export default LayoutCategoryProduct;

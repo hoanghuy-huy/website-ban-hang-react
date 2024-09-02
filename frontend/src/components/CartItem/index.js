@@ -9,7 +9,6 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Image from '../Image';
 const cx = classNames.bind(style);
 const CartItem = ({ item, onClick }) => {
-    console.log(item);
     return (
         <>
             <div className={cx('card-item')} style={{ position: 'relative' }}>

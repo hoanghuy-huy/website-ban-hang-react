@@ -1,5 +1,5 @@
+import { Op } from "sequelize";
 import db from "../models/index";
-
 class productApiService {
   async handleGetAllProductPagination(page, limit) {
     try {
@@ -13,6 +13,108 @@ class productApiService {
 
       let totalPages = Math.ceil(count / limit);
 
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleGetAllProductHotPagination(page, limit) {
+    try {
+      let offset = (page - 1) * limit;
+
+      const { count, rows } = await db.Product.findAndCountAll({
+        where: { hot: true },
+        offset: offset,
+        limit: limit,
+        order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleGetAllProductAuthenticPagination(page, limit) {
+    try {
+      let offset = (page - 1) * limit;
+
+      const { count, rows } = await db.Product.findAndCountAll({
+        where: { authentic: true },
+        offset: offset,
+        limit: limit,
+        order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleGetAllProductDiscountPagination(page, limit) {
+    try {
+      let offset = (page - 1) * limit;
+
+      const { count, rows } = await db.Product.findAndCountAll({
+        where: {
+          discountRate: {
+            [Op.gt]: 30,
+          },
+        },
+        offset: offset,
+        limit: limit,
+        // order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
       const data = {
         totalPages: totalPages,
         totalRows: count,

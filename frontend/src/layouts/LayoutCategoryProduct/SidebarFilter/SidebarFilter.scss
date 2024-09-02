@@ -1,0 +1,47 @@
+.sidebar-filter {
+    width: 100%;
+    height: auto;
+
+    .sidebar-filter-container {
+        padding: 5px 0 5px 0px;
+        background-color: var(--white);
+        border-radius: 5px;
+        height: inherit;
+        .sidebar-filter__title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 150%;
+            color: rgb(39, 39, 42);
+            font-size: 20px;
+
+        }
+        .sidebar-filter-group {
+            padding: 0 7px 0 0;
+
+            .sidebar-filter-group__header {
+                font-weight: 500;
+                padding-left: 15px;
+            }
+
+            .sidebar-filter-group__body {
+                padding-left: 20px;
+                .price-range-input-filter {
+                    .price-range-input-line {
+                        background: #bdbdbd;
+                        flex: 1;
+                        height: 1px;
+                        margin: 0 .625rem;
+                    }
+                }
+            }
+        }
+        .sidebar-filter-group + .sidebar-filter-group {
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 7px 0;
+        }
+    }
+}

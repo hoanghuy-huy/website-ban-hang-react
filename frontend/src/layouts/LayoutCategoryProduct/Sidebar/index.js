@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import Image from '~/components/Image';
 import { Link, useParams } from 'react-router-dom';
-import './Sidebar.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCategories } from '~/redux/features/categorySlice/categorySlice';
 import { fetchOneCategory, fetchProductPaginationWithCategoryId } from '~/redux/features/productSlice/productSlice';
+import './Sidebar.scss';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -18,12 +18,12 @@ const Sidebar = () => {
     const { categoryList } = useSelector((state) => state.categories);
 
     const handleFetchData = (categoryId, pathCategory) => {
-        dispatch(fetchOneCategory(pathCategory.replace("/","")))
+        dispatch(fetchOneCategory(pathCategory.replace('/', '')));
         dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8 }));
     };
 
     return (
-        <div className="sidebar-container">
+        <div className="sidebar-container-LayoutCategoryProduct">
             <div className="title">Danh Mục</div>
             <div>
                 <div className="category-container">

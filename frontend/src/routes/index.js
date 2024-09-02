@@ -8,7 +8,7 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutClient, LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
+import { LayoutCategoryProduct , LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -20,7 +20,7 @@ import NotFoundPage from '~/pages/NotFoundPage';
 //Public Routes
 const publicRoutes = [
     { path: routes.home, component: Home, layout: MainLayout },
-    { path: routes.product, component: ProductPage, layout: MainLayout },
+    { path: routes.product, component: ProductPage, layout: LayoutCategoryProduct },
     { path: routes.productChild, component: ProductPageChild, layout: MainLayout },
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },

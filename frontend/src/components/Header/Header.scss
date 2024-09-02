@@ -1,0 +1,86 @@
+.header {
+    height: var(--default-height-header);
+    box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    z-index: 100;
+    .inner-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        height: 72px;
+
+        .logo {
+            min-width: 64px;
+        }
+        
+
+        .actions {
+            position: relative;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            padding-left: 3px;
+            .action-home {
+                font-size: 14px;
+                padding: 8px 16px;
+                cursor: pointer;
+                color: var(--primary-color);
+
+                &:hover {
+                    background-color: var(--primary-light-color);
+                    border-radius: 8px;
+                }
+            }
+
+            .action-favorite {
+                padding: 8px 16px;
+
+                svg {
+                    font-size: 20px;
+                }
+                &:hover {
+                    background-color: var(--normal-color);
+                    border-radius: 8px;
+                    cursor: pointer;
+                }
+            }
+            .active {
+                color: var(--primary-color);
+
+            }
+
+
+            .action-cart {
+                padding: 8px 16px;
+                font-size: 14px;
+                img {
+                    height: 24px;
+                    width: 24px;
+                }
+                &:hover {
+                    background-color: var(--primary-light-color);
+                    border-radius: 8px;
+                    cursor: pointer;
+                }
+
+                .start-100 {
+                    left: 76% !important;
+                }
+                .top-0 {
+                    top: 10px !important;
+                }
+            }
+        }
+    }
+}
+
+.search-box,
+.search-result-box {
+    width: 725px;
+}

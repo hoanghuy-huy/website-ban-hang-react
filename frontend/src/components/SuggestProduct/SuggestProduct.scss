@@ -18,6 +18,8 @@
         height: 84px;
         background: white;
         margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1607843137);
+
         .active {
             background-color: var(--primary-light-color);
             border-bottom: 1px solid var(--primary-color);

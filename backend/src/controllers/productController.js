@@ -26,6 +26,78 @@ class productController {
     }
   }
 
+  async getAllProductHotPagination(req, res) {
+    try {
+      let { page, limit } = req.query;
+
+      let data = await productApiService.handleGetAllProductHotPagination(
+        +page,
+        +limit
+      );
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async getAllProductAuthenticPagination(req, res) {
+    try {
+      let { page, limit } = req.query;
+
+      let data = await productApiService.handleGetAllProductAuthenticPagination(
+        +page,
+        +limit
+      );
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async getAllProductDiscountPagination(req, res) {
+    try {
+      let { page, limit } = req.query;
+
+      let data = await productApiService.handleGetAllProductDiscountPagination(
+        +page,
+        +limit
+      );
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
   async getAllProduct(req, res) {
     try {
       let data = await productApiService.handleGetAllProduct();

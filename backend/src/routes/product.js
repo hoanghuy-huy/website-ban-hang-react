@@ -3,6 +3,9 @@ import productController from "../controllers/productController";
 
 const router = express.Router();
 router.get("/products/get-all-pagination", productController.getAllProductPagination);
+router.get("/products/get-all-hot-pagination", productController.getAllProductHotPagination);
+router.get("/products/get-all-authentic-pagination", productController.getAllProductAuthenticPagination);
+router.get("/products/get-all-discount-pagination", productController.getAllProductDiscountPagination);
 router.get("/products/get-all", productController.getAllProduct);
 router.get("/products/get-all-hot", productController.getAllProductHot);
 router.get("/products/get-one/:productId",productController.getOneProduct)
