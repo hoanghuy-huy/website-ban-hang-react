@@ -37,6 +37,15 @@
                         margin: 0 .625rem;
                     }
                 }
+                .checkbox-group {
+                    .title {
+                        font-size: 14px;
+                        padding-left: 7px;
+                    }
+                    .input {
+                        margin-right: 0 !important;
+                    }
+                }
             }
         }
         .sidebar-filter-group + .sidebar-filter-group {

@@ -76,4 +76,6 @@ function ProductList({ item }) {
 ProductList.propTypes = {
     item: PropTypes.object.isRequired,
 };
+
+
 export default memo(ProductList);

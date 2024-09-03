@@ -81,7 +81,7 @@ let handleGetAllFunc = (userId) => {
       resolve({
         EC: 1,
         EM: "User dose not exist",
-        data: {},
+        DT: {}
       });
     } catch (error) {
       console.log(error);

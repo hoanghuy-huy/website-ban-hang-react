@@ -62,12 +62,22 @@ export const fetchAllProductAuthenticPagination = createAsyncThunk(
     },
 );
 
-
 export const fetchProductPaginationWithCategoryId = createAsyncThunk(
     'products/fetchProductPaginationWithCategoryId',
     async ({ categoryId, limit, page }) => {
         const res = await httpRequest.get(
             `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+export const fetchAllProductHotPaginationWithCategoryId = createAsyncThunk(
+    'products/fetchAllProductHotPaginationWithCategoryId',
+    async ({ categoryId, limit, page }) => {
+        const res = await httpRequest.get(
+            `categories/get-all-product-hot-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}`,
         );
 
         return res ? res.DT : [];
@@ -83,6 +93,7 @@ const initialState = {
     listProductPagination: [],
     listProductPaginationWithCategory: [],
     actionFetchProductHome: { type: 'fetch all product' },
+    actionFetchProductCategory: { type: 'fetch all product' },
     error: false,
     loading: false,
 };
@@ -100,6 +111,13 @@ export const productSlice = createSlice({
                 state.actionFetchProductHome = { type: 'fetch all product discount' };
             } else {
                 state.actionFetchProductHome = { type: 'fetch all product' };
+            }
+        },
+        handleReassignDataProductCategory: (state, action) => {
+            if (action.payload.type === 'dataAllProductHot') {
+                state.actionFetchProductCategory = { type: 'fetch all product hot' };
+            } else {
+                state.actionFetchProductCategory = { type: 'fetch all product' };
             }
         },
     },
@@ -232,9 +250,23 @@ export const productSlice = createSlice({
             .addCase(fetchProductPaginationWithCategoryId.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
+            })
+            //get product hot pagination with category id
+            .addCase(fetchAllProductHotPaginationWithCategoryId.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllProductHotPaginationWithCategoryId.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPaginationWithCategory = action.payload;
+            })
+            .addCase(fetchAllProductHotPaginationWithCategoryId.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
             });
     },
 });
-export const { handleReassignDataProductHome } = productSlice.actions;
+export const { handleReassignDataProductHome, handleReassignDataProductCategory } = productSlice.actions;
 
 export default productSlice.reducer;

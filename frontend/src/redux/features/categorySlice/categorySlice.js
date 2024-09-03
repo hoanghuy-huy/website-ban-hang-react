@@ -15,6 +15,7 @@ export const fetchOneCategory = createAsyncThunk('categories/fetchOneCategory', 
 const initialState = {
     categoryList: [],
     productOfCategory:[],
+    categoryId:null,
     loading: false,
     error: false,
 };
@@ -24,7 +25,9 @@ const initialState = {
     name: 'categories',
     initialState,
     reducers: {
-      
+      handleSaveCategoryId:(state, action) => {
+        state.categoryId = action.payload
+      }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -62,5 +65,8 @@ const initialState = {
     },
 });
 
+export const { 
+    handleSaveCategoryId
+} = categoriesSlice.actions
 
 export default categoriesSlice.reducer

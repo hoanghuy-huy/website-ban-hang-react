@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Icon, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -8,6 +8,12 @@ import Select from '@mui/material/Select';
 
 import './FilterWrapper.scss';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import PaginationProduct from './PaginationProduct';
+import {
+    fetchAllProductHotPaginationWithCategoryId,
+    handleReassignDataProductCategory,
+} from '~/redux/features/productSlice/productSlice';
 
 const ITEM_HEIGHT = 30;
 const ITEM_PADDING_TOP = 8;
@@ -29,8 +35,9 @@ function getStyles(item, sortPrice, theme) {
     };
 }
 
-const FilterWrapper = () => {
+const FilterWrapper = ({ currentPage, setCurrentPage, totalPages, categoryId, actionFetchProductCategory }) => {
     const theme = useTheme();
+
     const [sortPrice, setSortPrice] = useState(itemSortPrice[0] || []);
 
     const handleChange = (event) => {
@@ -42,19 +49,11 @@ const FilterWrapper = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-
-    const [page, setPage] = React.useState(2);
-    const [rowsPerPage, setRowsPerPage] = React.useState(1);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    const dispatch = useDispatch();
+    const fetchDataCategoryProductPage = (type) => {
+        dispatch(handleReassignDataProductCategory(type));
+        setCurrentPage(1)
     };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
     return (
         <div className="filter-wrapper-container mt-4">
             <div className="col-12">
@@ -63,13 +62,28 @@ const FilterWrapper = () => {
                     <div className="btn-filter col-8">
                         <div className="btn-filter__sort-by-options">
                             <section className="sort-by-options__option-group">
-                                <Button className="sort-by-options__option active">
+                                <Button
+                                    className={
+                                        actionFetchProductCategory.type === 'fetch all product'
+                                            ? 'sort-by-options__option active'
+                                            : 'sort-by-options__option'
+                                    }
+                                    onClick={() => fetchDataCategoryProductPage({ type: 'dataAllProduct' })}
+                                >
                                     <span>Phổ biến</span>
                                 </Button>
                                 <Button className="sort-by-options__option">
                                     <span>Mới nhất</span>
                                 </Button>
-                                <Button className="sort-by-options__option">
+                                <Button
+                                    className={
+                                        actionFetchProductCategory.type === 'fetch all product hot'
+                                            ? 'sort-by-options__option active'
+                                            : 'sort-by-options__option'
+                                    }
+                                    onClick={() => fetchDataCategoryProductPage({ type: 'dataAllProductHot' })}
+
+                                >
                                     <span>Chính hãng</span>
                                 </Button>
                                 <div className="sort-by-options__option-select">
@@ -96,22 +110,13 @@ const FilterWrapper = () => {
                             </section>
                         </div>
                     </div>
-                    <div className="btn-pagination col-2 d-flex align-items-center justify-content-end">
-                        <div className="btn-pagination__state">
-                            <span className="btn-pagination__current-page"> 1</span>/
-                            <span className="btn-pagination__total-page">2</span>
-                        </div>
-                        <div className="btn-pagination-style btn-pagination__previous-page">
-                            <IconButton>
-                                <NavigateBefore />
-                            </IconButton>
-                        </div>
-                        <div className="btn-pagination-style btn-pagination__next-page">
-                            <IconButton>
-                                <NavigateNext />
-                            </IconButton>
-                        </div>
-                    </div>
+
+                    {/* pagination here */}
+                    <PaginationProduct
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPages={totalPages}
+                    />
                 </div>
             </div>
         </div>

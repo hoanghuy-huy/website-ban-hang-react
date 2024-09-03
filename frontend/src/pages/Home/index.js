@@ -31,7 +31,17 @@ function Home() {
 
     useEffect(() => {
         dispatch(fetchAllProductHot());
-        dispatch(fetchAllProductPagination({ limit, page }));
+        if (actionFetchProductHome.type === 'fetch all product') {
+            dispatch(fetchAllProductDiscountPagination({ limit, page }));
+        } else if (actionFetchProductHome.type === 'fetch all product hot') {
+            dispatch(fetchAllProductHotPagination({ limit, page }));
+        } else if (actionFetchProductHome.type === 'fetch all product authentic') {
+            dispatch(fetchAllProductAuthenticPagination({ limit, page }));
+        } else if (actionFetchProductHome.type === 'fetch all product discount') {
+            dispatch(fetchAllProductDiscountPagination({ limit, page }));
+        } else {
+            dispatch(fetchAllProductPagination({ limit, page }));
+        }
         // eslint-disable-next-line
     }, []);
 
@@ -46,7 +56,9 @@ function Home() {
             dispatch(fetchAllProductHotPagination({ limit, page }));
         } else if (actionFetchProductHome.type === 'fetch all product authentic') {
             dispatch(fetchAllProductAuthenticPagination({ limit, page }));
-        }else {
+        } else if (actionFetchProductHome.type === 'fetch all product discount') {
+            dispatch(fetchAllProductDiscountPagination({ limit, page }));
+        } else {
             dispatch(fetchAllProductPagination({ limit, page }));
         }
         // eslint-disable-next-line
