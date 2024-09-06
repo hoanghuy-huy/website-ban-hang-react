@@ -8,4 +8,22 @@
         border-radius: 8px;
     }
 
+    .NotFoundProductView {
+        margin-top: 10px;
+        background: rgb(255, 255, 255);
+        width: 100%;
+        padding: 16px 24px;
+        font-size: 15px;
+        margin-bottom: 24px;
+
+        div {
+            background-color: rgb(255, 255, 251);
+            border: 1px solid rgb(253, 216, 53);
+            color: rgb(223, 189, 21);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 2px
+        }
+    }
 }

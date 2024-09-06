@@ -176,7 +176,6 @@ class productApiService {
     try {
       let data = {};
 
-      console.log(categoryId);
 
       return {
         EM: "Category not found",
@@ -192,16 +191,42 @@ class productApiService {
     }
   }
 
-  async handleGetProductWithCategoryId(categoryId, page, limit) {
+  async handleGetProductWithCategoryId(categoryId, page, limit, sort, starNumber,price, brand) {
     try {
       let offset = (page - 1) * limit;
-
-      const { count, rows } = await db.Product.findAndCountAll({
-        where: { categoryId: categoryId },
-        offset: offset,
-        limit: limit,
-        order: [["id", "DESC"]],
-      });
+      let product;
+      let convertPriceToObject = price.split(',')
+      let convertBrandToObject = brand.split(',')
+      console.log(convertBrandToObject[0] !== '', convertBrandToObject.length > 0)
+      if (sort) {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
+              { categoryId: categoryId },
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
+            ]
+          },
+          offset: offset,
+          limit: limit,
+          order: [["price", sort]],
+        });
+      } else {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
+              { categoryId: categoryId },
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
+            ]
+          },
+          offset: offset,
+          limit: limit,
+        });
+      }
+      const { count, rows } = product
 
       let totalPages = Math.ceil(count / limit);
 

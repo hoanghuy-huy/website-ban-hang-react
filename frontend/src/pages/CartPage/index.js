@@ -28,7 +28,7 @@ const CartPage = () => {
     const handleCalculateTotalPrice = () => {
         let totalPrice = cartList?.reduce((total, currentValue) => {
             if (currentValue?.selected === true) {
-                return (total += currentValue.quantity * currentValue.Product.price);
+                return (total += currentValue?.quantity * currentValue?.Product?.price);
             }
             return total;
         }, 0);

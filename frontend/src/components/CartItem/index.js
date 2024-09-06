@@ -19,6 +19,7 @@ const CartItem = ({ item, onClick }) => {
                 >
                     <Image className={cx('img-product')} src={item?.thumbnailUrl} alt="img-product" />
                     <div className={cx('information-cart-item')}>
+
                         <div className={cx('icon')}>
                             <div className={cx('icon-top-deal')}>
                                 {item?.hot ? (
@@ -41,6 +42,11 @@ const CartItem = ({ item, onClick }) => {
                                 )}
                             </div>
                         </div>
+                        <div className={cx('brand')}>
+                            <span className={cx('brand-text')}>
+                                {item?.brandName}
+                            </span>
+                        </div>
                         <div className={cx('icon-genuine')}>
                             {item?.genuine ? (
                                 <Image
@@ -57,6 +63,12 @@ const CartItem = ({ item, onClick }) => {
                             <div className={cx('number-start-container')}>
                                 <div className="d-flex gap-1 py-1 ">
                                     <Rating name="read-only" value={item?.starsNumber} readOnly />
+                                </div>
+                            </div>
+
+                            <div className={cx('quantity-sold')}>
+                                <div className="d-flex gap-1 py-1">
+                                    <span className={cx('text-quantity-sold')}>Đã bán {item.quantitySold} </span>
                                 </div>
                             </div>
                         </div>

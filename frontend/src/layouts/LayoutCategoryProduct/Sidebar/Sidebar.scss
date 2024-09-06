@@ -43,8 +43,14 @@
             .category__img {
             }
         }
+        .active {
+            .category__item {
+                // background: rgba(39, 39, 42, 0.12);
+            }
+        }
     }
 }
+
 
 .sidebar-container::-webkit-scrollbar {
     display: none;

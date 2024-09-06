@@ -46,6 +46,12 @@
                         margin-right: 0 !important;
                     }
                 }
+                .price-range-input-filter__error {
+                    color: #ff424f;
+                    font-size: .75rem;
+                    padding: .625rem 0;
+                    text-align: center;
+                }
             }
         }
         .sidebar-filter-group + .sidebar-filter-group {

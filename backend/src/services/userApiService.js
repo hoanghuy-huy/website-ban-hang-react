@@ -44,13 +44,21 @@ class userApiService {
       let offset = (page - 1) * limit;
 
       const { count, rows } = await db.User.findAndCountAll({
-        attributes: ["id", "email", "phone", "groupId","address", "gender", "username"],
+        attributes: [
+          "id",
+          "email",
+          "phone",
+          "groupId",
+          "address",
+          "gender",
+          "username",
+        ],
         offset: offset,
         limit: limit,
-        include: [{ model: db.Group, attributes: ["name", "description","id"] }],
-        order: [
-          ['id', 'DESC']
+        include: [
+          { model: db.Group, attributes: ["name", "description", "id"] },
         ],
+        order: [["id", "DESC"]],
       });
 
       let totalPages = Math.ceil(count / limit);
@@ -107,7 +115,6 @@ class userApiService {
     }
   }
 
-
   async handleGetGroupUser(idGroup) {
     try {
       console.log(idGroup);
@@ -137,7 +144,7 @@ class userApiService {
       };
     }
   }
-  
+
   async createNewUser(rawData) {
     try {
       // Check email and phone already exists
@@ -175,7 +182,7 @@ class userApiService {
         username: rawData.username,
         groupId: +rawData.groupId,
         gender: +rawData.gender,
-        address: rawData.address
+        address: rawData.address,
       });
 
       return {
@@ -194,14 +201,14 @@ class userApiService {
   async getOneUser(id) {
     try {
       let user = await db.User.findOne({
-        where:{id: id}
-      })
-      if(user) {
+        where: { id: id },
+      });
+      if (user) {
         return {
           EM: "Find User Success",
           EC: 0,
           DT: user,
-        }
+        };
       }
       return {
         EM: "Not Found User",
@@ -220,23 +227,23 @@ class userApiService {
   async handleUpdateUser(data) {
     try {
       let user = await db.User.findOne({
-        where:{id: data.id}
-      })
-      console.log(data)
+        where: { id: data.id },
+      });
+      console.log(data);
 
-      if(user) {
+      if (user) {
         await user.update({
-            username: data.username,
-            address: data.address,
-            gender: +data.gender,
-            groupId: +data.groupId
-        })
+          username: data.username,
+          address: data.address,
+          gender: +data.gender,
+          groupId: +data.groupId,
+        });
 
         return {
           EM: "Update User Success",
           EC: 0,
           DT: user,
-        }
+        };
       }
       return {
         EM: "Not Found User",

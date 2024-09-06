@@ -116,6 +116,7 @@ class productController {
       });
     }
   }
+
   async getAllProductHot(req, res) {
     try {
       let data = await productApiService.handleGetAllProductHot();
@@ -161,9 +162,9 @@ class productController {
   async getProductWithCategoryId(req, res) {
     try {
       let categoryId = req.params.categoryId;
-      let { page, limit } = req.query;
+      let { page, limit, sort, starNumber, price, brand } = req.query;
       let data = await productApiService.handleGetProductWithCategoryId(
-        categoryId, +page, +limit
+        categoryId, +page, +limit, sort, starNumber, price, brand
       );
       return res.status(200).json({
         EM: data.EM,

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
+import _ from 'lodash';
 
 export const fetchOneCategory = createAsyncThunk('products/fetchOneCategory', async (pathCategory) => {
     const res = await httpRequest.get(`categories/get-one/${pathCategory}`);
@@ -64,9 +65,14 @@ export const fetchAllProductAuthenticPagination = createAsyncThunk(
 
 export const fetchProductPaginationWithCategoryId = createAsyncThunk(
     'products/fetchProductPaginationWithCategoryId',
-    async ({ categoryId, limit, page }) => {
+    async ({ categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
         const res = await httpRequest.get(
-            `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}`,
+            `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}&sort=${
+                sort ? sort : ''
+            }&starNumber=${starNumber ? 1 : 0}&price=${[
+                minPrice ? minPrice : 0,
+                maxPrice ? maxPrice : 0,
+            ]}&brand=${brand ? brand : []}`,
         );
 
         return res ? res.DT : [];
@@ -75,9 +81,24 @@ export const fetchProductPaginationWithCategoryId = createAsyncThunk(
 
 export const fetchAllProductHotPaginationWithCategoryId = createAsyncThunk(
     'products/fetchAllProductHotPaginationWithCategoryId',
-    async ({ categoryId, limit, page }) => {
+    async ({ categoryId, limit, page, sort, starNumber }) => {
         const res = await httpRequest.get(
-            `categories/get-all-product-hot-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}`,
+            `categories/get-all-product-hot-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
+                sort ? sort : ''
+            }&starNumber=${starNumber ? 1 : 0}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+export const fetchAllProductBestSellerPaginationWithCategoryId = createAsyncThunk(
+    'products/fetchAllProductBestSellerPaginationWithCategoryId',
+    async ({ categoryId, limit, page, sort, starNumber }) => {
+        const res = await httpRequest.get(
+            `categories/get-all-product-best-seller-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
+                sort ? sort : ''
+            }&starNumber=${starNumber ? 1 : 0}`,
         );
 
         return res ? res.DT : [];
@@ -94,6 +115,13 @@ const initialState = {
     listProductPaginationWithCategory: [],
     actionFetchProductHome: { type: 'fetch all product' },
     actionFetchProductCategory: { type: 'fetch all product' },
+    sortValue: '',
+    minPriceRedux: '',
+    maxPriceRedux: '',
+    brandValueToFilter: [],
+    starNumberCheckBoxValue: false,
+    descendingPrice: 'Giá : Cao đến Thấp',
+    ascendingPrice: 'Giá : Thấp đến Cao',
     error: false,
     loading: false,
 };
@@ -116,9 +144,31 @@ export const productSlice = createSlice({
         handleReassignDataProductCategory: (state, action) => {
             if (action.payload.type === 'dataAllProductHot') {
                 state.actionFetchProductCategory = { type: 'fetch all product hot' };
+            } else if (action.payload.type === 'dataAllProductBestSeller') {
+                state.actionFetchProductCategory = { type: 'fetch all product best seller' };
             } else {
                 state.actionFetchProductCategory = { type: 'fetch all product' };
             }
+        },
+        handleChangeValueSort: (state, action) => {
+            if (state.descendingPrice === action.payload) {
+                state.sortValue = 'DESC';
+            } else if (state.ascendingPrice === action.payload) {
+                state.sortValue = 'ASC';
+            } else {
+                state.sortValue = '';
+            }
+        },
+        handleChangeStarNumberCheckBoxValue: (state, action) => {
+            state.starNumberCheckBoxValue = action.payload;
+        },
+        handleFetchDataWithFilterPrice: (state, action) => {
+            state.maxPriceRedux = +action.payload.maxPrice;
+            state.minPriceRedux = +action.payload.minPrice;
+        },
+        handleChangeBrandValueToFilter: (state, action) => {
+            state.brandValueToFilter = action.payload 
+            console.log(state.brandValueToFilter)
         },
     },
     extraReducers: (builder) => {
@@ -264,9 +314,30 @@ export const productSlice = createSlice({
             .addCase(fetchAllProductHotPaginationWithCategoryId.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
+            })
+            //get product hot pagination with category id
+            .addCase(fetchAllProductBestSellerPaginationWithCategoryId.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllProductBestSellerPaginationWithCategoryId.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPaginationWithCategory = action.payload;
+            })
+            .addCase(fetchAllProductBestSellerPaginationWithCategoryId.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
             });
     },
 });
-export const { handleReassignDataProductHome, handleReassignDataProductCategory } = productSlice.actions;
+export const {
+    handleReassignDataProductHome,
+    handleReassignDataProductCategory,
+    handleChangeValueSort,
+    handleChangeStarNumberCheckBoxValue,
+    handleFetchDataWithFilterPrice,
+    handleChangeBrandValueToFilter,
+} = productSlice.actions;
 
 export default productSlice.reducer;

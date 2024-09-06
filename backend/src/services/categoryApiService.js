@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import db from "../models/index";
 
 class categoryApiService {
@@ -58,16 +59,91 @@ class categoryApiService {
     }
   }
 
-  async handleGetProductHotPaginationWithCategory(categoryId, page, limit) {
+  async handleGetProductHotPaginationWithCategory(categoryId, page, limit, sort, starNumber) {
     try {
       let offset = (page - 1) * limit;
+      let product
+      if(sort) {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              { authentic: true },
+              { categoryId: categoryId },
+              !!starNumber && {starsNumber: {[Op.gt]: 4}},
+            ]
+          },
+          offset: offset,
+          limit: limit,
+          order:[["price", sort]],
+        });
+      }else {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              { authentic: true },
+              { categoryId: categoryId },
+              !!starNumber && {starsNumber: {[Op.gt]: 4}},
+            ]
+          },
+          offset: offset,
+          limit: limit,
+        });
+      }
+      
+      const { count, rows } = product
 
-      const { count, rows } = await db.Product.findAndCountAll({
-        where: [{ authentic: true }, { categoryId: categoryId }],
-        offset: offset,
-        limit: limit,
-        order: [["id", "DESC"]],
-      });
+      let totalPages = Math.ceil(count / limit);
+
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleGetProductBestSellerPaginationWithCategory(categoryId, page, limit, sort) {
+    try {
+      let offset = (page - 1) * limit;
+      let product
+      if(sort) {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              { quantitySold: { [Op.gt]: 100 } },
+              { categoryId: categoryId }
+            ]
+          },
+          offset: offset,
+          limit: limit,
+          order:[["price", sort]],
+        });
+      }else {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              { quantitySold: { [Op.gt]: 100 } },
+              { categoryId: categoryId }
+            ]
+          },
+          offset: offset,
+          limit: limit,
+        });
+      }
+      
+      const { count, rows } = product
 
       let totalPages = Math.ceil(count / limit);
 
