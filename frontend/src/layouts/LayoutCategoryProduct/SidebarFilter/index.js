@@ -21,7 +21,7 @@ const SidebarFilter = () => {
     const dispatch = useDispatch();
     const { categoryId } = useSelector((state) => state.categories);
     const { brandList } = useSelector((state) => state.brand);
-    const { starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter } = useSelector((state) => state.products);
+    const { starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter, listProductPaginationWithCategory } = useSelector((state) => state.products);
     const [valueRenderBrandList, setValueRenderBrandList] = useState(brandList?.length >= 4 ? 4 : brandList?.length);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
@@ -65,6 +65,10 @@ const SidebarFilter = () => {
         setBrand([])
     }, [categoryId]);
 
+    // useEffect(() => {
+    //     setBrand([])
+    // }, [listProductPaginationWithCategory]);
+
     useEffect(() => {
         setMinPrice(minPriceRedux);
         setMaxPrice(maxPriceRedux);
@@ -74,7 +78,7 @@ const SidebarFilter = () => {
     const handleSaveFilterBrandValue = ({brandName,checked, index}) => {
         setBrand((preBrand) => {
             if (checked) {
-                if (!preBrand.includes(brandName)) {
+                if (!preBrand?.brandName?.includes(brandName)) {
                     return [...preBrand, { brandName : brandName, index: index}];
                 }
                 return preBrand;

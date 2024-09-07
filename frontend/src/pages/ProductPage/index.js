@@ -21,7 +21,7 @@ const ProductPage = () => {
         sortValue,
         starNumberCheckBoxValue,
         minPriceRedux,
-        maxPriceRedux
+        maxPriceRedux,
     } = useSelector((state) => state.products);
     const { categoryId } = useSelector((state) => state.categories);
     const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +32,7 @@ const ProductPage = () => {
     const [sortPrice, setSortPrice] = useState(itemSortPrice[0] || []);
     const dispatch = useDispatch();
 
-    const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName)
+    const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName);
 
     useEffect(() => {
         if (actionFetchProductCategory.type === 'fetch all product') {
@@ -45,7 +45,7 @@ const ProductPage = () => {
                     starNumber: starNumberCheckBoxValue,
                     minPrice: minPriceRedux,
                     maxPrice: maxPriceRedux,
-                    brand:listBrandToFilter,
+                    brand: listBrandToFilter,
                 }),
             );
         } else if (actionFetchProductCategory.type === 'fetch all product hot') {
@@ -69,31 +69,18 @@ const ProductPage = () => {
                 }),
             );
         }
-    }, [currentPage, actionFetchProductCategory, sortValue, starNumberCheckBoxValue,minPriceRedux, maxPriceRedux, brandValueToFilter]);
-
-    // useEffect(() => {
-    //     if (actionFetchProductCategory.type === 'fetch all product') {
-    //         dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue, starNumber: starNumberCheckBoxValue }));
-    //     } else if (actionFetchProductCategory.type === 'fetch all product hot') {
-    //         dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue }));
-    //     }else if (actionFetchProductCategory.type === 'fetch all product best seller') {
-    //         dispatch(fetchAllProductBestSellerPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue }));
-    //     }
-    // },[actionFetchProductCategory])
-
-    // useEffect(() => {
-    //     if (actionFetchProductCategory.type === 'fetch all product') {
-    //         dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue}));
-    //     } else if (actionFetchProductCategory.type === 'fetch all product hot') {
-    //         dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue }));
-    //     }else if (actionFetchProductCategory.type === 'fetch all product best seller') {
-    //         dispatch(fetchAllProductBestSellerPaginationWithCategoryId({ categoryId, page: currentPage, limit: limit, sort: sortValue }));
-    //     }
-    // },[sortValue])
+    }, [
+        currentPage,
+        actionFetchProductCategory,
+        sortValue,
+        starNumberCheckBoxValue,
+        minPriceRedux,
+        maxPriceRedux,
+        brandValueToFilter,
+    ]);
 
     useEffect(() => {
         setCurrentPage(1);
-        
     }, [categoryId]);
 
     if (loading === true && error === false) {

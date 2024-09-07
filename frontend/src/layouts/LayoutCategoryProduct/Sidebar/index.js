@@ -15,20 +15,19 @@ import './Sidebar.scss';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
-    const { actionFetchProductCategory, sortValue, minPriceRedux, maxPriceRedux } = useSelector((state) => state.products);
+    const { actionFetchProductCategory, sortValue, minPriceRedux, maxPriceRedux, brandValueToFilter } = useSelector((state) => state.products);
 
     useEffect(() => {
         dispatch(fetchAllCategories());
     }, []);
 
     const { categoryList } = useSelector((state) => state.categories);
-
+    const listBrandToFilter =  brandValueToFilter.map((item) => item.brandName)
     const handleFetchData = (categoryId, pathCategory) => {
         dispatch(fetchOneCategory(pathCategory.replace('/', '')));
-        dispatch(handleChangeBrandValueToFilter([]))
         dispatch(handleSaveCategoryId(categoryId));
         if (actionFetchProductCategory.type === 'fetch all product') {
-            dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux }));
+            dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }));
         } else if (actionFetchProductCategory.type === 'fetch all product hot') {
             dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue }));
         } else if (actionFetchProductCategory.type === 'fetch all product best seller') {

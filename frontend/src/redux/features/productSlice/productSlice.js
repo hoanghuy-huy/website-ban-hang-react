@@ -168,7 +168,6 @@ export const productSlice = createSlice({
         },
         handleChangeBrandValueToFilter: (state, action) => {
             state.brandValueToFilter = action.payload 
-            console.log(state.brandValueToFilter)
         },
     },
     extraReducers: (builder) => {
