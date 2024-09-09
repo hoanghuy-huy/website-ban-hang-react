@@ -197,7 +197,6 @@ class productApiService {
       let product;
       let convertPriceToObject = price.split(',')
       let convertBrandToObject = brand.split(',')
-      console.log(convertBrandToObject[0] !== '', convertBrandToObject.length > 0)
       if (sort) {
         product = await db.Product.findAndCountAll({
           where: {

@@ -2,24 +2,41 @@ import React, { useEffect } from 'react';
 import Image from '~/components/Image';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllCategories } from '~/redux/features/categorySlice/categorySlice';
-import { fetchOneCategory, fetchProductPaginationWithCategoryId } from '~/redux/features/productSlice/productSlice';
+import { fetchAllCategories, handleSaveCategoryId } from '~/redux/features/categorySlice/categorySlice';
+import {
+    fetchAllProductBestSellerPaginationWithCategoryId,
+    fetchAllProductHotPaginationWithCategoryId,
+    fetchOneCategory,
+    fetchProductPaginationWithCategoryId,
+
+} from '~/redux/features/productSlice/productSlice';
+
+
 import './Sidebar.scss';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
-    const { categories } = useParams();
 
     useEffect(() => {
         dispatch(fetchAllCategories());
     }, []);
-    const { category } = useSelector((state) => state.products);
+    const { actionFetchProductCategory, sortValue, minPriceRedux, maxPriceRedux, brandValueToFilter } = useSelector((state) => state.products);
 
     const { categoryList } = useSelector((state) => state.categories);
+    const listBrandToFilter =  brandValueToFilter.map((item) => item.brandName)
 
     const handleFetchData = (categoryId, pathCategory) => {
         dispatch(fetchOneCategory(pathCategory.replace('/', '')));
-        dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8 }));
+        dispatch(handleSaveCategoryId(categoryId));
+        if (actionFetchProductCategory.type === 'fetch all product') {
+            dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }));
+        } else if (actionFetchProductCategory.type === 'fetch all product hot') {
+            dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }));
+        } else if (actionFetchProductCategory.type === 'fetch all product best seller') {
+            dispatch(
+                fetchAllProductBestSellerPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }),
+            );
+        }
     };
 
     return (

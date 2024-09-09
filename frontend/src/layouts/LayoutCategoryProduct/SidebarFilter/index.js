@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Input, Rating, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import _ from 'lodash'
+import _ from 'lodash';
 import './SidebarFilter.scss';
 import {
     handleChangeBrandValueToFilter,
@@ -21,48 +21,72 @@ const SidebarFilter = () => {
     const dispatch = useDispatch();
     const { categoryId } = useSelector((state) => state.categories);
     const { brandList } = useSelector((state) => state.brand);
-    const { starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter, listProductPaginationWithCategory } = useSelector((state) => state.products);
+    const {
+        starNumberCheckBoxValue,
+        minPriceRedux,
+        maxPriceRedux,
+        brandValueToFilter,
+        
+    } = useSelector((state) => state.products);
     const [valueRenderBrandList, setValueRenderBrandList] = useState(brandList?.length >= 4 ? 4 : brandList?.length);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
     const [errorInputPrice, setErrorInputPrice] = useState(false);
-    const [brand, setBrand] = useState([])
-    const checkedBrandListFilter = brandValueToFilter.map((item) => item?.brandName)
-    const  { categories } = useParams()
+    const [errorInputExceedPrice, setErrorExceedInputPrice] = useState(false);
+    const [brand, setBrand] = useState([]);
+    const checkedBrandListFilter = brandValueToFilter.map((item) => item?.brandName);
     const renderBrandList = () => {
-        return brandList.slice(0, valueRenderBrandList).map((item,index) => {
-            return <FormControlLabel control={<Checkbox checked={checkedBrandListFilter.includes(item.name)} onChange={(e) => handleSaveFilterBrandValue({brandName: item?.name, checked: e.target.checked, index})}/>} label={item.name} />;
+        return brandList.slice(0, valueRenderBrandList).map((item, index) => {
+            return (
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={checkedBrandListFilter.includes(item.name)}
+                            onChange={(e) =>
+                                handleSaveFilterBrandValue({ brandName: item?.name, checked: e.target.checked, index })
+                            }
+                        />
+                    }
+                    label={item.name}
+                />
+            );
         });
     };
-    
+
     const handleOnChangeStarNumberCheckBox = (e) => {
         dispatch(handleChangeStarNumberCheckBoxValue(e.target.checked));
     };
 
     const handleChangeMinPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
+            if(value > 10000000) return
             setMinPrice(value);
         }
     };
 
     const handleChangeMaxPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
+            if(value > 10000000) return
             setMaxPrice(value);
         }
     };
     const handleFilterPrice = () => {
-        if (+minPrice < 0 || +maxPrice <= 0  || +minPrice >= +maxPrice) {
+        if (+minPrice < 0 || +maxPrice <= 0 || +minPrice >= +maxPrice) {
             setErrorInputPrice(true);
+            setErrorExceedInputPrice(false)
+        } else if (minPrice > 10000000 || maxPrice > 10000000) {
+            setErrorExceedInputPrice(true)
         } else {
             dispatch(handleFetchDataWithFilterPrice({ minPrice, maxPrice }));
             setErrorInputPrice(false);
+            setErrorExceedInputPrice(false)
         }
     };
 
     useEffect(() => {
         setValueRenderBrandList(brandList?.length >= 4 ? 4 : brandList?.length);
         dispatch(getAllBrand(categoryId));
-        setBrand([])
+        setBrand([]);
     }, [categoryId]);
 
     // useEffect(() => {
@@ -75,30 +99,35 @@ const SidebarFilter = () => {
         setBrand(brandValueToFilter);
     }, []);
 
-    const handleSaveFilterBrandValue = ({brandName,checked, index}) => {
+    const handleSaveFilterBrandValue = ({ brandName, checked, index }) => {
         setBrand((preBrand) => {
             if (checked) {
                 if (!preBrand?.brandName?.includes(brandName)) {
-                    return [...preBrand, { brandName : brandName, index: index}];
+                    return [...preBrand, { brandName: brandName, index: index }];
                 }
                 return preBrand;
             } else {
-                return preBrand.filter(brand => brand.brandName !== brandName);
+                return preBrand.filter((brand) => brand.brandName !== brandName);
             }
         });
-    }
+    };
 
-    
+    const handleResetFilterProduct = () => {
+        dispatch(handleChangeStarNumberCheckBoxValue(0));
+        dispatch(handleFetchDataWithFilterPrice(''))
+        setMinPrice('')
+        setMaxPrice('')
+        setBrand([])
+    };
+
     useEffect(() => {
-        dispatch(handleChangeBrandValueToFilter(brand))
-    },[brand])
-
-
+        dispatch(handleChangeBrandValueToFilter(brand));
+    }, [brand]);
 
     return (
         <div className="sidebar-filter">
             <div className="sidebar-filter-container">
-                <div className="sidebar-filter__title my-2">    
+                <div className="sidebar-filter__title my-2">
                     <FilterAltOutlinedIcon />
                     Bộ lọc tìm kiếm
                 </div>
@@ -149,6 +178,9 @@ const SidebarFilter = () => {
                         {errorInputPrice && (
                             <div className="price-range-input-filter__error">Vui lòng điền khoảng giá phù hợp</div>
                         )}
+                        {errorInputExceedPrice && (
+                            <div className="price-range-input-filter__error">Vui lòng điền khoảng giá trong khoảng 10 triệu VND</div>
+                        )}
                         <Button
                             sx={{ width: '90%', marginRight: 10, marginTop: 1, marginBottom: 2 }}
                             variant="outlined"
@@ -176,6 +208,17 @@ const SidebarFilter = () => {
                                 <span className="title">Từ 4 sao</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="sidebar-filter-group">
+                    <div className="sidebar-filter-group__body mt-2">
+                        <Button
+                            sx={{ width: '90%', marginRight: 10, marginTop: 1, marginBottom: 2 }}
+                            variant="contained"
+                            onClick={() => handleResetFilterProduct()}
+                        >
+                            Xóa tất cả
+                        </Button>
                     </div>
                 </div>
             </div>

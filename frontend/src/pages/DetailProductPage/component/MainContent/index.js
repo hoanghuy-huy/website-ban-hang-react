@@ -11,18 +11,21 @@ import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features
 import Button from '~/components/Button/Button';
 import './MainContent.scss';
 import ModalAddProductToCompare from './ModalAddProductToCompare';
+import Image from '~/components/Image';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
+    const dispatch = useDispatch();
     const { ProductImages } = item && item.ProductImages ? item : '';
     const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
         (state) => state.detailProduct,
     );
-    const dispatch = useDispatch();
+    
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product.id === item.id);
 
         return check;
     };
 
+    
     if (!item) {
         return <div>error from server.</div>;
     }
@@ -36,13 +39,13 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                         <div className="information-product-body">
                             <div className="brand-styled d-flex align-items-center">
                                 {item?.hot && (
-                                    <img
+                                    <Image
                                         src="https://salt.tikicdn.com/ts/upload/0f/59/82/795de6da98a5ac81ce46fb5078b65870.png"
                                         alt="img-genuine"
                                     />
                                 )}
                                 {item?.authentic && (
-                                    <img
+                                    <Image
                                         src="https://salt.tikicdn.com/ts/upload/d7/56/04/b93b8c666e13f49971483596ef14800f.png"
                                         alt="img-genuine"
                                     />
@@ -74,7 +77,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                 {item && item?.quantitySold > 0 && (
                                     <div className="quantity-sold">
                                         Số lượng đã bán
-                                        {item?.quantitySold}
+                                        {' ' + item?.quantitySold}
                                     </div>
                                 )}
                             </div>

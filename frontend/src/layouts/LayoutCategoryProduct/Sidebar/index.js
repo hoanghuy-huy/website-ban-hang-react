@@ -8,8 +8,7 @@ import {
     fetchAllProductHotPaginationWithCategoryId,
     fetchOneCategory,
     fetchProductPaginationWithCategoryId,
-    handleChangeBrandValueToFilter,
-    handleChangeValueSort,
+
 } from '~/redux/features/productSlice/productSlice';
 import './Sidebar.scss';
 
@@ -29,10 +28,10 @@ const Sidebar = () => {
         if (actionFetchProductCategory.type === 'fetch all product') {
             dispatch(fetchProductPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }));
         } else if (actionFetchProductCategory.type === 'fetch all product hot') {
-            dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue }));
+            dispatch(fetchAllProductHotPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }));
         } else if (actionFetchProductCategory.type === 'fetch all product best seller') {
             dispatch(
-                fetchAllProductBestSellerPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue }),
+                fetchAllProductBestSellerPaginationWithCategoryId({ categoryId, page: 1, limit: 8, sort: sortValue, minPrice: minPriceRedux, maxPrice: maxPriceRedux,brand: listBrandToFilter }),
             );
         }
     };

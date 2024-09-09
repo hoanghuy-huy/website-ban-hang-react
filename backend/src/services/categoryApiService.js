@@ -59,17 +59,21 @@ class categoryApiService {
     }
   }
 
-  async handleGetProductHotPaginationWithCategory(categoryId, page, limit, sort, starNumber) {
+  async handleGetProductHotPaginationWithCategory(categoryId, page, limit, sort, starNumber, price, brand) {
     try {
       let offset = (page - 1) * limit;
       let product
+      let convertPriceToObject = price.split(',')
+      let convertBrandToObject = brand.split(',')
       if(sort) {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               { authentic: true },
               { categoryId: categoryId },
-              !!starNumber && {starsNumber: {[Op.gt]: 4}},
+              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,
@@ -83,6 +87,8 @@ class categoryApiService {
               { authentic: true },
               { categoryId: categoryId },
               !!starNumber && {starsNumber: {[Op.gt]: 4}},
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,
@@ -114,16 +120,21 @@ class categoryApiService {
     }
   }
 
-  async handleGetProductBestSellerPaginationWithCategory(categoryId, page, limit, sort) {
+  async handleGetProductBestSellerPaginationWithCategory(categoryId, page, limit, sort, starNumber, price, brand) {
     try {
       let offset = (page - 1) * limit;
       let product
+      let convertPriceToObject = price.split(',')
+      let convertBrandToObject = brand.split(',')
       if(sort) {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               { quantitySold: { [Op.gt]: 100 } },
-              { categoryId: categoryId }
+              { categoryId: categoryId },
+              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,
@@ -135,7 +146,10 @@ class categoryApiService {
           where: {
             [Op.and]: [
               { quantitySold: { [Op.gt]: 100 } },
-              { categoryId: categoryId }
+              { categoryId: categoryId },
+              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,

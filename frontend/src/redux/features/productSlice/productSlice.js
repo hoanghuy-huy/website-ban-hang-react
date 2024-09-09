@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
-import _ from 'lodash';
 
 export const fetchOneCategory = createAsyncThunk('products/fetchOneCategory', async (pathCategory) => {
     const res = await httpRequest.get(`categories/get-one/${pathCategory}`);
@@ -81,11 +80,14 @@ export const fetchProductPaginationWithCategoryId = createAsyncThunk(
 
 export const fetchAllProductHotPaginationWithCategoryId = createAsyncThunk(
     'products/fetchAllProductHotPaginationWithCategoryId',
-    async ({ categoryId, limit, page, sort, starNumber }) => {
+    async ({ categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
         const res = await httpRequest.get(
             `categories/get-all-product-hot-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
                 sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}`,
+            }&starNumber=${starNumber ? 1 : 0}&price=${[
+                minPrice ? minPrice : 0,
+                maxPrice ? maxPrice : 0,
+            ]}&brand=${brand ? brand : []}`,
         );
 
         return res ? res.DT : [];
@@ -94,11 +96,14 @@ export const fetchAllProductHotPaginationWithCategoryId = createAsyncThunk(
 
 export const fetchAllProductBestSellerPaginationWithCategoryId = createAsyncThunk(
     'products/fetchAllProductBestSellerPaginationWithCategoryId',
-    async ({ categoryId, limit, page, sort, starNumber }) => {
+    async ({ categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
         const res = await httpRequest.get(
             `categories/get-all-product-best-seller-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
                 sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}`,
+            }&starNumber=${starNumber ? 1 : 0}&price=${[
+                minPrice ? minPrice : 0,
+                maxPrice ? maxPrice : 0,
+            ]}&brand=${brand ? brand : []}`,
         );
 
         return res ? res.DT : [];
@@ -108,6 +113,7 @@ export const fetchAllProductBestSellerPaginationWithCategoryId = createAsyncThun
 const initialState = {
     category: [],
     product: [],
+    categoryId: null,
     categoryProduct: [],
     listProductHot: [],
     productDetail: [],
@@ -163,8 +169,13 @@ export const productSlice = createSlice({
             state.starNumberCheckBoxValue = action.payload;
         },
         handleFetchDataWithFilterPrice: (state, action) => {
+            if(!action.payload) {
+                state.maxPriceRedux = ''
+                state.minPriceRedux = ''
+                return
+            };
             state.maxPriceRedux = +action.payload.maxPrice;
-            state.minPriceRedux = +action.payload.minPrice;
+            state.minPriceRedux = +action.payload.minPrice ? +action.payload.minPrice : '';
         },
         handleChangeBrandValueToFilter: (state, action) => {
             state.brandValueToFilter = action.payload 

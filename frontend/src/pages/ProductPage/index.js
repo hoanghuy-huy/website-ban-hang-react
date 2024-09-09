@@ -31,7 +31,6 @@ const ProductPage = () => {
     const itemSortPrice = ['Giá', descendingPrice, ascendingPrice];
     const [sortPrice, setSortPrice] = useState(itemSortPrice[0] || []);
     const dispatch = useDispatch();
-
     const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName);
 
     useEffect(() => {
@@ -56,6 +55,9 @@ const ProductPage = () => {
                     limit: limit,
                     sort: sortValue,
                     starNumber: starNumberCheckBoxValue,
+                    minPrice: minPriceRedux,
+                    maxPrice: maxPriceRedux,
+                    brand: listBrandToFilter,
                 }),
             );
         } else if (actionFetchProductCategory.type === 'fetch all product best seller') {
@@ -66,6 +68,9 @@ const ProductPage = () => {
                     limit: limit,
                     sort: sortValue,
                     starNumber: starNumberCheckBoxValue,
+                    minPrice: minPriceRedux,
+                    maxPrice: maxPriceRedux,
+                    brand: listBrandToFilter,
                 }),
             );
         }
@@ -94,16 +99,16 @@ const ProductPage = () => {
             <div className="title-content">
                 <h2>{category?.name}</h2>
             </div>
-            <FilterWrapper
-                sortPrice={sortPrice}
-                setSortPrice={setSortPrice}
-                itemSortPrice={itemSortPrice}
-                categoryId={categoryId}
-                totalPages={listProductPaginationWithCategory?.totalPages}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                actionFetchProductCategory={actionFetchProductCategory}
-            />
+        <FilterWrapper
+            sortPrice={sortPrice}
+            setSortPrice={setSortPrice}
+            itemSortPrice={itemSortPrice}
+            categoryId={categoryId}
+            totalPages={listProductPaginationWithCategory?.totalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            actionFetchProductCategory={actionFetchProductCategory}
+        />
             {listProductPaginationWithCategory?.products?.length > 0 ? (
                 <div className="container-cart-item d-flex">
                     <div className="col-12">

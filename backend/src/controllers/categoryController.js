@@ -43,10 +43,10 @@ class categoryController {
 
   async getAllProductHotPaginationWithCategory(req, res) {
     try {
-      let { page, limit, categoryId, sort, starNumber } = req.query;
+      let { page, limit, categoryId, sort, starNumber, price, brand } = req.query;
 
       let data = await categoryApiService.handleGetProductHotPaginationWithCategory(
-        categoryId, +page, +limit,sort, +starNumber
+        categoryId, +page, +limit,sort, +starNumber, price, brand
       );
       
       return res.status(200).json({
@@ -66,10 +66,10 @@ class categoryController {
 
   async getAllProductBestSellerPaginationWithCategory(req, res) {
     try {
-      let { page, limit, categoryId, sort } = req.query;
+      let { page, limit, categoryId, sort, starNumber, price, brand } = req.query;
 
       let data = await categoryApiService.handleGetProductBestSellerPaginationWithCategory(
-        categoryId, +page, +limit,sort
+        categoryId, +page, +limit,sort, +starNumber, price, brand
       );
       
       return res.status(200).json({

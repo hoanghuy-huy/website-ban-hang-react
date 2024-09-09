@@ -9,21 +9,22 @@ import Select from '@mui/material/Select';
 import { useDispatch, useSelector } from 'react-redux';
 import PaginationProduct from './PaginationProduct';
 import { handleChangeValueSort, handleReassignDataProductCategory } from '~/redux/features/productSlice/productSlice';
+import { getAllBrand } from '~/redux/features/brandSlice';
 import './FilterWrapper.scss';
 
 const FilterWrapper = ({
     currentPage,
     setCurrentPage,
     totalPages,
-    categoryId,
     actionFetchProductCategory,
     setSortPrice,
     sortPrice,
     itemSortPrice,
+    categoryId
 }) => {
     const ITEM_HEIGHT = 30;
     const ITEM_PADDING_TOP = 8;
-    const selectedfilterprice = {
+    const selectedFilterPrice = {
         PaperProps: {
             style: {
                 maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
@@ -55,10 +56,13 @@ const FilterWrapper = ({
         setSortPrice(typeof value === 'string' ? value.split(',') : value);
     };
     const dispatch = useDispatch();
+
     const fetchDataCategoryProductPage = (type) => {
         dispatch(handleReassignDataProductCategory(type));
         setCurrentPage(1);
     };
+
+
 
     return (
         <div className="filter-wrapper-container mt-4">
@@ -104,7 +108,7 @@ const FilterWrapper = ({
                                             value={sortPrice}
                                             onChange={handleChange}
                                             input={<OutlinedInput />}
-                                            selectedfilterprice={selectedfilterprice}
+                                            selectedFilterPrice={selectedFilterPrice}
                                             inputProps={{ 'aria-label': 'Without label' }}
                                         >
                                             {itemSortPrice.map((item) => (
@@ -124,11 +128,11 @@ const FilterWrapper = ({
                     </div>
 
                     {/* pagination here */}
-                    <PaginationProduct
+                   {totalPages > 0 && <PaginationProduct
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         totalPages={totalPages}
-                    />
+                    />}
                 </div>
             </div>
         </div>

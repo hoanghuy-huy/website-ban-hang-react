@@ -7,8 +7,9 @@ import Image from '~/components/Image';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleShowModalAddProductToCompare } from '~/redux/features/detailProductSlice';
 const ModalAddProductToCompare = () => {
-    const { showModalAddProductToCompare } = useSelector((state) => state.detailProduct);
     const dispatch = useDispatch()
+    const { showModalAddProductToCompare } = useSelector((state) => state.detailProduct);
+
     return (
         <Modal show={showModalAddProductToCompare} onHide={() => dispatch(handleShowModalAddProductToCompare())}> 
             <Modal.Header closeButton>
@@ -20,7 +21,7 @@ const ModalAddProductToCompare = () => {
                         <label>Nhập tên sản phẩm </label>
                         <div className="modal__find-product-input">
                             <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
-                            <input />
+                            <input placeholder='Tên sản phẩm'/>
                         </div>
                     </div>
                     <ul className="search-item-modal-comparison">

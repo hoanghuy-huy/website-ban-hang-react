@@ -1,8 +1,23 @@
 import { createAsyncThunk, createSlice, createAction, current } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import httpRequest from '~/utils/httpRequest';
 
+export const fetchOneProduct = createAsyncThunk('products/fetchOneProduct', async (productId) => {
+    const res = await httpRequest.get(`products/get-one/${productId}`);
+
+    return res ? res.DT : [];
+});
+
+export const fetchProductWithCategory = createAsyncThunk('products/fetchProductWithCategory', async (productId) => {
+    const res = await httpRequest.get(`products/categories/${productId}`);
+
+    return res ? res.DT : [];
+});
 const initialState = {
     listProductToCompare: [],
+    product: [],
+    categoryProduct: [],
+    categoryId: null,
     showFormCompare: false,
     error: false,
     loading: false,
@@ -58,6 +73,38 @@ export const detailProductSlice = createSlice({
             state.showModalAddProductToCompare = !state.showModalAddProductToCompare;
         },
     },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder
+            //get one product
+            .addCase(fetchOneProduct.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchOneProduct.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.product = action.payload;
+            })
+            .addCase(fetchOneProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //get one category with product id
+            .addCase(fetchProductWithCategory.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchProductWithCategory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.categoryProduct = action.payload;
+            })
+            .addCase(fetchProductWithCategory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            });
+    },
 });
 
 export const {
@@ -66,7 +113,7 @@ export const {
     handleAddItemCompare,
     handleShrinkFormCompare,
     handleDeleteAllItemCompare,
-    handleShowModalAddProductToCompare
+    handleShowModalAddProductToCompare,
 } = detailProductSlice.actions;
 
 export default detailProductSlice.reducer;
