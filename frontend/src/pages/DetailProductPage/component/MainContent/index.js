@@ -12,26 +12,28 @@ import Button from '~/components/Button/Button';
 import './MainContent.scss';
 import ModalAddProductToCompare from './ModalAddProductToCompare';
 import Image from '~/components/Image';
+import { convertPrice } from '~/utils/convert';
+import { Rating } from '@mui/material';
+import ReviewProduct from '../ReviewProduct';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const dispatch = useDispatch();
     const { ProductImages } = item && item.ProductImages ? item : '';
     const { showFormCompare, listProductToCompare, showFormShrinkCompare } = useSelector(
         (state) => state.detailProduct,
     );
-    
+
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product.id === item.id);
 
         return check;
     };
 
-    
     if (!item) {
         return <div>error from server.</div>;
     }
 
     return (
-        <div className="col-9-md">
+        <div className="col-9">
             <div className="d-flex">
                 <Sidebar listImg={ProductImages} />
                 <div className="content-center col-7 ms-3">
@@ -74,6 +76,17 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                             </div>
                             <div className="title-styled">{item?.name}</div>
                             <div className="rating-styled">
+                                <div className='starNumber'>
+                                    <p>{item?.starsNumber}{' '}</p>
+                                    <Rating
+                                        name="read-only"
+                                        value={item?.starsNumber}
+                                        sx={{ fontSize: '16px' }}
+                                        readOnly
+                                    />
+                                    <span className="totalRating">({item?.totalRating})</span>
+                                </div>
+
                                 {item && item?.quantitySold > 0 && (
                                     <div className="quantity-sold">
                                         Số lượng đã bán
@@ -83,9 +96,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                             </div>
                             <div className="product-price">
                                 <div className="product-price__current-price">
-                                    {item?.price.toLocaleString('vi-VN', {
-                                        maximumFractionDigits: 0,
-                                    })}
+                                    {convertPrice(item?.price)}
                                     <sup>₫</sup>
                                 </div>
                                 {item.discountRate > 0 && (
@@ -111,7 +122,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                             </div>
                         </div>
                     </div> */}
-            
+
                     <SimilarProductBox productList={productList} handleFetchData={handleFetchData} />
 
                     {detailProduct && (
@@ -168,6 +179,9 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                 </div>
             </div>
 
+            {/* Review Product Box */}
+            <ReviewProduct />
+
             {showFormCompare && <ComparisonProduct />}
             {listProductToCompare.length > 0 && showFormShrinkCompare && !showFormCompare && (
                 <div className="shrink-compare-form">
@@ -178,7 +192,6 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                     </div>
                 </div>
             )}
-
 
             <ModalAddProductToCompare />
         </div>

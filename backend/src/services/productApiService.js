@@ -195,16 +195,16 @@ class productApiService {
     try {
       let offset = (page - 1) * limit;
       let product;
-      let convertPriceToObject = price.split(',')
-      let convertBrandToObject = brand.split(',')
+      let convertPriceToObject =price ? price.split(',') : ''
+      let convertBrandToObject =brand ? brand.split(',') : ''
       if (sort) {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
               { categoryId: categoryId },
-              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
-              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
+              convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,
@@ -217,8 +217,8 @@ class productApiService {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
               { categoryId: categoryId },
-              +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
-              convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
+              convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
+              convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
           },
           offset: offset,

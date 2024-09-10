@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, createAction, current } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import httpRequest from '~/utils/httpRequest';
 
@@ -13,10 +13,25 @@ export const fetchProductWithCategory = createAsyncThunk('products/fetchProductW
 
     return res ? res.DT : [];
 });
+
+
+export const fetchProductPaginationWithCategoryId = createAsyncThunk(
+    'products/fetchProductPaginationWithCategoryId',
+    async ({ categoryId, limit, page }) => {
+        const res = await httpRequest.get(
+            `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
 const initialState = {
     listProductToCompare: [],
+    listProductPaginationWithCategory: [],
     product: [],
     categoryProduct: [],
+    productDetail: [],
     categoryId: null,
     showFormCompare: false,
     error: false,
@@ -60,6 +75,10 @@ export const detailProductSlice = createSlice({
                 state.showFormCompare = true;
                 return;
             }
+            if(state.listProductToCompare.length >= 4) {
+                toast.error('Danh sách sản phẩm đầy vui lòng xóa bớt')
+                return
+            }
             state.listProductToCompare.push(action.payload);
         },
         handleShrinkFormCompare: (state, action) => {
@@ -85,6 +104,7 @@ export const detailProductSlice = createSlice({
                 state.loading = false;
                 state.error = false;
                 state.product = action.payload;
+                state.categoryId = action.payload.product.categoryId
             })
             .addCase(fetchOneProduct.rejected, (state, action) => {
                 state.loading = false;
@@ -101,6 +121,20 @@ export const detailProductSlice = createSlice({
                 state.categoryProduct = action.payload;
             })
             .addCase(fetchProductWithCategory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //get product pagination with category id
+            .addCase(fetchProductPaginationWithCategoryId.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(fetchProductPaginationWithCategoryId.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductPaginationWithCategory = action.payload;
+            })
+            .addCase(fetchProductPaginationWithCategoryId.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             });
