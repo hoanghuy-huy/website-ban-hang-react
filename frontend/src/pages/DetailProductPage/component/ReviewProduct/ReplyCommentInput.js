@@ -4,7 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 import './ReviewProduct.scss';
 
-const ReplyComment = () => {
+const ReplyCommentInput = () => {
     return (
         <div className="replyComment">
             <div className="replyComment-container">
@@ -19,4 +19,4 @@ const ReplyComment = () => {
     );
 };
 
-export default ReplyComment;
+export default ReplyCommentInput;

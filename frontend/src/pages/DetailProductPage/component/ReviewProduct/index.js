@@ -1,11 +1,12 @@
 import React from 'react';
 import './ReviewProduct.scss';
-import { Avatar, Button, Checkbox, Input, Rating, Tooltip } from '@mui/material';
+import { Avatar, Button, Checkbox, Rating, Tooltip } from '@mui/material';
 import Image from '~/components/Image';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ReplyComment from './ReplyComment';
 import CommentInput from './CommentInput';
+import ReplyCommentInput from './ReplyCommentInput';
+import ReplyCommentText from './ReplyCommentText';
 
 const ReviewProduct = () => {
     return (
@@ -25,30 +26,32 @@ const ReviewProduct = () => {
                         </div>
                     </div>
 
-                    <div className="product-rating-overview__filters">
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
-                        </div>
-                        <div className="product-rating-overview__filter">
-                            <Button variant="outlined">Outlined</Button>
+                    <div className="product-rating-overview__filters col-12">
+                        <div className="row gap-3">
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                Tất cả
+                            </Button>
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                5 Sao
+                            </Button>
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                4 Sao
+                            </Button>
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                3 Sao
+                            </Button>
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                2 Sao
+                            </Button>
+                            <Button className="product-rating-overview__filter col-2" variant="outlined">
+                                1 Sao
+                            </Button>
+                            <Button className="product-rating-overview__filter col-3" variant="outlined">
+                                Có Hình ảnh
+                            </Button>
+                            <Button className="product-rating-overview__filter col-3" variant="outlined">
+                                Có Bình Luận
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -93,12 +96,14 @@ const ReviewProduct = () => {
 
                                             <div className="product-rating__count-like">1</div>
                                         </div>
-                                        <div className="product-rating__reply cursor">
-                                            Trả lời
-                                        </div>
+                                        <div className="product-rating__reply cursor">Trả lời</div>
                                     </div>
                                 </div>
-                                <ReplyComment />
+                                <ReplyCommentText />
+
+                                <ReplyCommentText />
+
+                                <ReplyCommentInput />
                             </div>
                         </div>
                     </div>

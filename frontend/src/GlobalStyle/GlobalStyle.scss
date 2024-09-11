@@ -56,3 +56,34 @@ li {
 .cursor {
     cursor: pointer;
 }
+
+.rounded {
+    border-radius: 20px !important;
+    color: #27272A !important;
+    border-color: rgb(221, 221, 227) !important;
+
+}
+
+.active-btn {
+    border-radius: 20px !important;
+    color: rgb(10, 104, 255) !important;
+    border-color: rgb(10, 104, 255) !important;
+
+}
+
+.white-text {
+    color: #fff !important;
+}
+
+.blue-text {
+    color: rgb(10, 104, 255) !important;
+}
+
+.blue-border {
+    border-color: rgb(10, 104, 255) !important;
+}
+
+.star-color{
+    color: #faaf00 !important;
+}
+

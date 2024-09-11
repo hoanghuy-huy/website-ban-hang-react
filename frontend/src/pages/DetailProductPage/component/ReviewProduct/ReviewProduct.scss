@@ -44,8 +44,8 @@
                 flex: 1;
                 margin-left: 0.9375rem;
                 .product-rating-overview__filter {
-                    width: 100px;
-                    height: 32px;
+                    min-width: 100px !important;
+                    height: 32px !important;
                 }
             }
             .product-rating-overview__stars {
@@ -183,7 +183,7 @@
                         }
                     }
 
-                    .icon {
+                    .icon-send {
                         position: absolute;
                         right: 10px;
                         top: 50%;
@@ -191,6 +191,12 @@
                         font-size: 19px;
                         color: var(--primary-color);
                         cursor: pointer;
+                    }
+                    .icon-addImg {
+                        color: rgba(0, 0, 0, 0.4);
+                        position: absolute;
+                        left: 10px;
+                        bottom: -25px;
                     }
                 }
             }
