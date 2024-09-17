@@ -124,9 +124,76 @@
     .cart-page__content-right {
         .right-inner {
             min-height: 200vh;
+            .DeliveryAddress-box {
+                border-radius: 4px;
+                background-color: var(--white);
+                padding: 16px;
+                .DeliveryAddress-box__header {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 12px;
+                    .header__title {
+                        color: rgb(128, 128, 137);
+                        font-weight: normal;
+                        margin: 0px;
+                    }
+                    .header__action {
+                        color: var(--primary-color);
+                        cursor: pointer;
+                    }
+                }
+                .DeliveryAddress-box__info {
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    color: rgb(56, 56, 61);
+                    margin-bottom: 2px;
+                    font-weight: 600;
+                    .customer_info__name {
+                        margin: 0px;
+                        word-break: break-word;
+                    }
+                    .customer_info__phone {
+                        margin: 0px;
+                        word-break: break-word;
+                    }
+                    i {
+                        display: block;
+                        width: 1px;
+                        height: 20px;
+                        background-color: rgb(235, 235, 240);
+                        margin: 0px 8px;
+                    }
+                }
+                .DeliveryAddress-box__address {
+                    color: rgb(128, 128, 137);
+                    font-weight: normal;
+                    .address__type {
+                        font-weight: 500;
+                        font-size: 12px;
+                        line-height: 16px;
+                        padding: 0px 6px;
+                        border-radius: 100px;
+                        margin-right: 4px;
+                        height: 18px;
+                        display: inline-flex;
+                        -webkit-box-align: center;
+                        align-items: center;
+                    }
+                    .address__type--home {
+                        color: rgb(0, 171, 86);
+                        background-color: rgb(239, 255, 244);
+                    }
+                    .address__type--company {
+                        color: rgb(0, 153, 255);
+                        background-color: rgb(239, 255, 253);
+                    }
+                }
+            }
             .voucher-box {
                 background-color: var(--white);
                 border-radius: 4px;
+                margin-top: 16px;
 
                 padding: 20px 20px;
                 .voucher-box__header {
@@ -149,7 +216,7 @@
                 }
             }
             .buy-box {
-                margin-top: 20px;
+                margin-top: 16px;
                 border-radius: 4px;
                 background-color: var(--white);
                 padding: 20px 10px;
@@ -227,7 +294,7 @@
                 height: 160px;
             }
         }
-        p{
+        p {
             font-size: 16px;
             font-weight: 600;
             line-height: 150%;

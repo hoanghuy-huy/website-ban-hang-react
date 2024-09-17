@@ -71,6 +71,7 @@ export const selectedProduct = createAsyncThunk('cart/selectedProduct', async ({
 
     return res ? res.DT : [];
 });
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -79,6 +80,9 @@ export const cartSlice = createSlice({
         showModalDelete: false,
         cartList: [],
         itemsToRemove: [],
+        itemsToOrder: [],
+        address: [],
+        showModalAddress: false,
     },
     reducers: {
         handleOnClickChangeQuantity: (state, action) => {
@@ -143,6 +147,20 @@ export const cartSlice = createSlice({
                 state.itemsToRemove = action.payload;
                 state.showModalDelete = true;
             }
+        },
+        handlePurchaseProduct: (state, action) => {
+            state.itemsToOrder = action.payload;
+            
+            return
+            
+            window.location.href = '/payment';
+        },
+        handleShowModalAddress: (state) => {
+            state.showModalAddress = true;
+        },
+        handleHideModalAddress: (state) => {
+            state.showModalAddress = false;
+            return
         },
     },
     extraReducers: (builder) => {
@@ -241,6 +259,9 @@ export const {
     handleOnChangeSelectedAll,
     handleShowModalDelete,
     handleCloseModalDelete,
+    handlePurchaseProduct,
+    handleHideModalAddress,
+    handleShowModalAddress,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

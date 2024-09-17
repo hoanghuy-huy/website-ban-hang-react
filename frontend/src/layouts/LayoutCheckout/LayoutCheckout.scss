@@ -1,0 +1,50 @@
+.LayoutCheckout {
+    .LayoutCheckout__header {
+        background-color: #fff;
+        .header-container {
+            display: flex;
+            -webkit-box-align: center;
+            align-items: center;
+            height: 100px;
+
+            width: 1270px;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-right: auto;
+            margin-left: auto;
+
+            .logo {
+                width: 10px;
+                height: 10px;
+                flex: 1 1 0%;
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+                .divider {
+                    width: 1px;
+                    height: 32px;
+                    background-color: rgb(26, 148, 255);
+                    margin: 0px 16px;
+                    display: block;
+                }
+
+                .title {
+                    font-weight: 400;
+                    font-size: 24px;
+                    line-height: 32px;
+                    color: rgb(26, 167, 255);
+                }
+            }
+        }
+    }
+    .main {
+        background-color: var(--background-color);
+
+        .main-content {
+            min-height: 100vh;
+            width: 1270px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    }
+}

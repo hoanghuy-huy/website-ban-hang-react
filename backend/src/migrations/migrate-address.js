@@ -2,21 +2,39 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Brand", {
+    await queryInterface.createTable("Address", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      userId: {
+        type: Sequelize.INTEGER,
+      },
+      recipientName: {
         type: Sequelize.STRING,
       },
-      slug: {
+      phone: {
         type: Sequelize.STRING,
       },
-      logoImg: {
+      city: {
         type: Sequelize.STRING,
+      },
+      district: {
+        type: Sequelize.STRING,
+      },
+      ward: {
+        type: Sequelize.STRING,
+      },
+      address: {
+        type: Sequelize.STRING,
+      },
+      typeAddress: {
+        type: Sequelize.STRING,
+      },
+      defaultAddress: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Brand");
+    await queryInterface.dropTable("Address");
   },
 };

@@ -1,22 +1,70 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '~/components/Button/Button';
-import { fetchAllCart, handleOnChangeSelectedAll, handleShowModalDelete } from '~/redux/features/cartSlice';
+import {
+    fetchAllCart,
+    handleHideModalAddress,
+    handleOnChangeSelectedAll,
+    handlePurchaseProduct,
+    handleShowModalAddress,
+    handleShowModalDelete,
+} from '~/redux/features/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { convertPrice } from '~/utils/convert';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ProductList from './ProductList';
 import _ from 'lodash';
+import ModalErrorPurchaseItem from './ModalErrorPurchaseItem';
+import WarningIcon from '@mui/icons-material/Warning';
+import ModalAddress from './ModalAddress';
+import { toast } from 'react-toastify';
+import { createNewAddressApi, editAddressApi, getAllAddressWithUserId } from '~/redux/features/addressSlice';
+import ModalAddressEdit from './ModalAddressEdit';
 import './CartPage.scss';
 
 const CartPage = () => {
     const { loading, error, cartList } = useSelector((state) => state.cart);
     const { userId } = useSelector((state) => state.account.account);
+    const [showModalError, setShowModalError] = useState(false);
+    const { listAddress } = useSelector((state) => state.address);
+    const [showModalEditAddress, setShowModalEditAddress] = useState(false);
 
+    const defaultValueAddress = {
+        id: listAddress ? listAddress?.id : '',
+        userId: userId,
+        recipientName: listAddress ? listAddress?.recipientName : '',
+        phone: listAddress ? listAddress?.phone : '',
+        city: '',
+        district: '',
+        ward: '',
+        address: listAddress ? listAddress?.address : '',
+        typeAddress: '',
+        defaultAddress: '',
+    };
+
+    const defaultValidAddress = {
+        recipientName: true,
+        phone: true,
+        city: true,
+        district: true,
+        ward: true,
+        address: true,
+        typeAddress: true,
+        defaultAddress: true,
+    };
+
+    const validatePhoneNumber = (phone) => {
+        const regex = /^(0[3|5|7|8|9][0-9]{8}|[0-9]{10})$/;
+        return regex.test(phone);
+    };
+
+    const [infoAddress, setInfoAddress] = useState(defaultValueAddress);
+    const [validInfoAddress, setValidInfoAddress] = useState(defaultValidAddress);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchAllCart(userId));
+        dispatch(getAllAddressWithUserId(userId));
     }, []);
 
     const checkSelectedAll = () => {
@@ -54,6 +102,77 @@ const CartPage = () => {
 
         return itemsToRemove;
     };
+
+    const handleHideModalError = () => {
+        setShowModalError(false);
+    };
+
+    const handleBuildDataToPurchase = (rawData) => {
+        let data = rawData.filter((item) => item.selected === true);
+
+        if (data?.length === 0) {
+            setShowModalError(true);
+            return;
+        }
+
+        if (!listAddress) {
+            dispatch(handleShowModalAddress());
+            toast.warn('Vui lòng nhập địa chỉ giao hàng');
+        }
+
+        dispatch(handlePurchaseProduct(data));
+    };
+
+    const handleValidInputAddress = () => {
+        setValidInfoAddress(defaultValidAddress);
+        let check = true;
+        let arr = ['recipientName', 'phone', 'city', 'district', 'ward', 'address'];
+        let name = ['họ tên', 'số điện thoại', 'tỉnh thành', 'quận huyện', 'phường xã', 'địa chỉ'];
+
+        let i = 0;
+        for (i = 0; i < arr.length; i++) {
+            if (!infoAddress[arr[i]]) {
+                let _validInputs = _.cloneDeep(defaultValidAddress);
+                _validInputs[arr[i]] = false;
+                setValidInfoAddress(_validInputs);
+
+                toast.error(`Không thể để trống ${name[i].toLocaleLowerCase()}`);
+                check = false;
+                break;
+            }
+        }
+        return check;
+    };
+
+    const handleSaveAddress = () => {
+        let valid = handleValidInputAddress();
+
+        if (valid) {
+            dispatch(handleHideModalAddress());
+            dispatch(createNewAddressApi(infoAddress));
+            window.location.reload();
+        }
+    };
+
+    const handleSaveEditAddress = () => {
+        let valid = handleValidInputAddress();
+        console.log( typeof infoAddress.phone)
+       if(valid){
+            console.log(infoAddress)
+            dispatch(editAddressApi(infoAddress));
+            setShowModalEditAddress(false)
+            // window.location.reload();
+        }
+    };
+
+    const handleCloseModalAddress = () => {
+        dispatch(handleHideModalAddress());
+    };
+
+    const handleCloseModalEditAddress = () => {
+        setShowModalEditAddress(false);
+    };
+
     if (loading === true && error === false) {
         return <div>loading...</div>;
     } else if (loading === false && error === true) {
@@ -105,6 +224,58 @@ const CartPage = () => {
                         </div>
                         <div className="cart-page__content-right col-4 mt-3">
                             <div className="right-inner">
+                                <div className="DeliveryAddress-box">
+                                    <div className="DeliveryAddress-box__header">
+                                        <div className="header__title"> Giao tới</div>
+
+                                        {listAddress ? (
+                                            <div
+                                                onClick={() => setShowModalEditAddress(true)}
+                                                className="header__action"
+                                            >
+                                                {' '}
+                                                Thay Đổi
+                                            </div>
+                                        ) : (<div
+                                            onClick={() => dispatch(handleShowModalAddress())}
+                                            className="header__action"
+                                        >
+                                            {' '}
+                                            Nhập
+                                        </div>)}
+                                    </div>
+
+                                    {listAddress ? (
+                                        <>
+                                            <div className="DeliveryAddress-box__info">
+                                                <p className="customer_info__name">{listAddress?.recipientName}</p>
+                                                <i></i>
+                                                <p className="customer_info__phone">{listAddress?.phone}</p>
+                                            </div>
+                                            <div className="DeliveryAddress-box__address">
+                                                {listAddress?.typeAddress === 'home' ? (
+                                                    <span className="address__type address__type--home">Nhà</span>
+                                                ) : (
+                                                    <span className="address__type address__type--company">
+                                                        Công Ty
+                                                    </span>
+                                                )}
+                                                {listAddress?.address} {', '}
+                                                {listAddress?.ward}
+                                                {', '}
+                                                {listAddress?.district}
+                                                {', '}
+                                                {listAddress?.city}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="warning-info gap-3 d-flex align-items-center ps-5">
+                                            <WarningIcon sx={{ color: '#ffc107 !important' }} /> Vui lòng nhập thông tin
+                                            vận chuyển
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="voucher-box">
                                     <div className="voucher-box__header">
                                         <div className="header__title"> Chọn voucher</div>
@@ -135,7 +306,9 @@ const CartPage = () => {
                                         </div>
                                     </div>
                                     <div className="me-3">
-                                        <Button primary onClick={() => alert('me')}>Mua hàng ({quantityProductSelected()})</Button>
+                                        <Button primary onClick={() => handleBuildDataToPurchase(cartList)}>
+                                            Mua hàng ({quantityProductSelected()})
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
@@ -153,6 +326,29 @@ const CartPage = () => {
                     </div>
                 )}
             </div>
+
+            <ModalErrorPurchaseItem show={showModalError} handleHide={handleHideModalError} />
+
+            <ModalAddress
+                setValidInfoAddress={setValidInfoAddress}
+                validInfoAddress={validInfoAddress}
+                defaultValidAddress={defaultValidAddress}
+                handleSave={handleSaveAddress}
+                handleHide={handleCloseModalAddress}
+                infoAddress={infoAddress}
+                setInfoAddress={setInfoAddress}
+            />
+
+            <ModalAddressEdit
+                show={showModalEditAddress}
+                setValidInfoAddress={setValidInfoAddress}
+                validInfoAddress={validInfoAddress}
+                defaultValidAddress={defaultValidAddress}
+                handleSave={handleSaveEditAddress}
+                handleHide={handleCloseModalEditAddress}
+                infoAddress={infoAddress}
+                setInfoAddress={setInfoAddress}
+            />
         </>
     );
 };

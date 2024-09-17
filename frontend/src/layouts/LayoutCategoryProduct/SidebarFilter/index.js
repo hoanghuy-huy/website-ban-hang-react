@@ -21,13 +21,9 @@ const SidebarFilter = () => {
     const dispatch = useDispatch();
     const { categoryId } = useSelector((state) => state.categories);
     const { brandList } = useSelector((state) => state.brand);
-    const {
-        starNumberCheckBoxValue,
-        minPriceRedux,
-        maxPriceRedux,
-        brandValueToFilter,
-        
-    } = useSelector((state) => state.products);
+    const { starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter } = useSelector(
+        (state) => state.products,
+    );
     const [valueRenderBrandList, setValueRenderBrandList] = useState(brandList?.length >= 4 ? 4 : brandList?.length);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
@@ -59,27 +55,27 @@ const SidebarFilter = () => {
 
     const handleChangeMinPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
-            if(value > 10000000) return
+            if (value > 10000000) return;
             setMinPrice(value);
         }
     };
 
     const handleChangeMaxPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
-            if(value > 10000000) return
+            if (value > 10000000) return;
             setMaxPrice(value);
         }
     };
     const handleFilterPrice = () => {
         if (+minPrice < 0 || +maxPrice <= 0 || +minPrice >= +maxPrice) {
             setErrorInputPrice(true);
-            setErrorExceedInputPrice(false)
+            setErrorExceedInputPrice(false);
         } else if (minPrice > 10000000 || maxPrice > 10000000) {
-            setErrorExceedInputPrice(true)
+            setErrorExceedInputPrice(true);
         } else {
             dispatch(handleFetchDataWithFilterPrice({ minPrice, maxPrice }));
             setErrorInputPrice(false);
-            setErrorExceedInputPrice(false)
+            setErrorExceedInputPrice(false);
         }
     };
 
@@ -114,10 +110,10 @@ const SidebarFilter = () => {
 
     const handleResetFilterProduct = () => {
         dispatch(handleChangeStarNumberCheckBoxValue(0));
-        dispatch(handleFetchDataWithFilterPrice(''))
-        setMinPrice('')
-        setMaxPrice('')
-        setBrand([])
+        dispatch(handleFetchDataWithFilterPrice(''));
+        setMinPrice('');
+        setMaxPrice('');
+        setBrand([]);
     };
 
     useEffect(() => {
@@ -131,32 +127,35 @@ const SidebarFilter = () => {
                     <FilterAltOutlinedIcon />
                     Bộ lọc tìm kiếm
                 </div>
-                <div className="sidebar-filter-group">
-                    <div className="sidebar-filter-group__header">Thương Hiệu</div>
-                    <div className="sidebar-filter-group__body">
-                        <div className="checkbox-group d-flex flex-column justify-content-center">
-                            <FormGroup>{renderBrandList()}</FormGroup>
-                            {brandList?.length > 4 && valueRenderBrandList <= 4 && (
-                                <div
-                                    className="ps-2 pb-2 cursor"
-                                    onClick={() => setValueRenderBrandList(brandList?.length)}
-                                >
-                                    Thêm <ExpandMoreIcon></ExpandMoreIcon>
-                                </div>
-                            )}
-                            {valueRenderBrandList > 4 && (
-                                <div
-                                    className="ps-2 pb-2 cursor"
-                                    onClick={() =>
-                                        setValueRenderBrandList(brandList?.length >= 4 ? 4 : brandList?.length)
-                                    }
-                                >
-                                    Ẩn Bớt <KeyboardArrowUpIcon></KeyboardArrowUpIcon>
-                                </div>
-                            )}
+                {brandList && brandList?.length > 0 && (
+                    <div className="sidebar-filter-group">
+                        <div className="sidebar-filter-group__header">Thương Hiệu</div>
+                        <div className="sidebar-filter-group__body">
+                            <div className="checkbox-group d-flex flex-column justify-content-center">
+                                <FormGroup>{renderBrandList()}</FormGroup>
+                                {brandList?.length > 4 && valueRenderBrandList <= 4 && (
+                                    <div
+                                        className="ps-2 pb-2 cursor"
+                                        onClick={() => setValueRenderBrandList(brandList?.length)}
+                                    >
+                                        Thêm <ExpandMoreIcon></ExpandMoreIcon>
+                                    </div>
+                                )}
+                                {valueRenderBrandList > 4 && (
+                                    <div
+                                        className="ps-2 pb-2 cursor"
+                                        onClick={() =>
+                                            setValueRenderBrandList(brandList?.length >= 4 ? 4 : brandList?.length)
+                                        }
+                                    >
+                                        Ẩn Bớt <KeyboardArrowUpIcon></KeyboardArrowUpIcon>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
+
                 <div className="sidebar-filter-group">
                     <div className="sidebar-filter-group__header">Khoảng Giá</div>
                     <div className="sidebar-filter-group__body">
@@ -179,7 +178,9 @@ const SidebarFilter = () => {
                             <div className="price-range-input-filter__error">Vui lòng điền khoảng giá phù hợp</div>
                         )}
                         {errorInputExceedPrice && (
-                            <div className="price-range-input-filter__error">Vui lòng điền khoảng giá trong khoảng 10 triệu VND</div>
+                            <div className="price-range-input-filter__error">
+                                Vui lòng điền khoảng giá trong khoảng 10 triệu VND
+                            </div>
                         )}
                         <Button
                             sx={{ width: '90%', marginRight: 10, marginTop: 1, marginBottom: 2 }}

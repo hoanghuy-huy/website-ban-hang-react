@@ -14,7 +14,16 @@ import Image from '~/components/Image';
 function ProductList({ item }) {
     const dispatch = useDispatch();
 
+    const handleAssignProduct = (id) => {
+        dispatch(handleOnChangeSelected({ id: id }));
+    };
 
+    const handleChangeQuantityProduct = (type, idProduct) => {
+        dispatch(handleOnClickChangeQuantity({ type: type, id: idProduct }));
+    };
+
+
+    
     return (
         <>
             <div className="cart-item-container mt-4" key={item?.id}>
@@ -26,7 +35,7 @@ function ProductList({ item }) {
                                     className="form-check-input"
                                     type="checkbox"
                                     checked={item?.selected}
-                                    onChange={() => dispatch(handleOnChangeSelected({ id: item.id }))}
+                                    onChange={() => handleAssignProduct(item.id)}
                                 />
                             </div>
                             <div className="thumbnail-img">
@@ -37,23 +46,15 @@ function ProductList({ item }) {
                         <div className="price">{convertPrice(item?.Product?.price)}</div>
                         <div className="item-quantity ">
                             <div className="quantity">
-                                <span
-                                    className="minus"
-                                    onClick={() =>
-                                        dispatch(handleOnClickChangeQuantity({ type: 'minus', id: item?.id }))
-                                    }
-                                >
-                                    <img
+                                <span className="minus" onClick={() => handleChangeQuantityProduct('minus', item?.id)}>
+                                    <Image
                                         src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/decrease.svg"
                                         alt=""
                                     />
                                 </span>
                                 <input value={item?.quantity} />
-                                <span
-                                    className="plus"
-                                    onClick={() => dispatch(handleOnClickChangeQuantity({ type: 'plus', id: item?.id }))}
-                                >
-                                    <img
+                                <span className="plus" onClick={() => handleChangeQuantityProduct('plus', item?.id)}>
+                                    <Image
                                         src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/increase.svg"
                                         alt=""
                                     />
@@ -67,15 +68,14 @@ function ProductList({ item }) {
                     </div>
                 </div>
             </div>
-            
+
             <ModalDeleteItem />
         </>
-    );  
+    );
 }
 
 ProductList.propTypes = {
     item: PropTypes.object.isRequired,
 };
-
 
 export default memo(ProductList);
