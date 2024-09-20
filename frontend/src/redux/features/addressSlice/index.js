@@ -5,11 +5,11 @@ import httpRequest from '~/utils/httpRequest';
 export const createNewAddressApi = createAsyncThunk('address/createNewAddressApi', async (data) => {
     const res = await httpRequest.post(`address/create`, data);
 
-    if(res.EC === 0) {
-        toast.success('Lưu địa chỉ thành công!')
-    }else {
-        toast.error('Xảy ra lỗi vui lòng thử lại')
-    }
+    // if (res.EC === 0) {
+    //     toast.success('Lưu địa chỉ thành công!');
+    // } else {
+    //     toast.error('Xảy ra lỗi vui lòng thử lại');
+    // }
 
     return res ? res.DT : [];
 });
@@ -20,8 +20,20 @@ export const editAddressApi = createAsyncThunk('address/editAddressApi', async (
     return res ? res.DT : [];
 });
 
+export const deleteAddressApi = createAsyncThunk('address/deleteAddressApi', async (data) => {
+    const res = await httpRequest.put(`address/delete`, data);
+
+    return res ? res.DT : [];
+});
+
 export const getAllAddressWithUserId = createAsyncThunk('address/getAllAddressWithUserId', async (userId) => {
     const res = await httpRequest.get(`address/get-all?userId=${userId}`);
+
+    return res ? res.DT : [];
+});
+
+export const getAddressDefault = createAsyncThunk('address/getAddressDefault', async (userId) => {
+    const res = await httpRequest.get(`address/get-address-default?userId=${userId}`);
 
     return res ? res.DT : {};
 });
@@ -31,9 +43,18 @@ export const addressSlice = createSlice({
     initialState: {
         loading: false,
         error: false,
-        listAddress: {},
+        listAddress: [],
+        addressDefault: {},
+        changeAddress: false,
+        changeAddress: false,
     },
-    reducers: {},
+    reducers: {
+        handleChangeAddressDeliveryRedux: (state, action) => {
+            state.addressDefault = action.payload;
+            state.changeAddress = true;
+            window.location.href = '/cart'
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(createNewAddressApi.pending, (state, action) => {
@@ -69,14 +90,41 @@ export const addressSlice = createSlice({
             .addCase(getAllAddressWithUserId.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = true;
-                state.listAddress = action.payload
+                state.listAddress = action.payload;
             })
             .addCase(getAllAddressWithUserId.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            //get address default
+            .addCase(getAddressDefault.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAddressDefault.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = true;
+                state.addressDefault = action.payload;
+            })
+            .addCase(getAddressDefault.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            //delete
+            .addCase(deleteAddressApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(deleteAddressApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(deleteAddressApi.rejected, (state, action) => {
                 state.loading = true;
                 state.error = false;
             });
     },
 });
-export const {} = addressSlice.actions;
+export const { handleChangeAddressDeliveryRedux } = addressSlice.actions;
 
 export default addressSlice.reducer;

@@ -1,0 +1,160 @@
+.AddressPage {
+    min-height: 2000px;
+    .AddressPage-container {
+        width: 1170px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        padding-top: 30px;
+        .address-list-text {
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.1;
+        }
+        .address-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0px 0px -20px -20px;
+            .address-list-container-active {
+                position: relative;
+                flex: 1 0 40%;
+                background-color: rgb(255, 255, 255);
+                box-shadow: none;
+                border-radius: 3px;
+                border: 1px dashed rgb(0, 153, 0);
+                margin: 0px 0px 20px 20px;
+                max-width: calc(50% - 20px);
+                padding: 10px 15px;
+            }
+            .address-list-container {
+                position: relative;
+                flex: 1 0 40%;
+                background-color: rgb(255, 255, 255);
+                box-shadow: none;
+                border-radius: 3px;
+                border: 1px solid rgb(221, 221, 221);
+                margin: 0px 0px 20px 20px;
+                max-width: calc(50% - 20px);
+                padding: 10px 15px;
+
+                .action .saving-address {
+                    margin-right: 7px;
+                    border: 1px solid rgb(85, 86, 73);
+                    color: rgb(255, 255, 255);
+                    background: rgb(98, 100, 85);
+                }
+            }
+            .name {
+                font-size: 15px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .name + .address {
+                height: 25px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .address {
+                font-size: 13px;
+                margin-bottom: 3px;
+            }
+            .phone {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+            .default {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                display: block;
+                font-size: 11px;
+                color: rgb(0, 153, 0);
+            }
+            .action .saving-address {
+                margin-right: 7px;
+                border: 1px solid rgb(2, 159, 209);
+                color: rgb(255, 255, 255);
+                background: rgb(0, 182, 240);
+            }
+            .action .edit-address {
+                border: 1px solid rgb(204, 204, 204);
+                margin-right: 7px;
+            }
+        }
+        .address-new-address {
+            font-size: 13px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            span {
+                color: rgb(0, 127, 240);
+                cursor: pointer;
+            }
+        }
+
+        .form-address {
+            background: rgb(247, 247, 247);
+            border: 1px solid rgb(221, 221, 221);
+            box-shadow: none;
+            border-radius: 0px 0px 3px 3px;
+            margin: 0px auto;
+            padding: 10px 15px;
+            transition: max-height 0.5s ease-out;
+            max-height: 650px;
+            overflow: hidden;
+            .form-container {
+                max-width: 550px;
+                margin: 0px auto;
+                .input-container {
+                    margin-top: 15px;
+                    display: flex;
+                    align-items: center;
+                    label {
+                        font-weight: 700;
+                        width: 33.3333%;
+                    }
+                    input {
+                        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+                            -webkit-box-shadow 0.15s ease-in-out;
+                        border: 1px solid rgb(204, 204, 204);
+                        border-radius: 4px;
+                        height: 34px;
+                        padding: 6px 12px;
+                        line-height: 34px;
+                        outline: none;
+                        flex: 1;
+                    }
+                    textarea {
+                        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+                            -webkit-box-shadow 0.15s ease-in-out;
+                        border: 1px solid rgb(204, 204, 204);
+                        border-radius: 4px;
+                        padding: 6px 12px;
+                        line-height: 20px;
+                        outline: none;
+                        flex: 1;
+                    }
+
+                    .input-radio {
+                        font-size: 13px;
+                        label {
+                        }
+                    }
+
+                    .button-group {
+                        display: flex;
+                        .btn-update {
+                             button {
+                                color: rgb(255, 255, 255) !important;
+                                background: rgb(0, 182, 240) !important;
+                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

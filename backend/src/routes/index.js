@@ -8,6 +8,7 @@ import categoryRouter from './category.js'
 import cartRouter from './cart.js'
 import brandRouter from './brand.js'
 import addressRouter from './address.js'
+import paymentRouter from './payment.js'
 
 function initApiRoutes(app) {
   app.use("/api/v1", authRouter);
@@ -20,6 +21,7 @@ function initApiRoutes(app) {
   app.use("/api/v1/cart",cartRouter)
   app.use("/api/v1/brand",brandRouter)
   app.use("/api/v1/address",addressRouter)
+  app.use("/api/v1/payment",paymentRouter)
 }
 
 module.exports = initApiRoutes;

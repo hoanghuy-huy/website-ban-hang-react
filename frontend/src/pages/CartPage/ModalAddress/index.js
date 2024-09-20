@@ -5,48 +5,42 @@ import { Form } from 'react-bootstrap';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleHideModalAddress } from '~/redux/features/cartSlice';
-function ModalAddress({ show, handleHide, handleSave, infoAddress, setInfoAddress, validInfoAddress }) {
-    const [city, setCity] = useState([]);
+import axios from 'axios';
+function ModalAddress({ show, handleHide, handleSave, infoAddress, setInfoAddress, validInfoAddress, city, setCity }) {
     const [district, setDistrict] = useState([]);
     const [ward, setWard] = useState([]);
     const [selectedCity, setSelectedCity] = useState(0);
     const [selectedDistrict, setSelectedDistrict] = useState(0);
     const { showModalAddress } = useSelector((state) => state.cart);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        fetch('https://esgoo.net/api-tinhthanh/1/0.htm')
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error === 0) {
-                    setCity(data.data);
-                }
-            });
-    }, []);
+    const fetchDataDistrict = async () => {
+        const res = await axios.get(`https://esgoo.net/api-tinhthanh/2/${selectedCity}.htm`);
+
+        if (res && res.data && res.data.error === 0) {
+            setDistrict(res.data.data);
+            setWard([]);
+            setSelectedDistrict(0);
+        }
+    };
+
+    const fetchDataWard = async () => {
+        const res = await axios.get(`https://esgoo.net/api-tinhthanh/3/${selectedDistrict}.htm`);
+
+        if (res && res.data && res.data.error === 0) {
+            setWard(res.data.data);
+        }
+    };
 
     useEffect(() => {
         if (selectedCity) {
-            fetch(`https://esgoo.net/api-tinhthanh/2/${selectedCity}.htm`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.error === 0) {
-                        setDistrict(data.data);
-                        setWard([]);
-                        setSelectedDistrict(0);
-                    }
-                });
+            fetchDataDistrict();
         }
     }, [selectedCity]);
 
     useEffect(() => {
         if (selectedDistrict) {
-            fetch(`https://esgoo.net/api-tinhthanh/3/${selectedDistrict}.htm`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.error === 0) {
-                        setWard(data.data);
-                    }
-                });
+            fetchDataWard();
         }
     }, [selectedDistrict]);
 
@@ -66,7 +60,7 @@ function ModalAddress({ show, handleHide, handleSave, infoAddress, setInfoAddres
         } else {
             _infoAddress[key] = value;
         }
-        console.log(key, value)
+        console.log(key, value);
         setInfoAddress(_infoAddress);
     };
     return (
@@ -164,7 +158,7 @@ function ModalAddress({ show, handleHide, handleSave, infoAddress, setInfoAddres
                                 name="type-address"
                                 value="home"
                                 onChange={(e) => handleOnChangeInput('typeAddress', e.target.value)}
-                                defaultValue='home'
+                                defaultValue="home"
                                 defaultChecked
                             />
 

@@ -18,6 +18,25 @@ const createFunc = async (req, res) => {
   }
 };
 
+const deleteFunc = async (req, res) => {
+  try {
+    let data = await addressApiService.handleDeleteFunc(req.body);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 const editFunc = async (req, res) => {
   try {
     let data = await addressApiService.editAddress(req.body);
@@ -58,8 +77,32 @@ const getAllFunc = async (req, res) => {
   }
 };
 
+const getAddressDefault = async (req, res) => {
+  try {
+    let { userId } =  req.query
+    let data = await addressApiService.handleGetAddressDefault(userId);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+
+
 module.exports = {
   createFunc,
   getAllFunc,
-  editFunc
+  editFunc,
+  getAddressDefault,
+  deleteFunc
 };

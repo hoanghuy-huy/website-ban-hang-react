@@ -18,26 +18,25 @@ import ModalErrorPurchaseItem from './ModalErrorPurchaseItem';
 import WarningIcon from '@mui/icons-material/Warning';
 import ModalAddress from './ModalAddress';
 import { toast } from 'react-toastify';
-import { createNewAddressApi, editAddressApi, getAllAddressWithUserId } from '~/redux/features/addressSlice';
-import ModalAddressEdit from './ModalAddressEdit';
+import { createNewAddressApi, editAddressApi, getAddressDefault, getAllAddressWithUserId } from '~/redux/features/addressSlice';
 import './CartPage.scss';
-
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 const CartPage = () => {
     const { loading, error, cartList } = useSelector((state) => state.cart);
     const { userId } = useSelector((state) => state.account.account);
     const [showModalError, setShowModalError] = useState(false);
-    const { listAddress } = useSelector((state) => state.address);
-    const [showModalEditAddress, setShowModalEditAddress] = useState(false);
+    const { addressDefault, changeAddress } = useSelector((state) => state.address);
 
     const defaultValueAddress = {
-        id: listAddress ? listAddress?.id : '',
+        id: addressDefault ? addressDefault?.id : '',
         userId: userId,
-        recipientName: listAddress ? listAddress?.recipientName : '',
-        phone: listAddress ? listAddress?.phone : '',
+        recipientName: addressDefault ? addressDefault?.recipientName : '',
+        phone: addressDefault ? addressDefault?.phone : '',
         city: '',
         district: '',
         ward: '',
-        address: listAddress ? listAddress?.address : '',
+        address: addressDefault ? addressDefault?.address : '',
         typeAddress: '',
         defaultAddress: '',
     };
@@ -53,6 +52,8 @@ const CartPage = () => {
         defaultAddress: true,
     };
 
+    const [city, setCity] = useState([]);
+
     const validatePhoneNumber = (phone) => {
         const regex = /^(0[3|5|7|8|9][0-9]{8}|[0-9]{10})$/;
         return regex.test(phone);
@@ -60,11 +61,26 @@ const CartPage = () => {
 
     const [infoAddress, setInfoAddress] = useState(defaultValueAddress);
     const [validInfoAddress, setValidInfoAddress] = useState(defaultValidAddress);
+
+
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchAllCart(userId));
-        dispatch(getAllAddressWithUserId(userId));
+        if(!changeAddress) {
+            dispatch(getAddressDefault(userId));
+        }
+
+        const fetchDataCity = async () => {
+            const res = await axios.get('https://esgoo.net/api-tinhthanh/1/0.htm');
+
+            if (res && res.data && res.data.error === 0) {
+                setCity(res.data.data);
+            }
+        };
+
+        fetchDataCity();
     }, []);
 
     const checkSelectedAll = () => {
@@ -115,7 +131,7 @@ const CartPage = () => {
             return;
         }
 
-        if (!listAddress) {
+        if (!addressDefault) {
             dispatch(handleShowModalAddress());
             toast.warn('Vui lòng nhập địa chỉ giao hàng');
         }
@@ -150,18 +166,9 @@ const CartPage = () => {
         if (valid) {
             dispatch(handleHideModalAddress());
             dispatch(createNewAddressApi(infoAddress));
-            window.location.reload();
-        }
-    };
 
-    const handleSaveEditAddress = () => {
-        let valid = handleValidInputAddress();
-        console.log( typeof infoAddress.phone)
-       if(valid){
-            console.log(infoAddress)
-            dispatch(editAddressApi(infoAddress));
-            setShowModalEditAddress(false)
-            // window.location.reload();
+            setInfoAddress(defaultValueAddress);
+            window.location.reload();
         }
     };
 
@@ -169,9 +176,7 @@ const CartPage = () => {
         dispatch(handleHideModalAddress());
     };
 
-    const handleCloseModalEditAddress = () => {
-        setShowModalEditAddress(false);
-    };
+
 
     if (loading === true && error === false) {
         return <div>loading...</div>;
@@ -228,44 +233,43 @@ const CartPage = () => {
                                     <div className="DeliveryAddress-box__header">
                                         <div className="header__title"> Giao tới</div>
 
-                                        {listAddress ? (
+                                        {addressDefault ? (
+                                            <div className="header__action">
+                                                {' '}
+                                                <Link to={'/address'}>Thay Đổi</Link>
+                                            </div>
+                                        ) : (
                                             <div
-                                                onClick={() => setShowModalEditAddress(true)}
+                                                onClick={() => dispatch(handleShowModalAddress())}
                                                 className="header__action"
                                             >
                                                 {' '}
-                                                Thay Đổi
+                                                Nhập
                                             </div>
-                                        ) : (<div
-                                            onClick={() => dispatch(handleShowModalAddress())}
-                                            className="header__action"
-                                        >
-                                            {' '}
-                                            Nhập
-                                        </div>)}
+                                        )}
                                     </div>
 
-                                    {listAddress ? (
+                                    {addressDefault ? (
                                         <>
                                             <div className="DeliveryAddress-box__info">
-                                                <p className="customer_info__name">{listAddress?.recipientName}</p>
+                                                <p className="customer_info__name">{addressDefault?.recipientName}</p>
                                                 <i></i>
-                                                <p className="customer_info__phone">{listAddress?.phone}</p>
+                                                <p className="customer_info__phone">{addressDefault?.phone}</p>
                                             </div>
                                             <div className="DeliveryAddress-box__address">
-                                                {listAddress?.typeAddress === 'home' ? (
+                                                {addressDefault?.typeAddress === 'home' ? (
                                                     <span className="address__type address__type--home">Nhà</span>
                                                 ) : (
                                                     <span className="address__type address__type--company">
                                                         Công Ty
                                                     </span>
                                                 )}
-                                                {listAddress?.address} {', '}
-                                                {listAddress?.ward}
+                                                {addressDefault?.address} {', '}
+                                                {addressDefault?.ward}
                                                 {', '}
-                                                {listAddress?.district}
+                                                {addressDefault?.district}
                                                 {', '}
-                                                {listAddress?.city}
+                                                {addressDefault?.city}
                                             </div>
                                         </>
                                     ) : (
@@ -297,7 +301,7 @@ const CartPage = () => {
                                         <span className="price-total__price-text">Tổng tiền</span>
                                         <div className="price-total__content">
                                             <div className="price-total__prices-value">
-                                                Vui lòng chọn sản phẩm
+                                            {quantityProductSelected() === 0 ? 'Vui lòng chọn sản phẩm' : convertPrice(handleCalculateTotalPrice())} 
                                                 <br />
                                                 <span className="price-total__price-value-noted">
                                                     (Đã bao gồm VAT nếu có)
@@ -337,17 +341,8 @@ const CartPage = () => {
                 handleHide={handleCloseModalAddress}
                 infoAddress={infoAddress}
                 setInfoAddress={setInfoAddress}
-            />
-
-            <ModalAddressEdit
-                show={showModalEditAddress}
-                setValidInfoAddress={setValidInfoAddress}
-                validInfoAddress={validInfoAddress}
-                defaultValidAddress={defaultValidAddress}
-                handleSave={handleSaveEditAddress}
-                handleHide={handleCloseModalEditAddress}
-                infoAddress={infoAddress}
-                setInfoAddress={setInfoAddress}
+                city={city}
+                setCity={setCity}
             />
         </>
     );

@@ -150,11 +150,9 @@ export const cartSlice = createSlice({
         },
         handlePurchaseProduct: (state, action) => {
             state.itemsToOrder = action.payload;
-            
-            return
-            
             window.location.href = '/payment';
         },
+        
         handleShowModalAddress: (state) => {
             state.showModalAddress = true;
         },

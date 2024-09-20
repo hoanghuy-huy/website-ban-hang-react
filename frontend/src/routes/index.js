@@ -18,6 +18,8 @@ import CartPage from '~/pages/CartPage';
 import NotFoundPage from '~/pages/NotFoundPage';
 import PaymentPage from '~/pages/PaymentPage';
 import AddressPage from '~/pages/AddressPage';
+import PaymentSuccessPage from '~/pages/PaymentSuccessPage';
+import AccountPage from '~/pages/AccountPage';
 
 
 //Public Routes
@@ -32,6 +34,8 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
+    { path: '/account', component: AccountPage, layout: LayoutCheckout },
+    { path: '/payment/success', component: PaymentSuccessPage, layout: LayoutCheckout },
     { path: routes.addressPage, component: AddressPage, layout: LayoutCheckout },
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },
     { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },

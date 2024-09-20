@@ -140,6 +140,9 @@
                     .header__action {
                         color: var(--primary-color);
                         cursor: pointer;
+                        a {
+                            color: var(--primary-color);
+                        }
                     }
                 }
                 .DeliveryAddress-box__info {
@@ -251,7 +254,7 @@
                     flex-wrap: nowrap;
                     -webkit-box-pack: justify;
                     justify-content: space-between;
-                    margin: 26px;
+                    margin: 26px 0;
                     .price-total__price-text {
                         color: rgb(39, 39, 42);
                         font-weight: 500;
