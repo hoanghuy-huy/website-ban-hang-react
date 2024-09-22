@@ -113,6 +113,28 @@ let removeMultipleProductFromCart = async (req, res) => {
   }
 };
 
+let removeMultipleProductFromCartWithId = async (req, res) => {
+  try {
+
+    let data = await cartApiService.handleRemoveMultipleProductFromCartWithId(
+      req.body
+    );
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 let selectedProduct = async (req, res) => {
   try {
     let { cartId } = req.body;
@@ -139,4 +161,5 @@ module.exports = {
   removeOneProductFromCart,
   removeMultipleProductFromCart,
   selectedProduct,
+  removeMultipleProductFromCartWithId
 };

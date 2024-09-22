@@ -96,7 +96,6 @@ class roleApiService {
 
   async handleGetRoleByGroup(idGroup) {
     try {
-
       const roles = await db.Group.findOne({
         where: { id: idGroup },
         attributes: ["id", "name", "description"],

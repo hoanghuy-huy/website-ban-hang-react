@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '~/components/Button/Button';
 import {
+    deleteMultipleProductFormCart,
+    deleteMultipleProductFormCartWithId,
     fetchAllCart,
     handleHideModalAddress,
     handleOnChangeSelectedAll,
@@ -18,16 +20,21 @@ import ModalErrorPurchaseItem from './ModalErrorPurchaseItem';
 import WarningIcon from '@mui/icons-material/Warning';
 import ModalAddress from './ModalAddress';
 import { toast } from 'react-toastify';
-import { createNewAddressApi, editAddressApi, getAddressDefault, getAllAddressWithUserId } from '~/redux/features/addressSlice';
+import {
+    createNewAddressApi,
+    editAddressApi,
+    getAddressDefault,
+    getAllAddressWithUserId,
+} from '~/redux/features/addressSlice';
 import './CartPage.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import SnackbarComp from './Snackbar';
 const CartPage = () => {
-    const { loading, error, cartList } = useSelector((state) => state.cart);
+    const { loading, error, cartList, showSnackBar } = useSelector((state) => state.cart);
     const { userId } = useSelector((state) => state.account.account);
     const [showModalError, setShowModalError] = useState(false);
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
-
     const defaultValueAddress = {
         id: addressDefault ? addressDefault?.id : '',
         userId: userId,
@@ -62,13 +69,11 @@ const CartPage = () => {
     const [infoAddress, setInfoAddress] = useState(defaultValueAddress);
     const [validInfoAddress, setValidInfoAddress] = useState(defaultValidAddress);
 
-
-
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchAllCart(userId));
-        if(!changeAddress) {
+        if (!changeAddress) {
             dispatch(getAddressDefault(userId));
         }
 
@@ -135,8 +140,11 @@ const CartPage = () => {
             dispatch(handleShowModalAddress());
             toast.warn('Vui lòng nhập địa chỉ giao hàng');
         }
-
+        
         dispatch(handlePurchaseProduct(data));
+        // let itemsToDelete = data.map((item) => item.id)
+        // dispatch(deleteMultipleProductFormCartWithId({data : itemsToDelete, userId}))
+        
     };
 
     const handleValidInputAddress = () => {
@@ -177,7 +185,6 @@ const CartPage = () => {
     };
 
 
-
     if (loading === true && error === false) {
         return <div>loading...</div>;
     } else if (loading === false && error === true) {
@@ -194,9 +201,9 @@ const CartPage = () => {
                     <div className="row mx-4">
                         <div className="main-content col-8">
                             <div className="heading d-flex align-items-center justify-content-between">
-                                <div className="form-check ">
+                                <div className="form-check">
                                     <input
-                                        className="form-check-input"
+                                        className="form-check-input cursor"
                                         type="checkbox"
                                         id="checkAll"
                                         checked={checkSelectedAll()}
@@ -301,7 +308,9 @@ const CartPage = () => {
                                         <span className="price-total__price-text">Tổng tiền</span>
                                         <div className="price-total__content">
                                             <div className="price-total__prices-value">
-                                            {quantityProductSelected() === 0 ? 'Vui lòng chọn sản phẩm' : convertPrice(handleCalculateTotalPrice())} 
+                                                {quantityProductSelected() === 0
+                                                    ? 'Vui lòng chọn sản phẩm'
+                                                    : convertPrice(handleCalculateTotalPrice())}
                                                 <br />
                                                 <span className="price-total__price-value-noted">
                                                     (Đã bao gồm VAT nếu có)
@@ -344,6 +353,8 @@ const CartPage = () => {
                 city={city}
                 setCity={setCity}
             />
+
+            <SnackbarComp />
         </>
     );
 };

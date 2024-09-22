@@ -12,6 +12,7 @@ import { showLoginForm } from '~/redux/features/accountSlice';
 import AuthForm from './AuthForm';
 import Image from '~/components/Image';
 import images from '~/assets/images';
+
 const HeaderClient = () => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);

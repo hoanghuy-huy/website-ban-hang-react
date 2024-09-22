@@ -60,6 +60,21 @@ export const deleteMultipleProductFormCart = createAsyncThunk(
     },
 );
 
+export const deleteMultipleProductFormCartWithId = createAsyncThunk(
+    'cart/deleteMultipleProductFormCartWithId',
+    async ({data, userId}, thunkAPI) => {
+        const res = await httpRequest.put(`cart/delete-multiple-with-id`, data);
+        if (res && res.EC === 0) {
+
+            thunkAPI.dispatch(fetchAllCart(userId));
+            
+            return res;
+        } else {
+            return res ? res.DT : [];
+        }
+    },
+);
+
 export const changeQuantity = createAsyncThunk('cart/changeQuantity', async ({ userId, productId, quantity }) => {
     const res = await httpRequest.post(`cart/change-quantity`, { userId, productId, quantity });
 
@@ -83,6 +98,7 @@ export const cartSlice = createSlice({
         itemsToOrder: [],
         address: [],
         showModalAddress: false,
+        showSnackBar: false,
     },
     reducers: {
         handleOnClickChangeQuantity: (state, action) => {
@@ -90,6 +106,10 @@ export const cartSlice = createSlice({
                 case 'plus':
                     const updatedQuantityPlus = current(state.cartList).map((item) => {
                         if (item.id === action.payload.id) {
+                            if (item.quantity === 10) {
+                                state.showSnackBar = true;
+                                return { ...item, quantity: item.quantity };
+                            }
                             return { ...item, quantity: item.quantity + 1 };
                         }
                         return item;
@@ -152,13 +172,16 @@ export const cartSlice = createSlice({
             state.itemsToOrder = action.payload;
             window.location.href = '/payment';
         },
-        
+
         handleShowModalAddress: (state) => {
             state.showModalAddress = true;
         },
         handleHideModalAddress: (state) => {
             state.showModalAddress = false;
-            return
+            return;
+        },
+        handleCloseSnackBar: (state) => {
+            state.showSnackBar = false
         },
     },
     extraReducers: (builder) => {
@@ -236,6 +259,19 @@ export const cartSlice = createSlice({
                 // state.loading = true;
                 state.error = false;
             })
+            // delete multiple product form cart with id
+            .addCase(deleteMultipleProductFormCartWithId.pending, (state, action) => {
+                // state.loading = true;
+                state.error = false;
+            })
+            .addCase(deleteMultipleProductFormCartWithId.fulfilled, (state, action) => {
+                // state.loading = false;
+                state.error = false;
+            })
+            .addCase(deleteMultipleProductFormCartWithId.rejected, (state, action) => {
+                // state.loading = true;
+                state.error = false;
+            })
             // selected product form cart
             .addCase(selectedProduct.pending, (state, action) => {
                 // state.loading = true;
@@ -260,6 +296,7 @@ export const {
     handlePurchaseProduct,
     handleHideModalAddress,
     handleShowModalAddress,
+    handleCloseSnackBar
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -7,11 +7,14 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { useDispatch, useSelector } from 'react-redux';
 import { PayPalButton } from 'react-paypal-button-v2';
 import Image from '~/components/Image';
-import './PaymentPage.scss';
 import { convertPrice } from '~/utils/convert';
 import Button from '~/components/Button/Button';
 import { getAddressDefault } from '~/redux/features/addressSlice';
 import * as paymentService from '~/services/paymentService';
+import _ from 'lodash'
+
+import './PaymentPage.scss';
+import { createNewOrderApi } from '~/redux/features/orderSlice';
 
 const PaymentPage = () => {
     const listMethodDelivery = [
@@ -30,11 +33,11 @@ const PaymentPage = () => {
     ];
 
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
-    const laterPayment = 'Later Payment';
+    const cash = 'cash';
     const { userId } = useSelector((state) => state.account.account);
     const { itemsToOrder } = useSelector((state) => state.cart);
     const [methodDelivery, setMethodDelivery] = useState(listMethodDelivery[0]);
-    const [methodPayment, setMethodPayment] = useState(laterPayment);
+    const [methodPayment, setMethodPayment] = useState(cash);
     const [sdkReady, setSdkReady] = useState(false)
     const dispatch = useDispatch();
 
@@ -100,6 +103,40 @@ const PaymentPage = () => {
         }
     }, []);
 
+    const handleOnClickOrderProduct = () => {
+        let order = {}
+        let orderDetail = {}
+
+        order.userId = userId
+        order.status = false
+        order.quantityItem = itemsToOrder.length
+        order.totalPrice = totalPriceToOrder()
+        order.totalDiscount = 0
+        order.orderPaymentStatus = false
+        order.orderStatusDelivery = false
+        order.paymentMethod = methodPayment
+        order.deliveryMethodName = methodDelivery.name
+        order.deliveryMethodFee = methodDelivery.feeDelivery
+        order.recipientName = addressDefault.recipientName
+        order.address = `${addressDefault.address} ,${addressDefault.ward} ,${addressDefault.district} ,${addressDefault.city} `
+        order.phone = addressDefault.phone
+        
+        orderDetail = itemsToOrder.map((item) => {
+            let obj = {}
+            obj.productId = item.productId
+            obj.price = item.Product.price
+            obj.quantity = item.quantity
+            obj.discount = 0
+            
+            return obj
+        })
+
+        const cartId = itemsToOrder.map((item) => item.id)
+
+        dispatch(createNewOrderApi({order, orderDetail,cartId,userId: userId}))
+        
+    }
+
     return (
         <div className="PaymentPage">
             <div className="PaymentPage-container">
@@ -151,7 +188,7 @@ const PaymentPage = () => {
                                                         <div className="item-info__quantity">SL: x{item?.quantity}</div>
                                                         <div>
                                                             <div className="item-info__price item-info__price-sale">
-                                                                <span class="item-info__original-price">
+                                                                <span className="item-info__original-price">
                                                                     {convertPrice(item?.Product.originalPrice)} ₫
                                                                 </span>
                                                                 <span>{convertPrice(item?.Product?.price)} ₫</span>
@@ -163,51 +200,6 @@ const PaymentPage = () => {
                                         );
                                     })}
 
-                                    {/* <div className="product-item__package-item">
-                                        <div className="thumbnail-img">
-                                            <img src="https://salt.tikicdn.com/cache/96x96/ts/product/5d/28/e3/fc87f9ba0cbc405554ac088925b44c2f.png" />
-                                        </div>
-                                        <div className="item-info">
-                                            <div className="item-info__first-line">
-                                                <span className="item-info__product-name">
-                                                    Cà phê hoà tan NESCAFÉ 3IN1 VỊ NGUYÊN BẢN - công thức cải tiến (hộp
-                                                    20 gói x 16g )
-                                                </span>
-                                            </div>
-                                            <div className="item-info__second-line">
-                                                <div className="item-info__quantity">SL: x1</div>
-                                                <div>
-                                                    <div className="item-info__price item-info__price-sale">
-                                                        <span class="item-info__original-price">53.000 ₫</span>
-                                                        <span>45.000 ₫</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="product-item__package-item">
-                                        <div className="thumbnail-img">
-                                            <Image src="https://salt.tikicdn.com/cache/96x96/ts/product/5d/28/e3/fc87f9ba0cbc405554ac088925b44c2f.png" />
-                                        </div>
-                                        <div className="item-info">
-                                            <div className="item-info__first-line">
-                                                <span className="item-info__product-name">
-                                                    Cà phê hoà tan NESCAFÉ 3IN1 VỊ NGUYÊN BẢN - công thức cải tiến (hộp
-                                                    20 gói x 16g )
-                                                </span>
-                                            </div>
-                                            <div className="item-info__second-line">
-                                                <div className="item-info__quantity">SL: x1</div>
-                                                <div>
-                                                    <div className="item-info__price item-info__price-sale">
-                                                        <span class="item-info__original-price">53.000 ₫</span>
-                                                        <span>45.000 ₫</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -216,12 +208,13 @@ const PaymentPage = () => {
                         <h3 className="payment-method__title">Chọn phương thức thanh toán</h3>
                         <div>
                             <FormControl>
-                                <RadioGroup>
+                                               
+                                <RadioGroup defaultValue={cash} >
                                     <div>
                                         <div className="payment-method-item ">
                                             <FormControlLabel
                                                 name="payment-method"
-                                                value="cash"
+                                                value={cash}
                                                 control={<Radio />}
                                                 onChange={(e) => handleOnChangeInputPayment(e.target.value)}
                                             />
@@ -345,7 +338,7 @@ const PaymentPage = () => {
                                     onError={() => handleErrorPaypal()}
                                 />
                             ) : (
-                                <Button primary>Đặt hàng</Button>
+                                <Button primary onClick={() => handleOnClickOrderProduct()}>Đặt hàng</Button>
                             )}
                         </div>
                     </div>

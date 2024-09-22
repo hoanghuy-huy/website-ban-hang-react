@@ -189,6 +189,36 @@ const handleRemoveMultipleProductFromCart = (itemsToDelete) => {
   });
 };
 
+const handleRemoveMultipleProductFromCartWithId = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await db.Cart.destroy({
+        where: {
+          id: {
+            [Op.in]: data
+          }
+        }
+      });
+
+      if(!result) {
+        resolve({
+          EM:'Something wrong with service',
+          EC: 1,
+          DT: '',
+        })
+      }
+      
+      resolve({
+        EM:'ok delete success',
+        EC: 0,
+        DT: result,
+      })
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const handleSelectedProduct = (cartId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -227,4 +257,5 @@ module.exports = {
   handleRemoveOneProductFromCart,
   handleRemoveMultipleProductFromCart,
   handleSelectedProduct,
+  handleRemoveMultipleProductFromCartWithId
 };

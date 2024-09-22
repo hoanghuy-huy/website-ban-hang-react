@@ -17,10 +17,12 @@ import { Badge } from '@mui/material';
 const Header = () => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);
+    
     const handleShowLoginForm = () => {
         dispatch(showLoginForm('cart'));
     };
-    const cartItem = useSelector((state) => state.cart.cartList);
+
+    const { cartList } = useSelector((state) => state.cart);
 
     return (
         <header className="header">
@@ -53,7 +55,7 @@ const Header = () => {
                     {auth ? (
                         <Link to={'/cart'}>
                             <div className="icon cart-icon action-cart position-relative">
-                                <Badge badgeContent={cartItem?.length !== 0 ? cartItem.length : '0'} color="primary">
+                                <Badge badgeContent={cartList?.length !== 0 ? cartList.length : '0'} color="primary">
                                     <img
                                         src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png"
                                         alt="cart"
