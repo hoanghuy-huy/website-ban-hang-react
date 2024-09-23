@@ -8,7 +8,7 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutCategoryProduct , LayoutCheckout, LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
+import { LayoutAccount, LayoutCategoryProduct , LayoutCheckout, LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -19,7 +19,9 @@ import NotFoundPage from '~/pages/NotFoundPage';
 import PaymentPage from '~/pages/PaymentPage';
 import AddressPage from '~/pages/AddressPage';
 import PaymentSuccessPage from '~/pages/PaymentSuccessPage';
-import AccountPage from '~/pages/AccountPage';
+import AccountPage from '~/pages/OrderDetailPage';
+import OrderPage from '~/pages/OrderPage';
+import OrderDetailPage from '~/pages/OrderDetailPage';
 
 
 //Public Routes
@@ -34,7 +36,8 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: '/account', component: AccountPage, layout: LayoutCheckout },
+    { path: '/account/order', component: OrderPage, layout: LayoutAccount },
+    { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
     { path: '/payment/success', component: PaymentSuccessPage, layout: LayoutCheckout },
     { path: routes.addressPage, component: AddressPage, layout: LayoutCheckout },
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },

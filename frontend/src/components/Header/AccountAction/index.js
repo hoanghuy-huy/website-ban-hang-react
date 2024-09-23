@@ -7,6 +7,7 @@ import { logoutAccount, showLoginForm } from '~/redux/features/accountSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './AccountAction.scss';
+import { Link } from 'react-router-dom';
 const AccountActions = (props) => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);
@@ -24,7 +25,9 @@ const AccountActions = (props) => {
                                 <PopperWrapper>
                                     <div className="account-menu__content py-2">
                                         <div className="account-menu__item py-1 ">Thông Tin Tài Khoản</div>
-                                        <div className="account-menu__item py-1">Đơn hàng của tôi</div>
+                                        <Link to={'/account/order'}>
+                                            <div className="account-menu__item py-1">Đơn hàng của tôi</div>
+                                        </Link>
                                         <div
                                             className="account-menu__item py-1"
                                             onClick={() => dispatch(logoutAccount())}
@@ -40,7 +43,7 @@ const AccountActions = (props) => {
                             <div onClick={() => dispatch(showLoginForm())}>
                                 <FontAwesomeIcon className="icon user pe-1" icon={faUser} />
                                 <span title="account" className="d-none d-xxl-inline">
-                                    Xin Chào 
+                                    Xin Chào
                                 </span>
                             </div>
                         </div>

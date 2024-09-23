@@ -1,6 +1,5 @@
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import db from "../models/index";
-
 let createNewOrder = (rawData) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -29,7 +28,6 @@ let createNewOrder = (rawData) => {
         );
 
         if (!dataOrderDetail) {
-
           await db.Order.destroy({
             where: { id: dataOrder.id },
           });
@@ -40,7 +38,6 @@ let createNewOrder = (rawData) => {
             EC: 1,
           });
         }
-
 
         resolve({
           EM: "ok! create order successfully",
@@ -61,6 +58,141 @@ let createNewOrder = (rawData) => {
   });
 };
 
+let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        return reject({ EM: "User ID không hợp lệ", EC: 400 });
+      }
+      limit = +limit;
+
+      let offset = (page - 1) * limit;
+
+      let { count, rows } = await db.Order.findAndCountAll({
+        where: { userId },
+        offset: offset,
+        limit: limit,
+        include: [
+          {
+            model: db.OrderDetail,
+            include: [
+              {
+                model: db.Product,
+                attributes: ["name", "thumbnailUrl"],
+              },
+            ],
+          },
+        ],
+        distinct: true,
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      let data = {
+        totalPages: totalPages,
+        totalItems: count,
+        orders: rows,
+      };
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetOneOrder = (params) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { orderId } = params;
+      if (!orderId) {
+        reject({
+          EM: "Missing value",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      const data = await db.Order.findOne({
+        where: { id: orderId },
+        include: [
+          {
+            model: db.OrderDetail,
+            include: [
+              { model: db.Product, attributes: ["name", "thumbnailUrl"] },
+            ],
+          },
+        ],
+      });
+
+      if (!data) {
+        reject({
+          EM: "Not Found Order",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      resolve({
+        EM: "Ok",
+        DT: data,
+        EC: 0,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleDeleteFunc = (query) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { orderId } = query;
+      if (!orderId) {
+        return reject({
+          EM: "Missing value",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      const order = await db.Order.findOne({ where: { id: orderId } });
+      if (!order) {
+        return reject({
+          EM: "Not Found Order",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      await db.OrderDetail.destroy({ where: { orderId: orderId } });
+
+      await order.destroy();
+
+      resolve({
+        EM: "Ok delete success",
+        DT: "",
+        EC: 0,
+      });
+    } catch (error) {
+      console.log(error);
+      reject({
+        EM: "An error occurred",
+        DT: error.message,
+        EC: 500,
+      });
+    }
+  });
+};
 module.exports = {
   createNewOrder,
+  handleGetAllOrderWithUserIdPagination,
+  handleGetOneOrder,
+  handleDeleteFunc,
 };

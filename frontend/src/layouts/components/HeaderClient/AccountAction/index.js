@@ -24,7 +24,9 @@ const AccountActions = (props) => {
                                 <PopperWrapper>
                                     <div className="account-menu__content py-2">
                                         <div className="account-menu__item py-1 ">Thông Tin Tài Khoản</div>
-                                        <div className="account-menu__item py-1">Đơn hàng của tôi</div>
+                                        <Link to={'/account/order'}>
+                                            <div className="account-menu__item py-1">Đơn hàng của tôi</div>
+                                        </Link>
                                         <div
                                             className="account-menu__item py-1"
                                             onClick={() => dispatch(logoutAccount())}

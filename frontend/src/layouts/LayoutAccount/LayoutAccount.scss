@@ -1,0 +1,51 @@
+.LayoutAccount {
+    .LayoutAccount-container {
+        background-color: var(--background-color);
+        min-height: 2000px;
+        .header {
+            position: static;
+        }
+
+        .AccountPage {
+            display: flex;
+            width: 100%;
+            margin: 0px auto 20px;
+            flex-wrap: wrap;
+            height: 100px;
+            .AccountPage-container {
+                display: flex;
+                width: inherit;
+                .AccountPage__sidebar {
+                    width: 250px;
+                    margin-right: 17px;
+
+                    ul {
+                        padding-left: 0;
+                    }
+
+                    .account-actions {
+                        .item-account {
+                            font-size: 13px;
+                            gap: 21px;
+                            &:hover {
+                                background-color: rgb(235, 235, 240);
+                                color: rgb(0, 0, 0);
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                    .active {
+                        li {
+                            background-color: rgb(235, 235, 240);
+                            color: rgb(0, 0, 0);
+                            cursor: pointer;
+                        }
+                    }
+                }
+                .AccountPage__content-inner {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
