@@ -15,6 +15,9 @@ module.exports = {
       status: {
         type: Sequelize.INTEGER,
       },
+      orderStatus: {
+        type: Sequelize.INTEGER,
+      },
       quantityItem: {
         type: Sequelize.INTEGER,
       },

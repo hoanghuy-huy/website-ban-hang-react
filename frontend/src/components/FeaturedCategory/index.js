@@ -1,67 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Slider from 'react-slick';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 import './FeaturedCategory.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllCategoriesHot } from '~/redux/features/categorySlice/categorySlice';
+import Image from '../Image';
+
 const FeaturedCategory = () => {
+    const { categoryListHot } = useSelector((state) => state.categories);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchAllCategoriesHot());
+    }, []);
+
     const settings = {
         // dots: true,
         infinite: true,
         speed: 700,
-        slidesToShow: 4,
-        slidesToScroll: 1,
+        slidesToShow: 6,
+        slidesToScroll: 6,
         fade: false,
         arrows: false,
     };
     return (
-        <div className="FeaturedCategory-section my-2">
-            <div className="container-fluid">
-                <h4 className="title">Thương hiệu nỗi bật</h4>
-                <Slider {...settings} className="cat_slider-main">
-                    <div className="item">
-                        <div className="info">
-                            <img
-                                src="https://vcdn.tikicdn.com/ts/seller/e6/d1/51/f7e8b6c959e6df9086dff65e6378d832.jpg"
-                                alt=""
-                            />
-                        </div>
+        <>
+            {categoryListHot && (
+                <div className="FeaturedCategory-section my-2">
+                    <div className="container-fluid">
+                        <h4 className="title">Danh mục nổi bật</h4>
+                        <Slider {...settings} className="cat_slider-main">
+                            {categoryListHot.map((item) => {
+                                return (
+                                    <>
+                                        <div className="item">
+                                            <div className="info">
+                                                <Image
+                                                    src={item?.urlImg}
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })}
+                        </Slider>
                     </div>
-                    <div className="item">
-                        <div className="info">
-                            <img
-                                src="https://salt.tikicdn.com/cache/w280/ts/tikimsp/c4/c1/51/d6e393ad26199edbc5d5edf1cebc66c7.png.webp"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-                    <div className="item">
-                        <div className="info">
-                            <img
-                                src="https://salt.tikicdn.com/cache/w280/ts/tikimsp/c4/c1/51/d6e393ad26199edbc5d5edf1cebc66c7.png.webp"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-                    <div className="item">
-                        <div className="info">
-                            <img
-                                src="https://salt.tikicdn.com/cache/w280/ts/tikimsp/c4/c1/51/d6e393ad26199edbc5d5edf1cebc66c7.png.webp"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-                    <div className="item">
-                        <div className="info">
-                            <img
-                                src="https://salt.tikicdn.com/cache/w280/ts/tikimsp/c4/c1/51/d6e393ad26199edbc5d5edf1cebc66c7.png.webp"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-
-                </Slider>
-            </div>
-        </div>
+                </div>
+            )}
+        </>
     );
 };
 

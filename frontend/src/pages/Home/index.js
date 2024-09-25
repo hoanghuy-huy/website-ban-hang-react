@@ -11,13 +11,11 @@ import {
     fetchAllProductPagination,
 } from '~/redux/features/productSlice/productSlice';
 import HotProductBox from './Sections/HotProductBox';
-import NProgress from 'nprogress';
 
 import './Home.scss';
 import FlashSales from '~/components/FlashSales';
 import { CircularProgress } from '@mui/material';
 import FeaturedCategory from '~/components/FeaturedCategory';
-import Product from '~/components/Product';
 
 import Box from '@mui/material/Box';
 
@@ -28,7 +26,7 @@ function Home() {
     const { listProductHot, listProductPagination, actionFetchProductHome, loading, error } = useSelector(
         (state) => state.products,
     );
-
+    
     useEffect(() => {
         dispatch(fetchAllProductHot());
         if (actionFetchProductHome.type === 'fetch all product') {

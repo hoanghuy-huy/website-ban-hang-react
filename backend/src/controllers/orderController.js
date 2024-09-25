@@ -39,6 +39,48 @@ const getAllOrderWithUserIdPagination = async (req, res) => {
   }
 };
 
+const getAllOrderInTransitWithUserIdPagination = async (req, res) => {
+  try {
+    let data = await orderApiService.handleGetAllOrderInTransitWithUserIdPagination(
+      req.query
+    );
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const getAllOrderStatusWithUserIdPagination = async (req, res) => {
+  try {
+    let data = await orderApiService.handleGetAllOrderStatusWithUserIdPagination(
+      req.query
+    );
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 const getOneOrder = async (req, res) => {
   try {
     let data = await orderApiService.handleGetOneOrder(req.params);
@@ -81,5 +123,7 @@ module.exports = {
   createFunc,
   getAllOrderWithUserIdPagination,
   getOneOrder,
-  deleteFunc
+  deleteFunc,
+  getAllOrderInTransitWithUserIdPagination,
+  getAllOrderStatusWithUserIdPagination
 };

@@ -180,6 +180,33 @@ class categoryApiService {
       };
     }
   }
+
+  async handleGetAllCategoryHot() {
+    try {
+      let category = await db.Category.findAll({
+        where: {hot: 1}
+      });
+      if (category) {
+        return {
+          EM: "Get All Category Successfully",
+          EC: 0,
+          DT: category,
+        };
+      }
+      return {
+        EM: "Not Found Category",
+        EC: 1,
+        DT: "",
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
 }
 
 module.exports = new categoryApiService();

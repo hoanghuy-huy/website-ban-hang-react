@@ -17,9 +17,33 @@ export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', asy
 
 export const getAllOrderWithUserIdApi = createAsyncThunk(
     'order/getAllOrderWithUserIdApi',
+    async ({ limit, page, userId, pending }, thunkAPI) => {
+        const res = await httpRequest.get(
+            `order/get-all-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}${
+                pending ? `&pending=${pending}` : ''
+            }`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+export const getAllOrderDeliveryWithUserIdApi = createAsyncThunk(
+    'order/getAllOrderDeliveryWithUserIdApi',
     async ({ limit, page, userId }, thunkAPI) => {
         const res = await httpRequest.get(
-            `order/get-all-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}`,
+            `order/get-all-order-in-transit-with-user-id?limit=${limit}&page=${page}&userId=${userId}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+export const getAllStatusOrderWithUserIdApi = createAsyncThunk(
+    'order/getAllStatusOrderWithUserIdApi',
+    async ({ limit, page, userId, status }, thunkAPI) => {
+        const res = await httpRequest.get(
+            `order/get-all-status-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}&status=${status ? 1 : 0}`,
         );
 
         return res ? res.DT : [];
@@ -49,8 +73,13 @@ export const orderSlice = createSlice({
         orderList: [],
         productOrderedList: [],
         orderItem: {},
+        actionFetchApi: { type: 'get-all' },
     },
-    reducers: {},
+    reducers: {
+        handleChoseActionToFetchApiOrder: (state, action) => {
+            state.actionFetchApi = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(createNewOrderApi.pending, (state, action) => {
@@ -67,7 +96,7 @@ export const orderSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
-            ///
+            /// get-all-order
             .addCase(getAllOrderWithUserIdApi.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -78,6 +107,34 @@ export const orderSlice = createSlice({
                 state.orderList = action.payload;
             })
             .addCase(getAllOrderWithUserIdApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            /// get-all-order
+            .addCase(getAllOrderDeliveryWithUserIdApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAllOrderDeliveryWithUserIdApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.orderList = action.payload;
+            })
+            .addCase(getAllOrderDeliveryWithUserIdApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            /// get-all-order
+            .addCase(getAllStatusOrderWithUserIdApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAllStatusOrderWithUserIdApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.orderList = action.payload;
+            })
+            .addCase(getAllStatusOrderWithUserIdApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             })
@@ -111,6 +168,6 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { handleOrderProduct } = orderSlice.actions;
+export const { handleOrderProduct,handleChoseActionToFetchApiOrder } = orderSlice.actions;
 
 export default orderSlice.reducer;

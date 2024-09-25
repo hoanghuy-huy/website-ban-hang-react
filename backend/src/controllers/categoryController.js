@@ -43,12 +43,20 @@ class categoryController {
 
   async getAllProductHotPaginationWithCategory(req, res) {
     try {
-      let { page, limit, categoryId, sort, starNumber, price, brand } = req.query;
+      let { page, limit, categoryId, sort, starNumber, price, brand } =
+        req.query;
 
-      let data = await categoryApiService.handleGetProductHotPaginationWithCategory(
-        categoryId, +page, +limit,sort, +starNumber, price, brand
-      );
-      
+      let data =
+        await categoryApiService.handleGetProductHotPaginationWithCategory(
+          categoryId,
+          +page,
+          +limit,
+          sort,
+          +starNumber,
+          price,
+          brand
+        );
+
       return res.status(200).json({
         EM: data.EM,
         EC: data.EC,
@@ -66,12 +74,39 @@ class categoryController {
 
   async getAllProductBestSellerPaginationWithCategory(req, res) {
     try {
-      let { page, limit, categoryId, sort, starNumber, price, brand } = req.query;
+      let { page, limit, categoryId, sort, starNumber, price, brand } =
+        req.query;
 
-      let data = await categoryApiService.handleGetProductBestSellerPaginationWithCategory(
-        categoryId, +page, +limit,sort, +starNumber, price, brand
-      );
-      
+      let data =
+        await categoryApiService.handleGetProductBestSellerPaginationWithCategory(
+          categoryId,
+          +page,
+          +limit,
+          sort,
+          +starNumber,
+          price,
+          brand
+        );
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async getAllCategoryHot(req, res) {
+    try {
+      let data = await categoryApiService.handleGetAllCategoryHot();
+
       return res.status(200).json({
         EM: data.EM,
         EC: data.EC,

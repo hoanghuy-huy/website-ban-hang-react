@@ -18,6 +18,9 @@ module.exports = {
       logoImg: {
         type: Sequelize.STRING,
       },
+      hot: {
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

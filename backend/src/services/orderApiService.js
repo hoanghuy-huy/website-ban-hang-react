@@ -58,18 +58,17 @@ let createNewOrder = (rawData) => {
   });
 };
 
-let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId }) => {
+let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId, pending }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!userId) {
         return reject({ EM: "User ID không hợp lệ", EC: 400 });
       }
       limit = +limit;
-
       let offset = (page - 1) * limit;
 
       let { count, rows } = await db.Order.findAndCountAll({
-        where: { userId },
+        where: !pending ? { userId } : {[Op.and] : [{userId: userId}, {status : 0}]},
         offset: offset,
         limit: limit,
         include: [
@@ -84,6 +83,106 @@ let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId }) => {
           },
         ],
         distinct: true,
+        order: [['id', 'DESC']]
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      let data = {
+        totalPages: totalPages,
+        totalItems: count,
+        orders: rows,
+      };
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+
+
+let handleGetAllOrderInTransitWithUserIdPagination = ({ limit, page, userId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId) {
+        return reject({ EM: "User ID không hợp lệ", EC: 400 });
+      }
+      limit = +limit;
+
+      let offset = (page - 1) * limit;
+
+      let { count, rows } = await db.Order.findAndCountAll({
+        where: {[Op.and]: [{userId: userId},{orderStatusDelivery: 1},{orderStatus : 0}]},
+        offset: offset,
+        limit: limit,
+        include: [
+          {
+            model: db.OrderDetail,
+            include: [
+              {
+                model: db.Product,
+                attributes: ["name", "thumbnailUrl"],
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        order: [['id', 'DESC']]
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      let data = {
+        totalPages: totalPages,
+        totalItems: count,
+        orders: rows,
+      };
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetAllOrderStatusWithUserIdPagination = ({ limit, page, userId, status }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!userId || !status) {
+        return reject({ EM: "Missing value", EC: 400 });
+      }
+      limit = +limit;
+      let offset = (page - 1) * limit;
+      let { count, rows } = await db.Order.findAndCountAll({
+        where: {[Op.and]: [{userId: userId},{orderStatus: status}, status == 1 && {orderStatusDelivery: true}]},
+        offset: offset,
+        limit: limit,
+        include: [
+          {
+            model: db.OrderDetail,
+            include: [
+              {
+                model: db.Product,
+                attributes: ["name", "thumbnailUrl"],
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        order: [['id', 'DESC']]
+
       });
 
       let totalPages = Math.ceil(count / limit);
@@ -195,4 +294,6 @@ module.exports = {
   handleGetAllOrderWithUserIdPagination,
   handleGetOneOrder,
   handleDeleteFunc,
+  handleGetAllOrderInTransitWithUserIdPagination,
+  handleGetAllOrderStatusWithUserIdPagination
 };
