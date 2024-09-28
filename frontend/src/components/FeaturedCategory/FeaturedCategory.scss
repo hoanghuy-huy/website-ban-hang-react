@@ -1,48 +1,41 @@
-.FeaturedCategory-section {
-    height: auto;
-    padding: 30px 0;
-    border-radius: 8px;
-    background: linear-gradient(rgba(255, 255, 255, 0) 22.49%, rgb(255, 255, 255) 73.49%),
-        linear-gradient(264.03deg, rgb(220, 229, 251) -10.27%, rgb(234, 236, 255) 35.65%, rgb(213, 236, 253) 110.66%);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1607843137);
+.main-menu-categories {
+    width: 100%;
+    .list-cates {
+        background-color: var(--white);
+        border-radius: 4px;
+        box-shadow: 0 4px 6px #00000029;
 
-    .container-fluid {
-        .title {
-            margin-right: 8px;
-            font-weight: 600;
-            font-size: 26px;
-            line-height: 150%;
-        }
-        .cat_slider-main {
-            padding: 10px 0;
-            .item {
-                width: 100%;
-                height: auto;
+        .gr-cates {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            .cate-item {
+                cursor: pointer;
                 display: flex;
+                padding: 16px 10px 10px;
                 justify-content: center;
                 align-items: center;
-                cursor: pointer;
-                .info {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    h5 {
-                        font-weight: 400;
-                    }
-                    img {
-                        height: 100%;
-                        width: 100%;
-                        border-radius: 10px;
-                    }
-                    p {
-                        font-size: 14px;
-                        opacity: 0.8;
-                    }
+                img {
+                    height: 47px;
+                    width: 47px;
                 }
-            }
-            .slick-slide {
-                padding-right: 10px !important;
+                p {
+                    width: auto;
+                    font-size: 14px;
+                    height: 18px;
+                    margin: 2px auto;
+                    line-height: 18px;
+                    align-content: center;
+                }
+
+                &:hover {
+                    background-color: #eaecf0;
+                }
+                svg {
+                    margin-left: 15px !important;
+                    font-size: 30px !important;
+                    color: var(--primary-color) !important;
+                }
             }
         }
     }

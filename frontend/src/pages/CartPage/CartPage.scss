@@ -1,7 +1,9 @@
 .cart-page-container {
-    min-height: 200vh;
     display: flex;
     flex-direction: column;
+    width: 1440px;
+    margin: 0 auto;
+    min-height: 100vh;
     .main-title {
         h4 {
             font-size: 20px;

@@ -193,7 +193,7 @@ const CartPage = () => {
 
     return (
         <>
-            <div className="cart-page-container col-12">
+            <div className="cart-page-container">
                 <div className="main-title ms-4">
                     <h4>Giỏ hàng</h4>
                 </div>
@@ -328,7 +328,7 @@ const CartPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="empty-product-cart d-flex flex-column align-items-center col-11 ms-4 mt-3 justify-content-center">
+                    <div className="empty-product-cart d-flex flex-column align-items-center col-11 mt-3 ms-5 justify-content-center">
                         <div className="cart-img ">
                             <img
                                 src="https://salt.tikicdn.com/ts/upload/43/fd/59/6c0f335100e0d9fab8e8736d6d2fbcad.png"

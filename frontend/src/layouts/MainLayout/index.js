@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import './MainLayout.scss';
 import Sidebar from '~/components/Sidebar';
+import Footer from '~/components/Footer';
 
 const MainLayout = ({ children }) => {
     return (
@@ -17,6 +18,7 @@ const MainLayout = ({ children }) => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

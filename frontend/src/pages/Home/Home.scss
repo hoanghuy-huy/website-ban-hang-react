@@ -1,8 +1,7 @@
 .content-home {
-    min-height: 4000px;
     border-radius: 8px;
     .img-slider-container {
-        padding-bottom: 50px;
+        padding-bottom: 10px;
     }
     .productRow {
         display: flex;
@@ -10,6 +9,14 @@
             width: 20%;
             height: 200px;
             padding: 0 10px;
+        }
+    }
+
+    .box-banner-offers   {
+        margin: 15px 0;
+        img {
+            border-radius: 8px;
+            width: 100%;
         }
     }
 }

@@ -1,54 +1,89 @@
-import React, { useEffect } from 'react';
-import Slider from 'react-slick';
-
-import './FeaturedCategory.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllCategoriesHot } from '~/redux/features/categorySlice/categorySlice';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Image from '../Image';
-
-const FeaturedCategory = () => {
-    const { categoryListHot } = useSelector((state) => state.categories);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchAllCategoriesHot());
-    }, []);
-
-    const settings = {
-        // dots: true,
-        infinite: true,
-        speed: 700,
-        slidesToShow: 6,
-        slidesToScroll: 6,
-        fade: false,
-        arrows: false,
-    };
+import ReorderIcon from '@mui/icons-material/Reorder';
+import './FeaturedCategory.scss';
+function FeaturedCategory() {
     return (
-        <>
-            {categoryListHot && (
-                <div className="FeaturedCategory-section my-2">
-                    <div className="container-fluid">
-                        <h4 className="title">Danh mục nổi bật</h4>
-                        <Slider {...settings} className="cat_slider-main">
-                            {categoryListHot.map((item) => {
-                                return (
-                                    <>
-                                        <div className="item">
-                                            <div className="info">
-                                                <Image
-                                                    src={item?.urlImg}
-                                                />
-                                            </div>
-                                        </div>
-                                    </>
-                                );
-                            })}
-                        </Slider>
-                    </div>
-                </div>
-            )}
-        </>
+        <section className="main-menu-categories">
+            <div className="list-cates">
+                <ul className="gr-cates row">
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <Image src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/b9/0ab938f5b5b2993d568351bceb721407.png" />
+                            <p>máy giặc</p>
+                        </Link>
+                    </li>
+                    <li className="cate-item col-2">
+                        <Link to={'#'}>
+                            <ReorderIcon />
+                            <p>Xem thêm</p>
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+        </section>
     );
-};
+}
 
 export default FeaturedCategory;

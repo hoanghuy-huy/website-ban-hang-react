@@ -10,11 +10,11 @@
     background-color: var(--white);
     z-index: 100;
     .inner-header {
-        width: 100%;
+        width: 1440px;
+        margin: 0 auto;
         display: flex;
         align-items: center;
         height: 72px;
-
         .logo {
             min-width: 64px;
         }

@@ -10,23 +10,27 @@ import {
     fetchAllProductHotPagination,
     fetchAllProductPagination,
 } from '~/redux/features/productSlice/productSlice';
-import HotProductBox from './Sections/HotProductBox';
-
-import './Home.scss';
-import FlashSales from '~/components/FlashSales';
 import { CircularProgress } from '@mui/material';
 import FeaturedCategory from '~/components/FeaturedCategory';
 
 import Box from '@mui/material/Box';
+import Image from '~/components/Image';
+import Skeleton from '@mui/material/Skeleton';
+import { ThreeDots } from 'react-loader-spinner';
 
+import HotProductBox from './Sections/HotProductBox';
+import './Home.scss';
+
+import { Suspense, lazy } from 'react';
+const ProductList = lazy(() => import('~/components/ProductBox'));
 function Home() {
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(20);
     const [page, setPage] = useState(1);
     const dispatch = useDispatch();
     const { listProductHot, listProductPagination, actionFetchProductHome, loading, error } = useSelector(
         (state) => state.products,
     );
-    
+
     useEffect(() => {
         dispatch(fetchAllProductHot());
         if (actionFetchProductHome.type === 'fetch all product') {
@@ -70,10 +74,17 @@ function Home() {
 
     if (loading === true && error === false) {
         return (
-            <div>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-                    <CircularProgress />
-                </Box>
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>
+                <ThreeDots
+                    visible={true}
+                    height="80"
+                    width="80"
+                    color="var(--primary-color)"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                />
             </div>
         );
     }
@@ -91,24 +102,43 @@ function Home() {
     }
     return (
         <div className="content-home">
-            <div className="img-slider-container">
-                <ImageSlider />
-            </div>
+            {true ? (
+                <div className="img-slider-container">
+                    <ImageSlider />
+                </div>
+            ) : (
+                <>
+                    <div className="img-slider-container">
+                        <Skeleton variant="rounded" width={'100%'} height={260} />
+                    </div>
+                </>
+            )}
+
             <div>
                 <FeaturedCategory />
             </div>
             <div>
                 <HotProductBox listHotProduct={listProductHot} />
             </div>
-            <div>
+            {/* <div>
                 <FlashSales items={listProductHot} />
+            </div> */}
+            <div className="box-banner-offers">
+                <Image src="https://cdnv2.tgdd.vn/mwg-static/dmx/Banner/08/7b/087b2f42e0aa1a225c759bf1531d2cf3.jpg" />
             </div>
             <div>
-                <ProductBox
+                <Suspense fallback={<div>Đang tải...</div>}>
+                    <ProductList
+                        listProductPagination={listProductPagination}
+                        handlePageClick={(e) => handlePageClick(e)}
+                        limit={limit}
+                    />
+                </Suspense>
+                {/* <ProductBox
                     listProductPagination={listProductPagination}
                     handlePageClick={(e) => handlePageClick(e)}
                     limit={limit}
-                />
+                /> */}
             </div>
             {/* <div className="productRow">
                 <div className="item">

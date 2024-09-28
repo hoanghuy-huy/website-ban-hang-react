@@ -10,6 +10,7 @@ import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import FilterWrapper from '~/components/FilterWrapper';
 import CartItem from '~/components/CartItem';
 import './Product.scss';
+import { ThreeDots } from 'react-loader-spinner';
 
 const ProductPage = () => {
     const {
@@ -89,7 +90,20 @@ const ProductPage = () => {
     }, [categoryId]);
 
     if (loading === true && error === false) {
-        return <div>Loading...</div>;
+        return (
+            <div className='d-flex justify-content-center align-items-center' style={{height: '100vh'}}>
+                <ThreeDots
+                    visible={true}
+                    height="80"
+                    width="80"
+                    color="var(--primary-color)"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                />
+            </div>
+        );
     } else if (loading === false && error === true) {
         return <div>Error from server</div>;
     }
@@ -99,16 +113,16 @@ const ProductPage = () => {
             <div className="title-content">
                 <h2>{category?.name}</h2>
             </div>
-        <FilterWrapper
-            sortPrice={sortPrice}
-            setSortPrice={setSortPrice}
-            itemSortPrice={itemSortPrice}
-            categoryId={categoryId}
-            totalPages={listProductPaginationWithCategory?.totalPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            actionFetchProductCategory={actionFetchProductCategory}
-        />
+            <FilterWrapper
+                sortPrice={sortPrice}
+                setSortPrice={setSortPrice}
+                itemSortPrice={itemSortPrice}
+                categoryId={categoryId}
+                totalPages={listProductPaginationWithCategory?.totalPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                actionFetchProductCategory={actionFetchProductCategory}
+            />
             {listProductPaginationWithCategory?.products?.length > 0 ? (
                 <div className="container-cart-item d-flex">
                     <div className="col-12">
