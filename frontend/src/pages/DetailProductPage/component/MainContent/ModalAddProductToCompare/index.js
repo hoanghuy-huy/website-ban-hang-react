@@ -13,7 +13,6 @@ import { convertPrice } from '~/utils/convert';
 const ModalAddProductToCompare = () => {
     const dispatch = useDispatch();
     const { showModalAddProductToCompare, listProductPaginationWithCategory, listProductToCompare } = useSelector((state) => state.detailProduct);
-    console.log(listProductToCompare)
     const renderResultSearchItem = () => {
         return listProductPaginationWithCategory?.products?.map((item) => {
             return (

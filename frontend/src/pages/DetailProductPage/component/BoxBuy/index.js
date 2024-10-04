@@ -16,6 +16,10 @@ const BoxBuy = ({ item }) => {
         if (_quantity < 1) {
             return;
         }
+        if(_quantity > 10) {
+            
+            return ;
+        }
         setQuantity(_quantity);
         const timer = setTimeout(() => {
             setPrice(_quantity * originalPrice);

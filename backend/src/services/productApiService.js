@@ -201,7 +201,7 @@ class productApiService {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
-              !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
+              !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
               { categoryId: categoryId },
               convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
@@ -215,7 +215,7 @@ class productApiService {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
-              !!+starNumber && { starsNumber: { [Op.gt]: 4 } },
+              !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
               { categoryId: categoryId },
               convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }

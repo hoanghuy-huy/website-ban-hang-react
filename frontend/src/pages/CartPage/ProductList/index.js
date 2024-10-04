@@ -18,12 +18,9 @@ function ProductList({ item }) {
         dispatch(handleOnChangeSelected({ id: id }));
     };
 
-    const handleChangeQuantityProduct = (type, idProduct) => {
-        dispatch(handleOnClickChangeQuantity({ type: type, id: idProduct }));
+    const handleChangeQuantityProduct = (type, idProduct, inventoryNumber) => {
+        dispatch(handleOnClickChangeQuantity({ type: type, id: idProduct, inventoryNumber }));
     };
-
-
-    
     return (
         <>
             <div className="cart-item-container mt-4" key={item?.id}>
@@ -44,7 +41,7 @@ function ProductList({ item }) {
                             <div className="name">{item?.Product?.name}</div>
                         </div>
                         <div className="price">{convertPrice(item?.Product?.price)}</div>
-                        <div className="item-quantity ">
+                        <div className="item-quantity">
                             <div className="quantity">
                                 <span className="minus" onClick={() => handleChangeQuantityProduct('minus', item?.id)}>
                                     <Image
@@ -60,6 +57,11 @@ function ProductList({ item }) {
                                     />
                                 </span>
                             </div>
+                            {item?.Product?.inventoryNumber < 10 && (
+                                <span className="alert-number-inventory">
+                                    Còn {item?.Product?.inventoryNumber} sản phẩm
+                                </span>
+                            )}
                         </div>
                         <div className="price-end">{convertPrice(item?.quantity * item?.Product?.price)}</div>
                         <div className="icon-trash mb-2" onClick={() => dispatch(handleShowModalDelete(item?.id))}>

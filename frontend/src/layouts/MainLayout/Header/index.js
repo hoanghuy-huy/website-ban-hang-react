@@ -35,7 +35,7 @@ const Header = () => {
 
                 <SearchBox />
 
-                <div className="actions col-4 gap-3">
+                <div className="actions col-3 gap-3">
                     <div className="action-home ">
                         <NavLink to={config.routes.home}>
                             {' '}
@@ -43,12 +43,12 @@ const Header = () => {
                             <div className="d-none d-xxl-inline">Trang Chủ</div>
                         </NavLink>
                     </div>
-                    <div className="action-favorite">
+                    {/* <div className="action-favorite">
                         <Badge badgeContent={4} color="primary">
                             <FavoriteBorder />
                         </Badge>
                         <div className="d-none d-xxl-inline ps-2">Yêu thích</div>
-                    </div>
+                    </div> */}
 
                     <AccountActions />
 

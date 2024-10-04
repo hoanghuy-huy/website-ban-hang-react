@@ -71,7 +71,7 @@ class categoryApiService {
             [Op.and]: [
               { authentic: true },
               { categoryId: categoryId },
-              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              !!starNumber && {starsNumber: {[Op.gt]: 3.9}},              
               +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
@@ -86,7 +86,7 @@ class categoryApiService {
             [Op.and]: [
               { authentic: true },
               { categoryId: categoryId },
-              !!starNumber && {starsNumber: {[Op.gt]: 4}},
+              !!starNumber && {starsNumber: {[Op.gt]: 3.9}},
               +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
@@ -132,7 +132,7 @@ class categoryApiService {
             [Op.and]: [
               { quantitySold: { [Op.gt]: 100 } },
               { categoryId: categoryId },
-              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              !!starNumber && {starsNumber: {[Op.gt]: 3.9}},              
               +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]
@@ -147,7 +147,7 @@ class categoryApiService {
             [Op.and]: [
               { quantitySold: { [Op.gt]: 100 } },
               { categoryId: categoryId },
-              !!starNumber && {starsNumber: {[Op.gt]: 4}},              
+              !!starNumber && {starsNumber: {[Op.gt]: 3.9}},              
               +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
               convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
             ]

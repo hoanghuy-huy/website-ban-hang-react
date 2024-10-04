@@ -35,6 +35,7 @@ const CartPage = () => {
     const { userId } = useSelector((state) => state.account.account);
     const [showModalError, setShowModalError] = useState(false);
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
+    
     const defaultValueAddress = {
         id: addressDefault ? addressDefault?.id : '',
         userId: userId,
@@ -230,7 +231,7 @@ const CartPage = () => {
 
                             {cartList &&
                                 cartList.length > 0 &&
-                                cartList.map((item, index) => {
+                                cartList.map((item) => {
                                     return <ProductList key={item?.id} item={item} />;
                                 })}
                         </div>

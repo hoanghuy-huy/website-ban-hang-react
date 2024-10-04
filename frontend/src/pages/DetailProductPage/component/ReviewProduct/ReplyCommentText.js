@@ -11,7 +11,6 @@ const ReplyCommentText = () => {
                 <Avatar sx={{ fontSize: 32 }} />
                 <div className="replyCommentText__wrapper">
                     Hello anh em
-
                 </div>
             </div>
         </div>

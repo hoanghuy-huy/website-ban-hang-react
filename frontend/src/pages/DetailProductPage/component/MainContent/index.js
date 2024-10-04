@@ -23,7 +23,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     );
 
     const checkedCompare = () => {
-        const check = listProductToCompare.some((product) => product.id === item.id);
+        const check = listProductToCompare.some((product) => product?.id === item?.id);
 
         return check;
     };
@@ -180,7 +180,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
             </div>
 
             {/* Review Product Box */}
-            <ReviewProduct />
+            <ReviewProduct productId={item.id}/>
 
             {showFormCompare && <ComparisonProduct />}
             {listProductToCompare.length > 0 && showFormShrinkCompare && !showFormCompare && (

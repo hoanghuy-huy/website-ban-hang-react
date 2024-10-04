@@ -3,7 +3,7 @@ import categoriesReducer from './features/categorySlice/categorySlice';
 import productReducer from './features/productSlice/productSlice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { accountReducer, cartReducer, detailProductReducer, brandReducer, addressProductReducer, orderReducer } from './features';
+import { accountReducer, cartReducer, detailProductReducer, brandReducer, addressProductReducer, orderReducer, commentReducer } from './features';
 
 const persistConfig = {
     key: 'root',
@@ -19,6 +19,7 @@ const rootReducer = combineReducers({
     brand: brandReducer,
     detailProduct: detailProductReducer,
     address: addressProductReducer,
+    comment: commentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

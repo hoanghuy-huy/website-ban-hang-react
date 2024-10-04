@@ -73,7 +73,7 @@ const SearchBox = () => {
                 </div>
             )}
         >
-            <div className="search-box col-5 rounded-2 position-relative">
+            <div className="search-box col-6 rounded-2 position-relative">
                 <div className="ps-3">
                     {' '}
                     <FontAwesomeIcon icon={faMagnifyingGlass} />

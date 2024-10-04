@@ -12,6 +12,7 @@
     .inner-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         height: 72px;
         width: 1440px;
         margin: 0 auto;
@@ -25,7 +26,8 @@
             user-select: none;
             display: flex;
             align-items: center;
-            padding-left: 3px;
+            justify-content: end;
+            padding-right: 10px;
             .action-home {
                 font-size: 14px;
                 padding: 8px 16px;

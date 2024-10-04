@@ -10,7 +10,7 @@ import brandRouter from './brand.js'
 import addressRouter from './address.js'
 import paymentRouter from './payment.js'
 import orderRouter from './order.js'
-
+import commentRouter from './comment.js'
 function initApiRoutes(app) {
   app.use("/api/v1", authRouter);
   app.use("/api/v1", userRouter);
@@ -24,6 +24,7 @@ function initApiRoutes(app) {
   app.use("/api/v1/address",addressRouter)
   app.use("/api/v1/payment",paymentRouter)
   app.use("/api/v1/order",orderRouter)
+  app.use("/api/v1/comment",commentRouter)
 }
 
 module.exports = initApiRoutes;

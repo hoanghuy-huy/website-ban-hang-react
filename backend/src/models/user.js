@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Group)
       User.belongsToMany(models.Product, { through : 'Cart', foreignKey: 'userId' })
       User.hasMany(models.Address, { foreignKey : 'userId'})
+      User.hasMany(models.Comment, {foreignKey: 'userId'})
     }
   }
   User.init({

@@ -99,6 +99,7 @@ export const cartSlice = createSlice({
         address: [],
         showModalAddress: false,
         showSnackBar: false,
+        messageSnackbar:'',
     },
     reducers: {
         handleOnClickChangeQuantity: (state, action) => {
@@ -106,7 +107,13 @@ export const cartSlice = createSlice({
                 case 'plus':
                     const updatedQuantityPlus = current(state.cartList).map((item) => {
                         if (item.id === action.payload.id) {
-                            if (item.quantity === 10) {
+                            if(item.Product.inventoryNumber === item.quantity) {
+                                state.messageSnackbar = `Số lượng trong kho chỉ còn ${item.quantity} sản phẩm`
+                                state.showSnackBar = true;
+                                return { ...item, quantity: item.quantity }
+                            }
+                            if (item.quantity >= 10) {
+                                state.messageSnackbar = `Số lượng được mua sản phẩm này là ${item.quantity} sản phẩm`
                                 state.showSnackBar = true;
                                 return { ...item, quantity: item.quantity };
                             }

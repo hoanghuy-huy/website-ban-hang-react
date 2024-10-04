@@ -58,6 +58,8 @@
                     border-bottom: 1px solid rgba(0, 0, 0, 0.09);
                     display: flex;
                     padding: 1rem 0 1rem 1.25rem;
+                    height: 300px;
+
                     .product-rating__avatar {
                     }
                     .product-rating__main {
@@ -123,7 +125,7 @@
                                         padding: 6px 40px 10px 12px;
                                         border-radius: 12px;
                                         width: 100%;
-                                        
+
                                         outline: 0px;
                                         font-size: 13px;
                                         line-height: 20px;
@@ -143,16 +145,12 @@
                                         color: var(--primary-color);
                                         cursor: pointer;
                                     }
-                                    
-
-                                }   
+                                }
                             }
                         }
-
                     }
                 }
             }
-            
         }
         .CommentInput {
             margin: 12px 0px;
@@ -164,7 +162,6 @@
                     z-index: 1;
                     -webkit-box-flex: 1;
                     flex-grow: 1;
-
 
                     textarea {
                         border: 1px solid rgb(238, 238, 238);
