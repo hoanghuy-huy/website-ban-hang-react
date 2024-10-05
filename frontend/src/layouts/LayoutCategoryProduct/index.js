@@ -1,4 +1,4 @@
-import Header from '~/components/Header';
+import Header from '~/layouts/MainLayout/Header';
 
 import './LayoutCategoryProduct.scss';
 import Sidebar from './Sidebar';

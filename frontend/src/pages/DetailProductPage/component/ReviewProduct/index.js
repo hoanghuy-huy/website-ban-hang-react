@@ -12,11 +12,11 @@ import { getAllComment } from '~/redux/features/commentSlice';
 import { Avatar, Checkbox, Tooltip } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-const ReviewProduct = ({ productId }) => {
+const ReviewProduct = ({ product }) => {
     const dispatch = useDispatch();
     const { commentList } = useSelector((state) => state.comment);
     useEffect(() => {
-        dispatch(getAllComment({ productId: productId, page: 1, limit: 5 }));
+        dispatch(getAllComment({ productId: product.productId, page: 1, limit: 5 }));
     }, []);
     const { totalPages, comments } = commentList;
     console.log(comments);
@@ -29,14 +29,14 @@ const ReviewProduct = ({ productId }) => {
                 </div>
                 <div className="product-rating-overview">
                     <div className="product-rating-overview__briefing">
-                        {!true ? (
+                        {true ? (
                             <>
                                 <div className="product-rating-overview__score-wrapper">
-                                    <span class="product-rating-overview__rating-score">4.7</span>
+                                    <span class="product-rating-overview__rating-score">{product.starsNumber}</span>
                                     <span class="product-rating-overview__rating-score-out-of"> trên 5 </span>
                                 </div>
                                 <div className="product-rating-overview__stars">
-                                    <Rating value={5} readOnly sx={{ fontSize: 20 }} />
+                                    <Rating value={product.starsNumber} readOnly sx={{ fontSize: 20 }} />
                                 </div>
                             </>
                         ) : (

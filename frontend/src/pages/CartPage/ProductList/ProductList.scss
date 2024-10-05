@@ -3,14 +3,19 @@
 }
 
 .cart-item-container {
+
     .form-check {
         .form-check-input {
             cursor: pointer;
         }
     }
+    .disable {
+        opacity: 0.6;
+    }
     .item-quantity {
         position: relative;
-        .alert-number-inventory {
+        .alert-number-inventory,
+        .alert-out-of-stock {
             position: absolute;
             top: 38px;
             transform: translateX(-50%);
@@ -18,6 +23,10 @@
             font-size: 8px;
             color: rgb(252, 130, 10);
             width: 62px;
+        }
+        .alert-out-of-stock {
+            color: #ff414d !important;
+            font-size: 10px !important;
         }
     }
 }

@@ -1,5 +1,5 @@
- // action
- .content-right {
+// action
+.content-right {
     border-radius: 8px;
     height: 360px;
     background: var(--white);
@@ -9,6 +9,27 @@
     flex-direction: column;
     gap: 12px;
     margin-left: 15px;
+    .alert-out-of-stock {
+        padding: 20px 20px;
+        .text-container {
+            color: #ff424f;
+            border-radius: 6px;
+            border: 1px solid #ff424f;
+            padding: 10px 10px;
+            .title {
+                svg {
+                    padding-right: 5px;
+                }
+            }
+            span {
+                padding-left: 25px;
+                font-weight: 300;
+                font-size: 14px;
+                line-height: 150%;
+                color: rgb(39, 39, 42);
+            }
+        }
+    }
     .content-right__quantity-input {
         display: grid;
         grid-template-columns: 1fr;
@@ -63,7 +84,7 @@
         font-style: normal;
         .label {
             font-size: 16px;
-            color: rgb(39, 39, 42)
+            color: rgb(39, 39, 42);
         }
         .price {
             font-size: 24px;
@@ -74,7 +95,6 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 8px;
-
     }
 }
 .content-right.col-3.gap-5 {

@@ -180,7 +180,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
             </div>
 
             {/* Review Product Box */}
-            <ReviewProduct productId={item.id}/>
+            <ReviewProduct product={item} />
 
             {showFormCompare && <ComparisonProduct />}
             {listProductToCompare.length > 0 && showFormShrinkCompare && !showFormCompare && (

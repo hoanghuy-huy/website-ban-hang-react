@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import httpRequest from '~/utils/httpRequest';
-import { deleteMultipleProductFormCartWithId } from '../cartSlice';
+import { deleteMultipleProductFormCartWithId,fetchAllCart } from '../cartSlice';
 
 export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', async (data, thunkAPI) => {
     const res = await httpRequest.post(`order/create`, data);
     if (res && res.EC === 0) {
-        window.location.href = '/payment/success';
-        thunkAPI.dispatch(deleteMultipleProductFormCartWithId({ data: data.cartId, userId: data.userId }));
+        await thunkAPI.dispatch(deleteMultipleProductFormCartWithId({ data: data.cartId, userId: data.userId }));
     } else {
         toast.error('Xảy ra lỗi vui lòng thử lại');
     }
@@ -43,7 +42,9 @@ export const getAllStatusOrderWithUserIdApi = createAsyncThunk(
     'order/getAllStatusOrderWithUserIdApi',
     async ({ limit, page, userId, status }, thunkAPI) => {
         const res = await httpRequest.get(
-            `order/get-all-status-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}&status=${status ? 1 : 0}`,
+            `order/get-all-status-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}&status=${
+                status ? 1 : 0
+            }`,
         );
 
         return res ? res.DT : [];
@@ -56,11 +57,14 @@ export const getOneOrderApi = createAsyncThunk('order/getOneOrderApi', async (or
     return res ? res.DT : {};
 });
 
-export const cancelOrderApi = createAsyncThunk('order/cancelOrderApi', async ({ orderId, userId }, thunkAPI) => {
-    const res = await httpRequest.put(`order/delete-order?orderId=${orderId}`);
-    thunkAPI.getAllOrderWithUserIdApi(userId);
-    return res ? res.DT : {};
-});
+export const cancelOrderApi = createAsyncThunk(
+    'order/cancelOrderApi',
+    async ({ orderId, userId, productList }, thunkAPI) => {
+        const res = await httpRequest.put(`order/delete-order?orderId=${orderId}`, productList);
+        thunkAPI.getAllOrderWithUserIdApi(userId);
+        return res ? res.DT : {};
+    },
+);
 
 export const orderSlice = createSlice({
     name: 'order',
@@ -168,6 +172,6 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { handleOrderProduct,handleChoseActionToFetchApiOrder } = orderSlice.actions;
+export const { handleOrderProduct, handleChoseActionToFetchApiOrder } = orderSlice.actions;
 
 export default orderSlice.reducer;

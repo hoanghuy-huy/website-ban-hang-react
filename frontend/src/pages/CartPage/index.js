@@ -90,8 +90,9 @@ const CartPage = () => {
     }, []);
 
     const checkSelectedAll = () => {
-        const checkAll = cartList?.every((item) => item?.selected === true);
-        // document.getElementById('checkAll').checked = checkAll
+        const checkAll = cartList
+        .filter((item) => item.Product.inventoryNumber > 0)
+        .every((item) => item?.selected === true);
         return checkAll;
     };
 

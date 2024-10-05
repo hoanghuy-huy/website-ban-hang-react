@@ -102,7 +102,7 @@ const getOneOrder = async (req, res) => {
 
 const deleteFunc = async (req, res) => {
   try {
-    let data = await orderApiService.handleDeleteFunc(req.query);
+    let data = await orderApiService.handleDeleteFunc(req.query,req.body);
 
     return res.status(200).json({
       EM: data.EM,

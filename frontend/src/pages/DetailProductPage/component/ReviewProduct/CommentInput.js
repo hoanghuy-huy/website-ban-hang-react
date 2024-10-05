@@ -6,6 +6,9 @@ import StarIcon from '@mui/icons-material/Star';
 import './ReviewProduct.scss';
 
 const CommentInput = () => {
+    const handleOnChangeImage = (filesImage) => {
+        console.log(filesImage)
+    };
     return (
         <div className="CommentInput">
             <div className="CommentInput-container">
@@ -27,8 +30,16 @@ const CommentInput = () => {
                         tabIndex={-1}
                         startIcon={<AddPhotoAlternateIcon />}
                         className="rounded me-2"
+                        type="file"
                     >
                         Thêm ảnh
+                        <input
+                            type="file"
+                            className="input-upload-img"
+                            multiple
+                            accept="image/png, image/jpeg" 
+                            onChange={(e) => handleOnChangeImage(e.target.files)}
+                        />
                     </Button>
                     <Button variant="outlined" className="rounded me-2">
                         5

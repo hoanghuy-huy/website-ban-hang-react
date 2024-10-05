@@ -11,12 +11,14 @@ import { convertPrice } from '~/utils/convert';
 import Button from '~/components/Button/Button';
 import { getAddressDefault } from '~/redux/features/addressSlice';
 import * as paymentService from '~/services/paymentService';
-import _ from 'lodash'
+import _ from 'lodash';
 
 import './PaymentPage.scss';
 import { createNewOrderApi } from '~/redux/features/orderSlice';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentPage = () => {
+    const navigate = useNavigate();
     const listMethodDelivery = [
         {
             id: 0,
@@ -38,7 +40,7 @@ const PaymentPage = () => {
     const { itemsToOrder } = useSelector((state) => state.cart);
     const [methodDelivery, setMethodDelivery] = useState(listMethodDelivery[0]);
     const [methodPayment, setMethodPayment] = useState(cash);
-    const [sdkReady, setSdkReady] = useState(false)
+    const [sdkReady, setSdkReady] = useState(false);
     const dispatch = useDispatch();
 
     const handleOnChangeInput = (value, item) => {
@@ -67,75 +69,78 @@ const PaymentPage = () => {
         const data = await paymentService.apiGetClientId();
 
         if (data && data.data) {
-            const script = document.createElement('script')
-            script.type = 'text/javascript'
-            script.src = `https://sandbox.paypal.com/sdk/js?client-id=${data.data}`
-            script.async = true
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = `https://sandbox.paypal.com/sdk/js?client-id=${data.data}`;
+            script.async = true;
             script.onload = () => {
-                setSdkReady(true)
-            }
+                setSdkReady(true);
+            };
             script.onerror = () => {
-                console.error("Failed to load PayPal SDK");
+                console.error('Failed to load PayPal SDK');
             };
 
-            document.body.appendChild(script)
-
+            document.body.appendChild(script);
         }
     };
 
     const handleOnChangeInputPayment = (value) => {
-
         setMethodPayment(value);
     };
 
-    const handleErrorPaypal = () => {
-        
-    }
+    const handleErrorPaypal = () => {};
 
     useEffect(() => {
         if (!changeAddress) {
             dispatch(getAddressDefault(userId));
         }
-        if(!window.paypal) {
+        if (!window.paypal) {
             addPaypalScript();
-        }else {
-            setSdkReady(true)
+        } else {
+            setSdkReady(true);
         }
     }, []);
 
-    const handleOnClickOrderProduct = () => {
-        let order = {}
-        let orderDetail = {}
+    const handleOnClickOrderProduct = async () => {
+        let order = {};
+        let orderDetail = {};
 
-        order.userId = userId
-        order.status = false
-        order.quantityItem = itemsToOrder.length
-        order.totalPrice = totalPriceToOrder()
-        order.totalDiscount = 0
-        order.orderPaymentStatus = false
-        order.orderStatusDelivery = false
-        order.paymentMethod = methodPayment
-        order.deliveryMethodName = methodDelivery.name
-        order.deliveryMethodFee = methodDelivery.feeDelivery
-        order.recipientName = addressDefault.recipientName
-        order.address = `${addressDefault.address} ,${addressDefault.ward} ,${addressDefault.district} ,${addressDefault.city} `
-        order.phone = addressDefault.phone
-        
+        order.userId = userId;
+        order.status = false;
+        order.quantityItem = itemsToOrder.length;
+        order.totalPrice = totalPriceToOrder();
+        order.totalDiscount = 0;
+        order.orderPaymentStatus = false;
+        order.orderStatusDelivery = false;
+        order.paymentMethod = methodPayment;
+        order.deliveryMethodName = methodDelivery.name;
+        order.deliveryMethodFee = methodDelivery.feeDelivery;
+        order.recipientName = addressDefault.recipientName;
+        order.address = `${addressDefault.address} ,${addressDefault.ward} ,${addressDefault.district} ,${addressDefault.city} `;
+        order.phone = addressDefault.phone;
+
         orderDetail = itemsToOrder.map((item) => {
-            let obj = {}
-            obj.productId = item.productId
-            obj.price = item.Product.price
-            obj.quantity = item.quantity
-            obj.discount = 0
-            
-            return obj
-        })
+            let obj = {};
+            obj.productId = item.productId;
+            obj.price = item.Product.price;
+            obj.quantity = item.quantity;
+            obj.discount = 0;
 
-        const cartId = itemsToOrder.map((item) => item.id)
+            return obj;
+        });
 
-        dispatch(createNewOrderApi({order, orderDetail,cartId,userId: userId}))
-        
-    }
+        const cartId = itemsToOrder.map((item) => item.id);
+        const productList = itemsToOrder.map((product) => {
+            return {
+                productId: product.productId,
+                quantity: product.quantity,
+            };
+        });
+
+        await dispatch(createNewOrderApi({ order, orderDetail, cartId, userId: userId, productList: productList }));
+
+        navigate('/payment/success');
+    };
 
     return (
         <div className="PaymentPage">
@@ -199,7 +204,6 @@ const PaymentPage = () => {
                                             </div>
                                         );
                                     })}
-
                                 </div>
                             </div>
                         </div>
@@ -208,8 +212,7 @@ const PaymentPage = () => {
                         <h3 className="payment-method__title">Chọn phương thức thanh toán</h3>
                         <div>
                             <FormControl>
-                                               
-                                <RadioGroup defaultValue={cash} >
+                                <RadioGroup defaultValue={cash}>
                                     <div>
                                         <div className="payment-method-item ">
                                             <FormControlLabel
@@ -334,11 +337,12 @@ const PaymentPage = () => {
                                             }),
                                         });
                                     }}
-
                                     onError={() => handleErrorPaypal()}
                                 />
                             ) : (
-                                <Button primary onClick={() => handleOnClickOrderProduct()}>Đặt hàng</Button>
+                                <Button primary onClick={() => handleOnClickOrderProduct()}>
+                                    Đặt hàng
+                                </Button>
                             )}
                         </div>
                     </div>

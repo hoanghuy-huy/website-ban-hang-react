@@ -62,12 +62,11 @@ export const deleteMultipleProductFormCart = createAsyncThunk(
 
 export const deleteMultipleProductFormCartWithId = createAsyncThunk(
     'cart/deleteMultipleProductFormCartWithId',
-    async ({data, userId}, thunkAPI) => {
+    async ({ data, userId }, thunkAPI) => {
         const res = await httpRequest.put(`cart/delete-multiple-with-id`, data);
         if (res && res.EC === 0) {
-
             thunkAPI.dispatch(fetchAllCart(userId));
-            
+
             return res;
         } else {
             return res ? res.DT : [];
@@ -99,7 +98,7 @@ export const cartSlice = createSlice({
         address: [],
         showModalAddress: false,
         showSnackBar: false,
-        messageSnackbar:'',
+        messageSnackbar: '',
     },
     reducers: {
         handleOnClickChangeQuantity: (state, action) => {
@@ -107,13 +106,13 @@ export const cartSlice = createSlice({
                 case 'plus':
                     const updatedQuantityPlus = current(state.cartList).map((item) => {
                         if (item.id === action.payload.id) {
-                            if(item.Product.inventoryNumber === item.quantity) {
-                                state.messageSnackbar = `Số lượng trong kho chỉ còn ${item.quantity} sản phẩm`
+                            if (item.Product.inventoryNumber === item.quantity) {
+                                state.messageSnackbar = `Số lượng trong kho chỉ còn ${item.quantity} sản phẩm`;
                                 state.showSnackBar = true;
-                                return { ...item, quantity: item.quantity }
+                                return { ...item, quantity: item.quantity };
                             }
                             if (item.quantity >= 10) {
-                                state.messageSnackbar = `Số lượng được mua sản phẩm này là ${item.quantity} sản phẩm`
+                                state.messageSnackbar = `Số lượng được mua sản phẩm này là ${item.quantity} sản phẩm`;
                                 state.showSnackBar = true;
                                 return { ...item, quantity: item.quantity };
                             }
@@ -152,11 +151,19 @@ export const cartSlice = createSlice({
             });
             state.cartList = updateStatusSelected;
 
-            const checkAll = state.cartList.every((item) => item.selected === true);
+            const checkAll = state.cartList
+                .filter((item) => item.Product.inventoryNumber > 0)
+                .every((item) => item.selected === true);
+
+            console.log(checkAll)
             document.getElementById('checkAll').checked = checkAll;
         },
         handleOnChangeSelectedAll: (state, action) => {
             const updateStatusSelected = current(state.cartList).map((item) => {
+                if (item.Product.inventoryNumber === 0) {
+                    return { ...item, selected: false };
+                }
+                
                 return { ...item, selected: action.payload };
             });
 
@@ -188,7 +195,7 @@ export const cartSlice = createSlice({
             return;
         },
         handleCloseSnackBar: (state) => {
-            state.showSnackBar = false
+            state.showSnackBar = false;
         },
     },
     extraReducers: (builder) => {
@@ -303,7 +310,7 @@ export const {
     handlePurchaseProduct,
     handleHideModalAddress,
     handleShowModalAddress,
-    handleCloseSnackBar
+    handleCloseSnackBar,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

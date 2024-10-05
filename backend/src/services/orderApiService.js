@@ -3,15 +3,28 @@ import db from "../models/index";
 let createNewOrder = (rawData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let { order, orderDetail } = rawData;
-
+      let { order, orderDetail, productList } = rawData;
       if (orderDetail && orderDetail.length < 1) {
         resolve({
-          EM: "something wrong with length order detail",
+          EM: "something wrong with data",
           DT: "",
           EC: 1,
         });
       }
+      let productId = productList.map((item) => item.productId);
+      let productQuantity = productList.map((item) => item.quantity);
+
+
+      let products = await db.Product.findAll({
+        where: {id: productId}
+      })
+
+      const updateQuantities = products.map((product, index) => ({
+        id: product.id,
+        newInventory: product.inventoryNumber - productQuantity[index],
+      }));
+
+
 
       const dataOrder = await db.Order.create(order);
 
@@ -39,6 +52,10 @@ let createNewOrder = (rawData) => {
           });
         }
 
+        await Promise.all(updateQuantities.map(({ id, newInventory }) => 
+          db.Product.update({ inventoryNumber: newInventory }, { where: { id } })
+        ));
+  
         resolve({
           EM: "ok! create order successfully",
           DT: dataOrder,
@@ -58,7 +75,12 @@ let createNewOrder = (rawData) => {
   });
 };
 
-let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId, pending }) => {
+let handleGetAllOrderWithUserIdPagination = ({
+  limit,
+  page,
+  userId,
+  pending,
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!userId) {
@@ -68,7 +90,9 @@ let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId, pending }) =
       let offset = (page - 1) * limit;
 
       let { count, rows } = await db.Order.findAndCountAll({
-        where: !pending ? { userId } : {[Op.and] : [{userId: userId}, {status : 0}]},
+        where: !pending
+          ? { userId }
+          : { [Op.and]: [{ userId: userId }, { status: 0 }] },
         offset: offset,
         limit: limit,
         include: [
@@ -83,7 +107,7 @@ let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId, pending }) =
           },
         ],
         distinct: true,
-        order: [['id', 'DESC']]
+        order: [["id", "DESC"]],
       });
 
       let totalPages = Math.ceil(count / limit);
@@ -106,9 +130,11 @@ let handleGetAllOrderWithUserIdPagination = ({ limit, page, userId, pending }) =
   });
 };
 
-
-
-let handleGetAllOrderInTransitWithUserIdPagination = ({ limit, page, userId }) => {
+let handleGetAllOrderInTransitWithUserIdPagination = ({
+  limit,
+  page,
+  userId,
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!userId) {
@@ -119,7 +145,13 @@ let handleGetAllOrderInTransitWithUserIdPagination = ({ limit, page, userId }) =
       let offset = (page - 1) * limit;
 
       let { count, rows } = await db.Order.findAndCountAll({
-        where: {[Op.and]: [{userId: userId},{orderStatusDelivery: 1},{orderStatus : 0}]},
+        where: {
+          [Op.and]: [
+            { userId: userId },
+            { orderStatusDelivery: 1 },
+            { orderStatus: 0 },
+          ],
+        },
         offset: offset,
         limit: limit,
         include: [
@@ -134,7 +166,7 @@ let handleGetAllOrderInTransitWithUserIdPagination = ({ limit, page, userId }) =
           },
         ],
         distinct: true,
-        order: [['id', 'DESC']]
+        order: [["id", "DESC"]],
       });
 
       let totalPages = Math.ceil(count / limit);
@@ -157,7 +189,12 @@ let handleGetAllOrderInTransitWithUserIdPagination = ({ limit, page, userId }) =
   });
 };
 
-let handleGetAllOrderStatusWithUserIdPagination = ({ limit, page, userId, status }) => {
+let handleGetAllOrderStatusWithUserIdPagination = ({
+  limit,
+  page,
+  userId,
+  status,
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!userId || !status) {
@@ -166,7 +203,13 @@ let handleGetAllOrderStatusWithUserIdPagination = ({ limit, page, userId, status
       limit = +limit;
       let offset = (page - 1) * limit;
       let { count, rows } = await db.Order.findAndCountAll({
-        where: {[Op.and]: [{userId: userId},{orderStatus: status}, status == 1 && {orderStatusDelivery: true}]},
+        where: {
+          [Op.and]: [
+            { userId: userId },
+            { orderStatus: status },
+            status == 1 && { orderStatusDelivery: true },
+          ],
+        },
         offset: offset,
         limit: limit,
         include: [
@@ -181,8 +224,7 @@ let handleGetAllOrderStatusWithUserIdPagination = ({ limit, page, userId, status
           },
         ],
         distinct: true,
-        order: [['id', 'DESC']]
-
+        order: [["id", "DESC"]],
       });
 
       let totalPages = Math.ceil(count / limit);
@@ -249,10 +291,23 @@ let handleGetOneOrder = (params) => {
   });
 };
 
-let handleDeleteFunc = (query) => {
+let handleDeleteFunc = (query,productList) => {
   return new Promise(async (resolve, reject) => {
     try {
       const { orderId } = query;
+      let productId = productList.map((item) => item.productId);
+      let productQuantity = productList.map((item) => item.quantity);
+
+
+      let products = await db.Product.findAll({
+        where: {id: productId}
+      })
+
+      const updateQuantities = products.map((product, index) => ({
+        id: product.id,
+        newInventory: product.inventoryNumber + productQuantity[index],
+      }));
+
       if (!orderId) {
         return reject({
           EM: "Missing value",
@@ -273,7 +328,11 @@ let handleDeleteFunc = (query) => {
       await db.OrderDetail.destroy({ where: { orderId: orderId } });
 
       await order.destroy();
-
+      
+      await Promise.all(updateQuantities.map(({ id, newInventory }) => 
+        db.Product.update({ inventoryNumber: newInventory }, { where: { id } })
+      ));
+      
       resolve({
         EM: "Ok delete success",
         DT: "",
@@ -295,5 +354,5 @@ module.exports = {
   handleGetOneOrder,
   handleDeleteFunc,
   handleGetAllOrderInTransitWithUserIdPagination,
-  handleGetAllOrderStatusWithUserIdPagination
+  handleGetAllOrderStatusWithUserIdPagination,
 };

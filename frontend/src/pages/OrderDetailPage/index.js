@@ -22,15 +22,21 @@ const OrderDetailPage = () => {
     let totalPriceForOrder = () => {
         if(!OrderDetails) return 0
         let total = OrderDetails.reduce((totalPrice, currentValue) => {
-            console.log(currentValue, totalPrice)
             return totalPrice += currentValue.quantity * currentValue.price
         },0)
 
         return total
     }
 
-    const handleCancelOrder = (orderId) => {
-        dispatch(cancelOrderApi({orderId,userId}))
+    const handleCancelOrder = async(orderId) => {
+        let productList = orderItem?.OrderDetails.map((item) => {
+            return {
+                productId: item.productId,
+                quantity: item.quantity
+            }
+        })
+
+        await dispatch(cancelOrderApi({orderId,userId,productList}))
 
         navigate('/account/order')
     }
