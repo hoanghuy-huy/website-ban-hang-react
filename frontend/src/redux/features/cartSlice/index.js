@@ -18,7 +18,7 @@ export const addProductToCart = createAsyncThunk(
         if (res && res.EC === 0) {
             toast.success('Thêm vào giỏ hàng thành công');
 
-            thunkAPI.dispatch(fetchAllCart(userId));
+            await thunkAPI.dispatch(fetchAllCart(userId));
             return res ? res.DT : [];
         } else {
             toast.error('Xảy ra lỗi vui lòng thử lại');

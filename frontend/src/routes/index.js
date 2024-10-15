@@ -22,6 +22,7 @@ import PaymentSuccessPage from '~/pages/PaymentSuccessPage';
 import AccountPage from '~/pages/OrderDetailPage';
 import OrderPage from '~/pages/OrderPage';
 import OrderDetailPage from '~/pages/OrderDetailPage';
+import OrderPageAdmin from '~/pages/OrderPageAdmin';
 
 
 //Public Routes
@@ -36,6 +37,7 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
+    { path: '/manager/order', component: OrderPageAdmin, layout: LayoutAccount },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },
     { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
     { path: '/payment/success', component: PaymentSuccessPage, layout: LayoutCheckout },

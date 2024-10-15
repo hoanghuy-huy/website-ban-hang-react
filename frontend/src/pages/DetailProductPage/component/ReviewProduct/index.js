@@ -19,7 +19,6 @@ const ReviewProduct = ({ product }) => {
         dispatch(getAllComment({ productId: product.productId, page: 1, limit: 5 }));
     }, []);
     const { totalPages, comments } = commentList;
-    console.log(comments);
 
     return (
         <div className="ReviewProduct">

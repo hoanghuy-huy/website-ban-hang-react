@@ -3,66 +3,71 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import Button from '~/components/Button/Button';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import DoDisturbAltOutlinedIcon from '@mui/icons-material/DoDisturbAltOutlined';
-import './OrderPage.scss';
+import './OrderPageAdmin.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    cancelOrderApi,
+    cancelOrderApiAdmin,
+    confirmOrderAdmin,
+    confirmOrderForShipmentAdmin,
+    getAllOrder,
     getAllOrderDeliveryWithUserIdApi,
     getAllOrderWithUserIdApi,
     getAllStatusOrderWithUserIdApi,
     handleChoseActionToFetchApiOrder,
 } from '~/redux/features/orderSlice';
 import { convertPrice } from '~/utils/convert';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import {
     FETCH_ALL_ORDER,
     FETCH_ALL_ORDER_DELIVERY,
     FETCH_ALL_ORDER_PENDING,
+    FETCH_ALL_ORDER_SHIPPING,
     FETCH_STATUS_CANCEL_ORDER,
     FETCH_STATUS_ORDER,
     FETCH_STATUS_SUCCESS_ORDER,
+    ROLE_MANAGER,
 } from '~/utils/constants';
-const OrderPage = () => {
+const OrderPageAdmin = () => {
     const dispatch = useDispatch();
-    const { orderList, actionFetchApi } = useSelector((state) => state.order);
+    const { orderListAdmin, actionFetchApi } = useSelector((state) => state.order);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(3);
     const { userId } = useSelector((state) => state.account.account);
-    const { totalPages, totalItems, orders } = orderList;
+    const role = useSelector((state) => state.account.account.userGroup);
+    const { totalPages, totalItems, orders } = orderListAdmin;
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (actionFetchApi.type === FETCH_ALL_ORDER) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage }));
         } else if (actionFetchApi.type === FETCH_ALL_ORDER_PENDING) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, pending: true }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, pending: true }));
         } else if (actionFetchApi.type === FETCH_ALL_ORDER_DELIVERY) {
-            dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, pendingShipment: true }));
         } else if (actionFetchApi.type === FETCH_STATUS_CANCEL_ORDER) {
-            dispatch(
-                getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: false }),
-            );
+            dispatch(getAllOrder({ limit: limit, page: currentPage, orderStatus: false }));
         } else if (actionFetchApi.type === FETCH_STATUS_SUCCESS_ORDER) {
-            dispatch(getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: true }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, orderStatus: true }));
         } else {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage }));
         }
     }, []);
 
     useEffect(() => {
         if (actionFetchApi.type === FETCH_ALL_ORDER) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage }));
         } else if (actionFetchApi.type === FETCH_ALL_ORDER_PENDING) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, pending: true }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, pending: true }));
         } else if (actionFetchApi.type === FETCH_ALL_ORDER_DELIVERY) {
-            dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, pendingShipment: false }));
         } else if (actionFetchApi.type === FETCH_STATUS_CANCEL_ORDER) {
-            dispatch(
-                getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: false }),
-            );
+            dispatch(getAllOrder({ limit: limit, page: currentPage, orderStatus: false }));
         } else if (actionFetchApi.type === FETCH_STATUS_SUCCESS_ORDER) {
-            dispatch(getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: true }));
-        } else {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+            dispatch(getAllOrder({ limit: limit, page: currentPage, orderStatus: true }));
+        } else if (actionFetchApi.type === FETCH_ALL_ORDER_SHIPPING) {
+            dispatch(getAllOrder({ limit: limit, page: currentPage, pendingShipment: true }));
         }
     }, [actionFetchApi]);
 
@@ -70,9 +75,37 @@ const OrderPage = () => {
         dispatch(handleChoseActionToFetchApiOrder(type));
     };
 
+    const handleCancelOrder = async (orderId) => {
+        let productList = await orders
+            .find((item) => item.id === orderId)
+            .OrderDetails.map((item) => {
+                return {
+                    productId: item.productId,
+                    quantity: item.quantity,
+                };
+            });
+
+        await dispatch(cancelOrderApiAdmin({ orderId, productList }));
+
+        // navigate('/manager/order')
+        window.location.reload();
+    };
+
+    const confirmOrderFunc = async (orderId) => {
+        dispatch(confirmOrderAdmin({ orderId, page: currentPage }));
+
+        window.location.reload();
+    };
+
+    const confirmOrderForShipmentFunc = async (orderId) => {
+        dispatch(confirmOrderForShipmentAdmin({ orderId, page: currentPage }));
+
+        window.location.reload();
+    };
+
     return (
-        <div className="OrderPage">
-            <div className="OrderPage-container">
+        <div className="OrderPageAdmin">
+            <div className="OrderPageAdmin-container">
                 <div className="heading mb-4">
                     <h5 className="title">Đơn hàng của tôi</h5>
                 </div>
@@ -96,7 +129,7 @@ const OrderPage = () => {
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER_PENDING })}
                         >
-                            Đang xử lý
+                            Chưa duyệt
                         </div>
                         <div
                             className={
@@ -105,6 +138,16 @@ const OrderPage = () => {
                                     : 'StyledTab-item col-2'
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER_DELIVERY })}
+                        >
+                            Giao hàng ngay
+                        </div>
+                        <div
+                            className={
+                                actionFetchApi.type === FETCH_ALL_ORDER_SHIPPING
+                                    ? 'StyledTab-item active col-2'
+                                    : 'StyledTab-item col-2'
+                            }
+                            onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER_SHIPPING })}
                         >
                             Đang vận chuyển
                         </div>
@@ -116,7 +159,7 @@ const OrderPage = () => {
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_STATUS_SUCCESS_ORDER })}
                         >
-                            Đã giao
+                            Đã giao thành công
                         </div>
                         <div
                             className={
@@ -126,7 +169,7 @@ const OrderPage = () => {
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_STATUS_CANCEL_ORDER })}
                         >
-                            Đã hủy
+                            Đã từ chối
                         </div>
                     </div>
                     <div className="StyledOrder">
@@ -140,10 +183,10 @@ const OrderPage = () => {
                                                     <div className="title">
                                                         {item?.status === 0 ? (
                                                             <>
-                                                                {item?.orderStatus === 0 ? (
+                                                                {item?.orderStatus == 0 ? (
                                                                     <>
                                                                         <DoDisturbAltOutlinedIcon />
-                                                                        Đã hủy
+                                                                        Đã từ chối đơn hàng
                                                                     </>
                                                                 ) : (
                                                                     <>
@@ -163,15 +206,15 @@ const OrderPage = () => {
                                                                             </>
                                                                         ) : (
                                                                             <>
-                                                                                <LocalShippingOutlinedIcon /> Đang vận
-                                                                                chuyển
-                                                                            </>
+                                                                                <LocalShippingOutlinedIcon /> 
+                                                                                Đang trên đường vận chuyển                                                                             </>
                                                                         )}
                                                                     </>
                                                                 ) : (
+
                                                                     <>
                                                                         <CheckOutlinedIcon />
-                                                                        Đã xác nhận
+                                                                        Đã xác nhận, đang đợi giao hàng
                                                                     </>
                                                                 )}
                                                             </>
@@ -207,9 +250,58 @@ const OrderPage = () => {
                                                         </div>
 
                                                         <div className="actions mt-2 mx-2">
-                                                            <Link to={'/account/order/order-detail/' + item?.id}>
-                                                                <Button outline>Xem chi tiết</Button>
-                                                            </Link>
+                                                            {role === ROLE_MANAGER ? (
+                                                                <>
+                                                                    {item.orderStatus === 0 ||
+                                                                        (item.orderStatus === 1 ? (
+                                                                            <></>
+                                                                        ) : item.orderStatusDelivery === 1 && item.status === 1? (
+                                                                            <></>
+                                                                        ) : (
+                                                                            <>
+                                                                                <div className="d-flex">
+                                                                                    {item?.orderStatusDelivery === 0 &&
+                                                                                    item?.status === 1 ? (
+                                                                                        <Button
+                                                                                            normal
+                                                                                            onClick={() =>
+                                                                                                confirmOrderForShipmentFunc(
+                                                                                                    item?.id,
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            Giao hàng
+                                                                                        </Button>
+                                                                                    ) : (
+                                                                                        <Button
+                                                                                            onClick={() =>
+                                                                                                confirmOrderFunc(
+                                                                                                    item?.id,
+                                                                                                )
+                                                                                            }
+                                                                                            success
+                                                                                        >
+                                                                                            Duyệt
+                                                                                        </Button>
+                                                                                    )}
+
+                                                                                    <Button
+                                                                                        onClick={() =>
+                                                                                            handleCancelOrder(item?.id)
+                                                                                        }
+                                                                                        primary
+                                                                                    >
+                                                                                        Từ chối
+                                                                                    </Button>
+                                                                                </div>
+                                                                            </>
+                                                                        ))}
+                                                                </>
+                                                            ) : (
+                                                                <Link to={'/account/order/order-detail/' + item?.id}>
+                                                                    <Button outline>Xem chi tiết</Button>
+                                                                </Link>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -233,4 +325,4 @@ const OrderPage = () => {
     );
 };
 
-export default OrderPage;
+export default OrderPageAdmin;

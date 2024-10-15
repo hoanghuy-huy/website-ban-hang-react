@@ -1,5 +1,6 @@
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import db from "../models/index";
+import emailService from "../services/emailService";
 let createNewOrder = (rawData) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -14,17 +15,14 @@ let createNewOrder = (rawData) => {
       let productId = productList.map((item) => item.productId);
       let productQuantity = productList.map((item) => item.quantity);
 
-
       let products = await db.Product.findAll({
-        where: {id: productId}
-      })
+        where: { id: productId },
+      });
 
       const updateQuantities = products.map((product, index) => ({
         id: product.id,
         newInventory: product.inventoryNumber - productQuantity[index],
       }));
-
-
 
       const dataOrder = await db.Order.create(order);
 
@@ -52,10 +50,15 @@ let createNewOrder = (rawData) => {
           });
         }
 
-        await Promise.all(updateQuantities.map(({ id, newInventory }) => 
-          db.Product.update({ inventoryNumber: newInventory }, { where: { id } })
-        ));
-  
+        await Promise.all(
+          updateQuantities.map(({ id, newInventory }) =>
+            db.Product.update(
+              { inventoryNumber: newInventory },
+              { where: { id } }
+            )
+          )
+        );
+
         resolve({
           EM: "ok! create order successfully",
           DT: dataOrder,
@@ -149,7 +152,8 @@ let handleGetAllOrderInTransitWithUserIdPagination = ({
           [Op.and]: [
             { userId: userId },
             { orderStatusDelivery: 1 },
-            { orderStatus: 0 },
+            { orderStatus: null },
+            { status: 1 },
           ],
         },
         offset: offset,
@@ -291,17 +295,23 @@ let handleGetOneOrder = (params) => {
   });
 };
 
-let handleDeleteFunc = (query,productList) => {
+let handleDeleteFunc = (query, productList) => {
   return new Promise(async (resolve, reject) => {
     try {
       const { orderId } = query;
+      if (!productList) {
+        reject({
+          EC: -1,
+          EM: "Missing Value Product List",
+          DT: [],
+        });
+      }
       let productId = productList.map((item) => item.productId);
       let productQuantity = productList.map((item) => item.quantity);
 
-
       let products = await db.Product.findAll({
-        where: {id: productId}
-      })
+        where: { id: productId },
+      });
 
       const updateQuantities = products.map((product, index) => ({
         id: product.id,
@@ -325,16 +335,21 @@ let handleDeleteFunc = (query,productList) => {
         });
       }
 
-      await db.OrderDetail.destroy({ where: { orderId: orderId } });
+      await order.update({
+        orderStatus: 0,
+      });
 
-      await order.destroy();
-      
-      await Promise.all(updateQuantities.map(({ id, newInventory }) => 
-        db.Product.update({ inventoryNumber: newInventory }, { where: { id } })
-      ));
-      
+      await Promise.all(
+        updateQuantities.map(({ id, newInventory }) =>
+          db.Product.update(
+            { inventoryNumber: newInventory },
+            { where: { id } }
+          )
+        )
+      );
+
       resolve({
-        EM: "Ok delete success",
+        EM: "Ok reject order success",
         DT: "",
         EC: 0,
       });
@@ -348,6 +363,199 @@ let handleDeleteFunc = (query,productList) => {
     }
   });
 };
+
+let handleGetAllOrderPagination = ({
+  limit,
+  page,
+  pending,
+  pendingShipment,
+  orderStatus,
+}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      limit = +limit;
+      let offset = (page - 1) * limit;
+      if (pendingShipment) {
+        let { count, rows } = await db.Order.findAndCountAll({
+          where: {
+            [Op.and]: [
+              { status: 1 },
+              { orderStatusDelivery: pendingShipment },
+              { orderStatus: null },
+            ],
+          },
+          offset: offset,
+          limit: limit,
+          include: [
+            {
+              model: db.OrderDetail,
+              include: [
+                {
+                  model: db.Product,
+                  attributes: ["name", "thumbnailUrl"],
+                },
+              ],
+            },
+          ],
+          distinct: true,
+          order: [["id", "DESC"]],
+        });
+        let totalPages = Math.ceil(count / limit);
+
+        let data = {
+          totalPages: totalPages,
+          totalItems: count,
+          orders: rows,
+        };
+
+        resolve({
+          EM: "Ok",
+          EC: 0,
+          DT: data,
+        });
+      }
+
+      if (orderStatus) {
+        let { count, rows } = await db.Order.findAndCountAll({
+          where: {
+            orderStatus: orderStatus,
+          },
+          offset: offset,
+          limit: limit,
+          include: [
+            {
+              model: db.OrderDetail,
+              include: [
+                {
+                  model: db.Product,
+                  attributes: ["name", "thumbnailUrl"],
+                },
+              ],
+            },
+          ],
+          distinct: true,
+          order: [["id", "DESC"]],
+        });
+        let totalPages = Math.ceil(count / limit);
+
+        let data = {
+          totalPages: totalPages,
+          totalItems: count,
+          orders: rows,
+        };
+
+        resolve({
+          EM: "Ok",
+          EC: 0,
+          DT: data,
+        });
+      }
+
+      let { count, rows } = await db.Order.findAndCountAll({
+        where: pending
+          ? { [Op.and]: [{ status: 0 }, { orderStatus: null }] }
+          : "",
+        offset: offset,
+        limit: limit,
+        include: [
+          {
+            model: db.OrderDetail,
+            include: [
+              {
+                model: db.Product,
+                attributes: ["name", "thumbnailUrl"],
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      let data = {
+        totalPages: totalPages,
+        totalItems: count,
+        orders: rows,
+      };
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleConfirmFunc = ({ orderId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!orderId) {
+        reject({
+          EM: "missing value id order",
+          EC: 1,
+          DT: "",
+        });
+      }
+
+      await db.Order.update(
+        {
+          status: 1,
+        },
+        {
+          where: { id: +orderId },
+        }
+      );
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: "",
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleConfirmOrderForShipmentFunc = ({ orderId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!orderId) {
+        reject({
+          EM: "missing value id order",
+          EC: 1,
+          DT: "",
+        });
+      }
+
+      await db.Order.update(
+        {
+          orderStatusDelivery: 1,
+        },
+        {
+          where: { id: +orderId },
+        }
+      );
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: "",
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,
@@ -355,4 +563,7 @@ module.exports = {
   handleDeleteFunc,
   handleGetAllOrderInTransitWithUserIdPagination,
   handleGetAllOrderStatusWithUserIdPagination,
+  handleGetAllOrderPagination,
+  handleConfirmFunc,
+  handleConfirmOrderForShipmentFunc,
 };

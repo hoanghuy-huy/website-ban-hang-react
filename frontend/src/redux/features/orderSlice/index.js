@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import httpRequest from '~/utils/httpRequest';
-import { deleteMultipleProductFormCartWithId,fetchAllCart } from '../cartSlice';
+import { deleteMultipleProductFormCartWithId, fetchAllCart } from '../cartSlice';
 
 export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', async (data, thunkAPI) => {
     const res = await httpRequest.post(`order/create`, data);
@@ -13,6 +13,19 @@ export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', asy
 
     return res ? res.DT : [];
 });
+
+export const getAllOrder = createAsyncThunk(
+    'order/getAllOrder',
+    async ({ limit, page, pending, pendingShipment, orderStatus }, thunkAPI) => {
+        const res = await httpRequest.get(
+            `order/get-all-order?limit=${limit}&page=${page}${pending ? '&pending=true' : ''}${
+                pendingShipment == null ? '': pendingShipment ?  '&pendingShipment=1' : '&pendingShipment=0'
+            }${orderStatus == null ? '' : orderStatus ? '&orderStatus=1' : '&orderStatus=0'}`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
 
 export const getAllOrderWithUserIdApi = createAsyncThunk(
     'order/getAllOrderWithUserIdApi',
@@ -61,10 +74,37 @@ export const cancelOrderApi = createAsyncThunk(
     'order/cancelOrderApi',
     async ({ orderId, userId, productList }, thunkAPI) => {
         const res = await httpRequest.put(`order/delete-order?orderId=${orderId}`, productList);
-        thunkAPI.getAllOrderWithUserIdApi(userId);
+        await thunkAPI.getAllOrderWithUserIdApi(userId);
         return res ? res.DT : {};
     },
 );
+
+export const cancelOrderApiAdmin = createAsyncThunk(
+    'order/cancelOrderApiAdmin',
+    async ({ orderId, userId, productList }, thunkAPI) => {
+        const res = await httpRequest.put(`order/delete-order?orderId=${orderId}`, productList);
+        await thunkAPI.getAllOrder({ limit: 3, page: 1 });
+        return res ? res.DT : {};
+    },
+);
+
+export const confirmOrderAdmin = createAsyncThunk('order/confirmOrderAdmin', async ({ orderId, page }, thunkAPI) => {
+
+    const res = await httpRequest.post(`order/confirm-order`, {orderId : orderId});
+
+    await thunkAPI.getAllOrder({ limit: 3, page: page });
+
+    return res ? res.DT : {};
+});
+
+export const confirmOrderForShipmentAdmin = createAsyncThunk('order/confirmOrderForShipmentAdmin', async ({ orderId, page }, thunkAPI) => {
+
+    const res = await httpRequest.post(`order/confirm-order-for-shipment`, {orderId : orderId});
+    
+    // await thunkAPI.getAllOrder({ limit: 3, page: page });
+
+    return res ? res.DT : {};
+});
 
 export const orderSlice = createSlice({
     name: 'order',
@@ -75,6 +115,7 @@ export const orderSlice = createSlice({
         orderId: null,
         paymentMethod: null,
         orderList: [],
+        orderListAdmin: [],
         productOrderedList: [],
         orderItem: {},
         actionFetchApi: { type: 'get-all' },
@@ -100,7 +141,7 @@ export const orderSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
-            /// get-all-order
+            /// get-all-order-with-user-id
             .addCase(getAllOrderWithUserIdApi.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -115,6 +156,20 @@ export const orderSlice = createSlice({
                 state.error = true;
             })
             /// get-all-order
+            .addCase(getAllOrder.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAllOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.orderListAdmin = action.payload;
+            })
+            .addCase(getAllOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            /// get-all-order-delivery
             .addCase(getAllOrderDeliveryWithUserIdApi.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -156,7 +211,7 @@ export const orderSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
-            //
+            // cancel order
             .addCase(cancelOrderApi.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -168,7 +223,46 @@ export const orderSlice = createSlice({
             .addCase(cancelOrderApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            });
+            })
+            // cancel order
+            .addCase(cancelOrderApiAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(cancelOrderApiAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(cancelOrderApiAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            // confirm order
+            .addCase(confirmOrderAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(confirmOrderAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(confirmOrderAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            // confirm order for shipment
+            .addCase(confirmOrderForShipmentAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(confirmOrderForShipmentAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(confirmOrderForShipmentAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
     },
 });
 

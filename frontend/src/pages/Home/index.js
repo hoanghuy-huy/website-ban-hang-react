@@ -22,6 +22,7 @@ import HotProductBox from './Sections/HotProductBox';
 import './Home.scss';
 
 import { Suspense, lazy } from 'react';
+import BoothOffer from './Sections/BoothOffer';
 const ProductList = lazy(() => import('~/components/ProductBox'));
 function Home() {
     const [limit, setLimit] = useState(20);
@@ -160,6 +161,8 @@ function Home() {
                     <Product />
                 </div>
             </div> */}
+
+            {/* <BoothOffer /> */}
         </div>
     );
 }

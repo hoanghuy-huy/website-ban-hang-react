@@ -28,6 +28,7 @@ const AccountActions = (props) => {
                                         <Link to={'/account/order'}>
                                             <div className="account-menu__item py-1">Đơn hàng của tôi</div>
                                         </Link>
+
                                         <div
                                             className="account-menu__item py-1"
                                             onClick={() => dispatch(logoutAccount())}

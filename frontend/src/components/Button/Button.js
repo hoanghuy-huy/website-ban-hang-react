@@ -17,6 +17,8 @@ const Button = ({
     active = false,
     medium = false,
     disable = false,
+    warning = false,
+    success = false,
     ...passProps
 }) => {
     let Component = 'button';
@@ -26,10 +28,9 @@ const Button = ({
         ...passProps,
     };
 
-    if(disable) {
-        Object.keys(props).forEach(key => {
-            if(key.startsWith('on') && typeof props[key] === 'function') 
-                delete props[key]
+    if (disable) {
+        Object.keys(props).forEach((key) => {
+            if (key.startsWith('on') && typeof props[key] === 'function') delete props[key];
         });
     }
 
@@ -49,6 +50,8 @@ const Button = ({
         normal,
         active,
         medium,
+        warning,
+        success,
     });
     return (
         <Component className={classes} {...props}>
