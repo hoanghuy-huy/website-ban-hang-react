@@ -7,6 +7,14 @@ export const getAllBrand = createAsyncThunk('brand/getAllBrand', async (category
     return res ? res.DT : [];
 });
 
+export const getAllBrandAdmin = createAsyncThunk('brand/getAllBrandAdmin', async (categoryId) => {
+    const res = await httpRequest.get(`brand/get-all-brand`);
+
+    return res ? res.DT : [];
+});
+
+
+
 
 export const brandSlice = createSlice({
     name: 'brand',
@@ -14,6 +22,8 @@ export const brandSlice = createSlice({
         loading: false,
         error: false,
         brandList:[],
+        brandListAdmin:[],
+
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -29,6 +39,19 @@ export const brandSlice = createSlice({
                 state.brandList = action.payload;
             })
             .addCase(getAllBrand.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAllBrandAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAllBrandAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.brandListAdmin = action.payload;
+            })
+            .addCase(getAllBrandAdmin.rejected, (state, action) => {
                 state.loading = true;
                 state.error = false;
             });

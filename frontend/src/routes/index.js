@@ -23,6 +23,9 @@ import AccountPage from '~/pages/OrderDetailPage';
 import OrderPage from '~/pages/OrderPage';
 import OrderDetailPage from '~/pages/OrderDetailPage';
 import OrderPageAdmin from '~/pages/OrderPageAdmin';
+import AdminLayout from '~/layouts/AdminLayout';
+import DashBoardPage from '~/pages/DashBoardPage';
+import ProductAdminPage from '~/pages/ProductAdminPage/index.';
 
 
 //Public Routes
@@ -37,14 +40,16 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: '/manager/order', component: OrderPageAdmin, layout: LayoutAccount },
+    { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
+    { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },
+    { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },
     { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
     { path: '/payment/success', component: PaymentSuccessPage, layout: LayoutCheckout },
     { path: routes.addressPage, component: AddressPage, layout: LayoutCheckout },
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },
     { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
-    { path: routes.user, component: MangerUsersPage },
+    { path: routes.user, component: MangerUsersPage, layout: AdminLayout },
     { path: routes.role, component: RoleUser },
     { path: routes.groupRole, component: GroupRole },
 ];

@@ -104,12 +104,12 @@ const OrderPageAdmin = () => {
     };
 
     return (
-        <div className="OrderPageAdmin">
+        <div className="OrderPageAdmin w-100">
             <div className="OrderPageAdmin-container">
                 <div className="heading mb-4">
-                    <h5 className="title">Đơn hàng của tôi</h5>
+                    <h5 className="title">Quản lý đơn hàng</h5>
                 </div>
-                <div className="content">
+                <div className="content w-100">
                     <div className="StyledTab mb-4">
                         <div
                             className={

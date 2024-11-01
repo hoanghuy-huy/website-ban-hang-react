@@ -81,8 +81,8 @@ const MangerUsersPage = () => {
             <div className="user-header">
                 <h3>Table Users</h3>
             </div>
-            <div className="user-container">
-                <Button variant="success" onClick={() => handleShow()}>
+            <div className="user-container mt-3">
+                <Button variant="success" onClick={() => handleShow()} className='mb-3'>
                     Create New User
                 </Button>
                 <ModalUser

@@ -29,9 +29,13 @@ const AccountActions = (props) => {
                                 <PopperWrapper>
                                     <div className="account-menu__content py-2">
                                         {role === ROLE_MANAGER ? (
-                                            <Link to={'/manager/order'}>
+                                            <>
+                                            <Link to={'/admin/order'}>
                                                 <div className="account-menu__item py-1">Quản lý đơn hàng</div>
                                             </Link>
+                             
+                                            </>
+                                            
                                         ) : (
                                             <Link to={'/account/order'}>
                                                 <div className="account-menu__item py-1">Đơn hàng của tôi</div>

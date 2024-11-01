@@ -24,6 +24,24 @@ let handleGetAllFuncPagination = (categoryId) => {
   });
 };
 
+let handleGetAllFunc = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await db.Brand.findAll();
+      
+      resolve({
+        EC: 0,
+        EM: "get all success",
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   handleGetAllFuncPagination,
+  handleGetAllFunc,
 };
