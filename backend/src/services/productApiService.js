@@ -1,10 +1,37 @@
 import { Op } from "sequelize";
 import db from "../models/index";
 class productApiService {
-  async handleGetAllProductPagination(page, limit) {
+  async handleGetAllProductPagination(page, limit, brandId, categoryId) {
     try {
       let offset = (page - 1) * limit;
+      console.log(brandId, categoryId)
+      if (!!brandId === true || !!categoryId === true) {
+        const { count, rows } = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              !!categoryId && { categoryId: categoryId },
+              !!brandId && { brandId: brandId },
+            ],
+          },
+          offset: offset,
+          limit: limit,
+          order: [["id", "DESC"]],
+        });
 
+        let totalPages = Math.ceil(count / limit);
+
+        const data = {
+          totalPages: totalPages,
+          totalRows: count,
+          products: rows,
+        };
+
+        return {
+          EM: "Get All products Success",
+          EC: 0,
+          DT: data,
+        };
+      }
       const { count, rows } = await db.Product.findAndCountAll({
         offset: offset,
         limit: limit,
@@ -176,7 +203,6 @@ class productApiService {
     try {
       let data = {};
 
-
       return {
         EM: "Category not found",
         EC: 1,
@@ -191,21 +217,41 @@ class productApiService {
     }
   }
 
-  async handleGetProductWithCategoryId(categoryId, page, limit, sort, starNumber,price, brand) {
+  async handleGetProductWithCategoryId(
+    categoryId,
+    page,
+    limit,
+    sort,
+    starNumber,
+    price,
+    brand
+  ) {
     try {
       let offset = (page - 1) * limit;
       let product;
-      let convertPriceToObject =price ? price.split(',') : ''
-      let convertBrandToObject =brand ? brand.split(',') : ''
+      let convertPriceToObject = price ? price.split(",") : "";
+      let convertBrandToObject = brand ? brand.split(",") : "";
       if (sort) {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
               { categoryId: categoryId },
-              convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
-              convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
-            ]
+              convertPriceToObject &&
+                +convertPriceToObject[1] !== 0 && {
+                  price: {
+                    [Op.between]: [
+                      convertPriceToObject[0],
+                      convertPriceToObject[1],
+                    ],
+                  },
+                },
+              convertBrandToObject &&
+                convertBrandToObject[0] !== "" &&
+                convertBrandToObject.length > 0 && {
+                  brandName: { [Op.or]: [...convertBrandToObject] },
+                },
+            ],
           },
           offset: offset,
           limit: limit,
@@ -217,15 +263,27 @@ class productApiService {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
               { categoryId: categoryId },
-              convertPriceToObject && +convertPriceToObject[1] !== 0 && {price: {[Op.between] :[convertPriceToObject[0],convertPriceToObject[1]]}},
-              convertBrandToObject && convertBrandToObject[0] !== '' && convertBrandToObject.length > 0 && {brandName: {[Op.or] : [...convertBrandToObject]} }
-            ]
+              convertPriceToObject &&
+                +convertPriceToObject[1] !== 0 && {
+                  price: {
+                    [Op.between]: [
+                      convertPriceToObject[0],
+                      convertPriceToObject[1],
+                    ],
+                  },
+                },
+              convertBrandToObject &&
+                convertBrandToObject[0] !== "" &&
+                convertBrandToObject.length > 0 && {
+                  brandName: { [Op.or]: [...convertBrandToObject] },
+                },
+            ],
           },
           offset: offset,
           limit: limit,
         });
       }
-      const { count, rows } = product
+      const { count, rows } = product;
 
       let totalPages = Math.ceil(count / limit);
 
@@ -318,6 +376,169 @@ class productApiService {
       return {
         EM: "Product not found",
         EC: 1,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleDeleteFunc({ productId }) {
+    try {
+      if (productId) {
+        let product = await db.Product.findOne({
+          where: { id: productId },
+        });
+
+        if (!product) {
+          return {
+            EM: "delete err",
+            EC: 1,
+            DT: "",
+          };
+        }
+        await product.destroy();
+
+        return {
+          EM: "ok delete success",
+          EC: 0,
+          DT: "",
+        };
+      }
+
+      return {
+        EM: "delete err",
+        EC: 1,
+        DT: "",
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleCreateFunc(rawData) {
+    try {
+      let { price, discountRate, ...others } = rawData;
+      let roundedPrice;
+      let data;
+      console.log(rawData);
+      if (!!discountRate) {
+        let discountAmount = price * (+discountRate / 100);
+        let finalPrice = price - discountAmount;
+        roundedPrice = Math.round(finalPrice / 1000) * 1000;
+
+        data = await db.Product.create({
+          price: roundedPrice,
+          originalPrice: price,
+          discountRate: +discountRate,
+          ...others,
+        });
+
+        return {
+          EM: "create product success",
+          EC: 0,
+          DT: "",
+        };
+      }
+
+      data = await db.Product.create({
+        price: price,
+        originalPrice: price,
+        ...others,
+      });
+
+      if (!data) {
+        return {
+          EM: "create product error",
+          EC: 1,
+          DT: "",
+        };
+      }
+
+      return {
+        EM: "create product success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleEditFunc(rawData) {
+    try {
+      console.log(rawData);
+      let { price, discountRate, ...others } = rawData;
+      let roundedPrice;
+      let data;
+      let product = await db.Product.findOne({ where: rawData.id });
+
+      if (!product) {
+        return {
+          EM: "product not found",
+          EC: 1,
+          DT: "",
+        };
+      }
+      if (!!discountRate) {
+        if (product.price === rawData.price) {
+          let discountAmount = product.originalPrice * (+discountRate / 100);
+          let finalPrice = product.originalPrice - discountAmount;
+          roundedPrice = Math.round(finalPrice / 1000) * 1000;
+          data = await product.update({
+            price: roundedPrice,
+            originalPrice: product.originalPrice,
+            discountRate: +discountRate,
+            ...others,
+          });
+        } else {
+          let discountAmount = rawData.price * (+discountRate / 100);
+          let finalPrice = rawData.price - discountAmount;
+          roundedPrice = Math.round(finalPrice / 1000) * 1000;
+          data = await product.update({
+            price: roundedPrice,
+            originalPrice: rawData.price,
+            discountRate: +discountRate,
+            ...others,
+          });
+        }
+
+        return {
+          EM: "Edit product success",
+          EC: 0,
+          DT: "",
+        };
+      }
+
+      data = await product.update({
+        price: product.originalPrice,
+        originalPrice: price,
+        ...others,
+      });
+
+      if (!data) {
+        return {
+          EM: "create product error",
+          EC: 1,
+          DT: "",
+        };
+      }
+
+      return {
+        EM: "create product success",
+        EC: 0,
         DT: data,
       };
     } catch (error) {

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
+import { toast } from 'react-toastify';
 
 export const fetchOneCategory = createAsyncThunk('products/fetchOneCategory', async (pathCategory) => {
     const res = await httpRequest.get(`categories/get-one/${pathCategory}`);
@@ -28,8 +29,8 @@ export const fetchAllProductHot = createAsyncThunk('products/fetchAllProductHot'
 
 export const fetchAllProductPagination = createAsyncThunk(
     'products/fetchAllProductPagination',
-    async ({ limit, page }) => {
-        const res = await httpRequest.get(`products/get-all-pagination?limit=${limit}&page=${page}`);
+    async ({ limit, page, categoryId, brandId  }) => {
+        const res = await httpRequest.get(`products/get-all-pagination?limit=${limit}&page=${page}${categoryId ? `&categoryId=${categoryId}` :''}${brandId ? `&brandId=${brandId}` :''}`);
 
         return res ? res.DT : [];
     },
@@ -68,10 +69,9 @@ export const fetchProductPaginationWithCategoryId = createAsyncThunk(
         const res = await httpRequest.get(
             `products/get-product-with-category-id/${categoryId}?limit=${limit}&page=${page}&sort=${
                 sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}&price=${[
-                minPrice ? minPrice : 0,
-                maxPrice ? maxPrice : 0,
-            ]}&brand=${brand ? brand : []}`,
+            }&starNumber=${starNumber ? 1 : 0}&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${
+                brand ? brand : []
+            }`,
         );
 
         return res ? res.DT : [];
@@ -84,10 +84,9 @@ export const fetchAllProductHotPaginationWithCategoryId = createAsyncThunk(
         const res = await httpRequest.get(
             `categories/get-all-product-hot-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
                 sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}&price=${[
-                minPrice ? minPrice : 0,
-                maxPrice ? maxPrice : 0,
-            ]}&brand=${brand ? brand : []}`,
+            }&starNumber=${starNumber ? 1 : 0}&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${
+                brand ? brand : []
+            }`,
         );
 
         return res ? res.DT : [];
@@ -100,19 +99,57 @@ export const fetchAllProductBestSellerPaginationWithCategoryId = createAsyncThun
         const res = await httpRequest.get(
             `categories/get-all-product-best-seller-pagination?page=${page}&limit=${limit}&categoryId=${categoryId}&sort=${
                 sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}&price=${[
-                minPrice ? minPrice : 0,
-                maxPrice ? maxPrice : 0,
-            ]}&brand=${brand ? brand : []}`,
+            }&starNumber=${starNumber ? 1 : 0}&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${
+                brand ? brand : []
+            }`,
         );
 
         return res ? res.DT : [];
     },
 );
 
+export const deleteProduct = createAsyncThunk('products/deleteProduct', async ({ productId }) => {
+    const res = await httpRequest.put(`products/delete`, { productId: productId });
+    if (res && res.EC === 0) {
+        toast.success('Xóa sản phẩm thành công');
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
+    return res ? res.DT : [];
+});
+
+export const createProductApi = createAsyncThunk('products/createProductApi', async (rawData) => {
+    const res = await httpRequest.post(`products/create`, rawData);
+    if (res && res.EC === 0) {
+        toast.success('Tạo sản phẩm thành công');
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
+    return res ? res.DT : [];
+});
+
+export const editProductApi = createAsyncThunk('products/editProductApi', async (rawData, thunkAPI) => {
+    const res = await httpRequest.post(`products/edit`, rawData);
+    if (res && res.EC === 0) {
+        toast.success('Sửa sản phẩm thành công');
+        thunkAPI.dispatch(fetchAllProductPagination({ limit: 10, page: 1 }));
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
+    return res ? res.DT : [];
+});
+
+export const countProductApi = createAsyncThunk('products/countProductApi', async (thunkAPI) => {
+    const res = await httpRequest.get(`products/count`);
+
+    return res ? res.DT : [];
+});
+
+
 const initialState = {
     category: [],
     product: [],
+    countProduct:null,
     categoryId: null,
     categoryProduct: [],
     listProductHot: [],
@@ -169,16 +206,16 @@ export const productSlice = createSlice({
             state.starNumberCheckBoxValue = action.payload;
         },
         handleFetchDataWithFilterPrice: (state, action) => {
-            if(!action.payload) {
-                state.maxPriceRedux = ''
-                state.minPriceRedux = ''
-                return
-            };
+            if (!action.payload) {
+                state.maxPriceRedux = '';
+                state.minPriceRedux = '';
+                return;
+            }
             state.maxPriceRedux = +action.payload.maxPrice;
             state.minPriceRedux = +action.payload.minPrice ? +action.payload.minPrice : '';
         },
         handleChangeBrandValueToFilter: (state, action) => {
-            state.brandValueToFilter = action.payload 
+            state.brandValueToFilter = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -338,7 +375,57 @@ export const productSlice = createSlice({
             .addCase(fetchAllProductBestSellerPaginationWithCategoryId.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            });
+            })
+            .addCase(deleteProduct.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(deleteProduct.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(deleteProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(createProductApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(createProductApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(createProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(editProductApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(editProductApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(editProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(countProductApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(countProductApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.countProduct = action.payload
+            })
+            .addCase(countProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
     },
 });
 export const {

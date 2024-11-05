@@ -6,6 +6,7 @@ import DoDisturbAltOutlinedIcon from '@mui/icons-material/DoDisturbAltOutlined';
 import './OrderPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    customerConfirmOrderApi,
     getAllOrderDeliveryWithUserIdApi,
     getAllOrderWithUserIdApi,
     getAllStatusOrderWithUserIdApi,
@@ -29,7 +30,6 @@ const OrderPage = () => {
     const [limit, setLimit] = useState(3);
     const { userId } = useSelector((state) => state.account.account);
     const { totalPages, totalItems, orders } = orderList;
-
     useEffect(() => {
         if (actionFetchApi.type === FETCH_ALL_ORDER) {
             dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
@@ -70,6 +70,10 @@ const OrderPage = () => {
         dispatch(handleChoseActionToFetchApiOrder(type));
     };
 
+    const handleCustomerConfirmOrder = async (orderId) => {
+        await dispatch(customerConfirmOrderApi({ orderId, userId }));
+        await dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+    };
     return (
         <div className="OrderPage">
             <div className="OrderPage-container">
@@ -206,10 +210,29 @@ const OrderPage = () => {
                                                             {convertPrice(item?.totalPrice)} ₫
                                                         </div>
 
-                                                        <div className="actions mt-2 mx-2">
+                                                        <div className="actions mt-2 mx-2 d-flex gap-2">
                                                             <Link to={'/account/order/order-detail/' + item?.id}>
-                                                                <Button outline>Xem chi tiết</Button>
+                                                                <Button size="small" outline>
+                                                                    Xem chi tiết
+                                                                </Button>
                                                             </Link>
+                                                            {item.orderStatusDelivery === 1 &&
+                                                                item.orderStatus === null &&
+                                                                item.status === 1 && (
+                                                                    <Link className='success-btn'>
+                                                                        <Button
+                                                                            size="small"
+                                                                            
+                                                                            outline
+                                                                            onClick={() =>
+                                                                                handleCustomerConfirmOrder(item.id)
+                                                                            }
+                                            
+                                                                        >
+                                                                            Đã nhận được hàng
+                                                                        </Button>
+                                                                    </Link>
+                                                                )}
                                                         </div>
                                                     </div>
                                                 </div>

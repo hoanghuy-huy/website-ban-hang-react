@@ -3,6 +3,12 @@ import orderController from "../controllers/orderController";
 
 const router = express.Router();
 
+
+router.post('/customer-confirm-order', orderController.customerConfirmOrderFunc)
+
+
+router.get('/total-revenue', orderController.totalRevenue)
+router.get('/total-products-sold', orderController.totalProductSold)-
 router.get('/get-all-order', orderController.getAllOrderPagination)
 router.post('/confirm-order', orderController.confirmOrderFunc)
 router.post('/confirm-order-for-shipment', orderController.confirmOrderForShipmentFunc)

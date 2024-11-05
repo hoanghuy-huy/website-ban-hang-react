@@ -4,11 +4,13 @@ import productApiService from "../services/productApiService";
 class productController {
   async getAllProductPagination(req, res) {
     try {
-      let { page, limit } = req.query;
+      let { page, limit, brandId, categoryId } = req.query;
 
       let data = await productApiService.handleGetAllProductPagination(
         +page,
-        +limit
+        +limit,
+        +brandId,
+        +categoryId
       );
 
       return res.status(200).json({
@@ -135,7 +137,7 @@ class productController {
       });
     }
   }
-  
+
   async getProductWithCategory(req, res) {
     try {
       let categoryId = req.params.category;
@@ -164,7 +166,13 @@ class productController {
       let categoryId = req.params.categoryId;
       let { page, limit, sort, starNumber, price, brand } = req.query;
       let data = await productApiService.handleGetProductWithCategoryId(
-        categoryId, +page, +limit, sort, starNumber, price, brand
+        categoryId,
+        +page,
+        +limit,
+        sort,
+        starNumber,
+        price,
+        brand
       );
       return res.status(200).json({
         EM: data.EM,
@@ -180,7 +188,6 @@ class productController {
       });
     }
   }
-
 
   async getOneProduct(req, res) {
     try {
@@ -213,6 +220,82 @@ class productController {
         EM: data.EM,
         EC: data.EC,
         DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async deleteFunc(req, res) {
+    try {
+      let data = await productApiService.handleDeleteFunc(req.body);
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async createFunc(req, res) {
+    try {
+      let data = await productApiService.handleCreateFunc(req.body);
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async editFunc(req, res) {
+    try {
+      let data = await productApiService.handleEditFunc(req.body);
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async countProduct(req, res) {
+    try {
+      const productCount = await db.Product.count();
+
+      return res.status(200).json({
+        EM: 'Success',
+        EC: 0,
+        DT: productCount,
       });
     } catch (error) {
       console.log(error);

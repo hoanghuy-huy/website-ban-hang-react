@@ -1,0 +1,46 @@
+.table-brand {
+    margin-top: 10px;
+    table {
+        thead {
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            font-size: 15px !important;
+        }
+        tbody {
+            font-size: 13px !important;
+            .actions {
+                display: flex;
+                justify-content: start;
+                button {
+                    min-width: 25px !important;
+                    width: 25px !important;
+                    height: 25px !important;
+
+                    svg {
+                        font-size: 20px !important;
+                    }
+                }
+            }
+            .id-brand {
+                min-width: 100px;
+            }
+            td {
+                color: #403e57;
+                font-weight: 500;
+                vertical-align: middle;
+            }
+
+
+
+        
+        }
+        
+    }
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .divide{
+            color: var(--primary-color);
+        }
+    }
+}

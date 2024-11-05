@@ -6,6 +6,7 @@ import { addProductToCart, fetchAllCart } from '~/redux/features/cartSlice';
 import { showLoginForm } from '~/redux/features/accountSlice';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import SnackbarComp from '../Snackbar';
+import { convertPrice } from '~/utils/convert';
 const BoxBuy = ({ item }) => {
     const userId = useSelector((state) => state.account.account.userId);
     const auth = useSelector((state) => state.account.auth);
@@ -105,9 +106,7 @@ const BoxBuy = ({ item }) => {
                         <div className="label">Tạm tính</div>
                         <div className="price">
                             <div>
-                                {price?.toLocaleString('vi-VN', {
-                                    maximumFractionDigits: 0,
-                                })}
+                                {convertPrice(price)}
                             </div>
                         </div>
                     </div>

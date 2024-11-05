@@ -95,7 +95,7 @@ let handleGetAllOrderWithUserIdPagination = ({
       let { count, rows } = await db.Order.findAndCountAll({
         where: !pending
           ? { userId }
-          : { [Op.and]: [{ userId: userId }, { status: 0 }] },
+          : { [Op.and]: [{ userId: userId }, { status: 0 }, {orderStatus : !null}] },
         offset: offset,
         limit: limit,
         include: [
@@ -556,6 +556,77 @@ let handleConfirmOrderForShipmentFunc = ({ orderId }) => {
   });
 };
 
+let handleTotalProductSold = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const countProductSold = await db.Order.sum('quantityItem',{
+        where: {
+          orderStatus: 1,
+        },
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: countProductSold,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleTotalRevenue = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let totalPrice = await db.Order.sum("totalPrice", {
+        where: { orderStatus: 1 },
+      });
+      console.log(totalPrice)
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalPrice,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleCustomerConfirmFunc = ({ orderId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!orderId) {
+        reject({
+          EM: "missing value id order",
+          EC: 1,
+          DT: "",
+        });
+      }
+
+      await db.Order.update(
+        {
+          orderStatus: 1,
+        },
+        {
+          where: { id: +orderId },
+        }
+      );
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: "",
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 module.exports = {
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,
@@ -566,4 +637,7 @@ module.exports = {
   handleGetAllOrderPagination,
   handleConfirmFunc,
   handleConfirmOrderForShipmentFunc,
+  handleTotalProductSold,
+  handleTotalRevenue,
+  handleCustomerConfirmFunc,
 };

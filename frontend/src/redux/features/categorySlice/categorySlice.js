@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import httpRequest from '~/utils/httpRequest';
 import NProgress from 'nprogress';
+import { toast } from 'react-toastify';
+import { getAllBrandAdmin } from '../brandSlice';
 // First, create the thunk
 export const fetchAllCategories = createAsyncThunk('categories/fetchAllCategories', async () => {
     const response = await httpRequest.get('categories');
@@ -14,6 +16,38 @@ export const fetchAllCategoriesHot = createAsyncThunk('categories/fetchAllCatego
 
 export const fetchOneCategory = createAsyncThunk('categories/fetchOneCategory', async (pathCategory) => {
     const response = await httpRequest.get(`categories/get-one/${pathCategory}`);
+    return response.DT;
+});
+
+export const createCategoryApi = createAsyncThunk('categories/createCategoryApi', async (rawData) => {
+    const response = await httpRequest.post(`categories/create`, rawData);
+    if (response && response.EC === 0) {
+        toast.success('Thêm danh mục thành công');
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
+    return response.DT;
+});
+
+export const deleteCategoryApi = createAsyncThunk('categories/deleteCategoryApi', async ({ categoryId }, thunkAPI) => {
+    const response = await httpRequest.put(`categories/delete`, { categoryId });
+    if (response && response.EC === 0) {
+        toast.success('Xóa danh mục thành công');
+        thunkAPI.dispatch(fetchAllCategories());
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
+    return response.DT;
+});
+
+export const editCategoryApi = createAsyncThunk('categories/editCategoryApi', async (rawData, thunkAPI) => {
+    const response = await httpRequest.post(`categories/edit`, rawData);
+    if (response && response.EC === 0) {
+        toast.success('Cập nhật danh mục thành công');
+        thunkAPI.dispatch(fetchAllCategories());
+    } else {
+        toast.error('Xảy ra lỗi vui long thử lại');
+    }
     return response.DT;
 });
 
@@ -79,6 +113,46 @@ export const categoriesSlice = createSlice({
                 state.productOfCategory = action.payload;
             })
             .addCase(fetchOneCategory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(createCategoryApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(createCategoryApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.productOfCategory = action.payload;
+            })
+            .addCase(createCategoryApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(deleteCategoryApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(deleteCategoryApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(deleteCategoryApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(editCategoryApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(editCategoryApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(editCategoryApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             });

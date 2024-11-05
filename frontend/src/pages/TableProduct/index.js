@@ -15,25 +15,54 @@ import { fetchAllProductPagination } from '~/redux/features/productSlice/product
 import { convertPrice } from '~/utils/convert';
 import { fetchAllCategories } from '~/redux/features/categorySlice/categorySlice';
 
-const TableProduct = ({ cat, brand }) => {
-    const [age, setAge] = React.useState('');
+const TableProduct = ({
+    cat,
+    brand,
+    handleDeleteProduct,
+    setDataProduct,
+    setActions,
+    setShowFromCreateProduct,
+    defaultDataProduct,
+}) => {
     const [limit, setLimit] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useDispatch();
+    const [catFilter, setCatFilter] = useState('');
+    const [brandFilter, setBrandFilter] = useState('');
     const listProductPagination = useSelector((state) => state.products.listProductPagination);
 
     useEffect(() => {
         dispatch(fetchAllProductPagination({ page: currentPage, limit: limit }));
     }, []);
 
-    console.log(cat);
+    useEffect(() => {
+        dispatch(
+            fetchAllProductPagination({ page: currentPage, limit: limit, categoryId: catFilter, brandId: brandFilter }),
+        );
+    }, [catFilter, brandFilter]);
 
     const handleChange = (event, value) => {
         setCurrentPage(value);
         dispatch(fetchAllProductPagination({ page: currentPage, limit: limit }));
     };
 
-    const handleDeleteProduct = (id) => {};
+    const handleEditProduct = async (data) => {
+        setActions('EDIT');
+        let buildData = {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            discountRate: data.discountRate,
+            stock: data.inventoryNumber,
+            cat: +data.categoryId,
+            brand: data.brandId ? data.brandId : '',
+            auth: data.authentic ? 1 : 0,
+            image: data.thumbnailUrl,
+        };
+        setShowFromCreateProduct(true);
+        setDataProduct(buildData);
+    };
     return (
         <div className="card-product shadow border-0 p-3 mt-4 mb-5 bg-white rounded-2">
             <h3>Sản phẩm</h3>
@@ -42,8 +71,8 @@ const TableProduct = ({ cat, brand }) => {
                     <h4>Danh mục</h4>
                     <FormControl sx={{ m: 1, minWidth: 120, width: '100%' }} size="small">
                         <Select
-                            value={age}
-                            onChange={handleChange}
+                            value={catFilter}
+                            onChange={(e) => setCatFilter(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                         >
@@ -62,8 +91,8 @@ const TableProduct = ({ cat, brand }) => {
                     <h4>Thương hiệu</h4>
                     <FormControl size="small" sx={{ m: 1, minWidth: 120, width: '100%' }}>
                         <Select
-                            value={age}
-                            onChange={handleChange}
+                            value={brandFilter}
+                            onChange={(e) => setBrandFilter(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                         >
@@ -95,10 +124,10 @@ const TableProduct = ({ cat, brand }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listProductPagination &&
-                            listProductPagination.products.length > 0 &&
+                        {listProductPagination && listProductPagination.products.length > 0 ? (
                             listProductPagination.products.map((product) => {
                                 const category = cat && cat.find((item) => item.id === product.categoryId);
+                                const brandList = brand && brand.find((item) => item.id === product.brandId);
 
                                 return (
                                     <tr>
@@ -117,7 +146,7 @@ const TableProduct = ({ cat, brand }) => {
                                         </td>
                                         <td>{category ? category.name : 'N/A'}</td>
 
-                                        <td>{product.brandName ? product.brandName : 'N/A'}</td>
+                                        <td>{brandList ? brandList.name : 'N/A'}</td>
                                         <td>
                                             {product.originalPrice !== product.price && (
                                                 <del className="price-old">{convertPrice(product.originalPrice)}</del>
@@ -145,7 +174,11 @@ const TableProduct = ({ cat, brand }) => {
                                                     </Button>
                                                 </Tooltip> */}
                                                 <Tooltip title="chỉnh sửa sẩn phẩm">
-                                                    <Button className="edit" color="warning">
+                                                    <Button
+                                                        className="edit"
+                                                        color="warning"
+                                                        onClick={() => handleEditProduct(product)}
+                                                    >
                                                         <CreateIcon />
                                                     </Button>
                                                 </Tooltip>
@@ -161,23 +194,32 @@ const TableProduct = ({ cat, brand }) => {
                                         </td>
                                     </tr>
                                 );
-                            })}
+                            })
+                        ) : (
+                            <tr>
+                                <td colspan="9">Không tìm thấy sản phẩm nào</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
                 <div className="table-footer">
-                    <div>
-                        Trang
-                        <strong> {currentPage} </strong>
-                        <span className="divide">/ </span>
-                        {listProductPagination?.totalPages}
-                    </div>
-                    <Pagination
-                        onChange={handleChange}
-                        page={currentPage}
-                        count={listProductPagination?.totalPages}
-                        variant="outlined"
-                        shape="rounded"
-                    />
+                    {listProductPagination && listProductPagination.totalPages !== 0 && (
+                        <>
+                            <div>
+                                Trang
+                                <strong> {currentPage} </strong>
+                                <span className="divide">/ </span>
+                                {listProductPagination?.totalPages}
+                            </div>
+                            <Pagination
+                                onChange={handleChange}
+                                page={currentPage}
+                                count={listProductPagination?.totalPages}
+                                variant="outlined"
+                                shape="rounded"
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div>

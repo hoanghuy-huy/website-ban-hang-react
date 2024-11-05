@@ -41,9 +41,10 @@ const getAllOrderWithUserIdPagination = async (req, res) => {
 
 const getAllOrderInTransitWithUserIdPagination = async (req, res) => {
   try {
-    let data = await orderApiService.handleGetAllOrderInTransitWithUserIdPagination(
-      req.query
-    );
+    let data =
+      await orderApiService.handleGetAllOrderInTransitWithUserIdPagination(
+        req.query
+      );
 
     return res.status(200).json({
       EM: data.EM,
@@ -62,9 +63,10 @@ const getAllOrderInTransitWithUserIdPagination = async (req, res) => {
 
 const getAllOrderStatusWithUserIdPagination = async (req, res) => {
   try {
-    let data = await orderApiService.handleGetAllOrderStatusWithUserIdPagination(
-      req.query
-    );
+    let data =
+      await orderApiService.handleGetAllOrderStatusWithUserIdPagination(
+        req.query
+      );
 
     return res.status(200).json({
       EM: data.EM,
@@ -102,7 +104,7 @@ const getOneOrder = async (req, res) => {
 
 const deleteFunc = async (req, res) => {
   try {
-    let data = await orderApiService.handleDeleteFunc(req.query,req.body);
+    let data = await orderApiService.handleDeleteFunc(req.query, req.body);
 
     return res.status(200).json({
       EM: data.EM,
@@ -121,9 +123,7 @@ const deleteFunc = async (req, res) => {
 
 const getAllOrderPagination = async (req, res) => {
   try {
-    let data = await orderApiService.handleGetAllOrderPagination(
-      req.query
-    );
+    let data = await orderApiService.handleGetAllOrderPagination(req.query);
 
     return res.status(200).json({
       EM: data.EM,
@@ -142,9 +142,7 @@ const getAllOrderPagination = async (req, res) => {
 
 const confirmOrderFunc = async (req, res) => {
   try {
-    let data = await orderApiService.handleConfirmFunc(
-      req.body
-    );
+    let data = await orderApiService.handleConfirmFunc(req.body);
 
     return res.status(200).json({
       EM: data.EM,
@@ -181,6 +179,64 @@ const confirmOrderForShipmentFunc = async (req, res) => {
     });
   }
 };
+
+const totalProductSold = async (req, res) => {
+  try {
+    let data = await orderApiService.handleTotalProductSold();
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const totalRevenue = async (req, res) => {
+  try {
+    let data = await orderApiService.handleTotalRevenue();
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const customerConfirmOrderFunc = async (req, res) => {
+  try {
+    let data = await orderApiService.handleCustomerConfirmFunc(req.body);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
 module.exports = {
   createFunc,
   getAllOrderWithUserIdPagination,
@@ -190,5 +246,8 @@ module.exports = {
   getAllOrderStatusWithUserIdPagination,
   getAllOrderPagination,
   confirmOrderFunc,
-  confirmOrderForShipmentFunc
+  confirmOrderForShipmentFunc,
+  totalProductSold,
+  totalRevenue,
+  customerConfirmOrderFunc
 };

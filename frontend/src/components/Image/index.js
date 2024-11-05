@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { forwardRef } from 'react';
+import React, { useState, forwardRef, useEffect } from 'react';
 import images from '~/assets/images';
 
-const Image = forwardRef(({ src, alt, ...props }, ref) => {
+const Image = forwardRef(({ src, alt, onChange, ...props }, ref) => {
     const [fallBack, setFallBack] = useState(null);
 
     const handleError = () => {
         setFallBack(images.noImage);
     };
+
+    useEffect(() => {
+        setFallBack(null); 
+    }, [src]);
 
     return (
         <img
@@ -17,8 +20,10 @@ const Image = forwardRef(({ src, alt, ...props }, ref) => {
             src={fallBack || src}
             alt={alt}
             onError={handleError}
+            onLoad={onChange}
         />
     );
 });
+
 
 export default Image;

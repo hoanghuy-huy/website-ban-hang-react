@@ -7,6 +7,7 @@ import style from './CartItem.module.scss';
 import { IconButton, Rating, Tooltip } from '@mui/material';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Image from '../Image';
+import { convertPrice } from '~/utils/convert';
 const cx = classNames.bind(style);
 const CartItem = ({ item, onClick }) => {
     return (
@@ -75,9 +76,7 @@ const CartItem = ({ item, onClick }) => {
 
                         <div className={cx('price-and-discount-style')}>
                             <div className={cx('price')}>
-                                {item?.price.toLocaleString('vi-VN', {
-                                    maximumFractionDigits: 0,
-                                })}
+                               {convertPrice(item.price)}
                                 <sup>₫</sup>
                             </div>
                             <div className={cx('discount')}>
@@ -97,9 +96,7 @@ const CartItem = ({ item, onClick }) => {
                                             <sup>%</sup>
                                         </span>
                                         <span className={cx('original-price')}>
-                                            {item?.originalPrice.toLocaleString('vi-VN', {
-                                                maximumFractionDigits: 0,
-                                            })}
+                                            {convertPrice(item?.originalPrice)}
                                             <sup>₫</sup>
                                         </span>
                                     </>

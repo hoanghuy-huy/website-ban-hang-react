@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import './OrderDetailPage.scss';
 import { cancelOrderApi, getOneOrderApi } from '~/redux/features/orderSlice';
-import {  useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { convertPrice } from '~/utils/convert';
 import Image from '~/components/Image';
 const OrderDetailPage = () => {
@@ -12,38 +12,36 @@ const OrderDetailPage = () => {
     const { userId } = useSelector((state) => state.account.account);
     const { OrderDetails } = orderItem;
     const { orderId } = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    console.log(orderItem);
     let totalPriceForEachProduct = (price, quantity) => {
-        return price * quantity
-    }
-    
+        return price * quantity;
+    };
+
     let totalPriceForOrder = () => {
-        if(!OrderDetails) return 0
+        if (!OrderDetails) return 0;
         let total = OrderDetails.reduce((totalPrice, currentValue) => {
-            return totalPrice += currentValue.quantity * currentValue.price
-        },0)
+            return (totalPrice += currentValue.quantity * currentValue.price);
+        }, 0);
 
-        return total
-    }
+        return total;
+    };
 
-    const handleCancelOrder = async(orderId) => {
+    const handleCancelOrder = async (orderId) => {
         let productList = orderItem?.OrderDetails.map((item) => {
             return {
                 productId: item.productId,
-                quantity: item.quantity
-            }
-        })
+                quantity: item.quantity,
+            };
+        });
 
-        await dispatch(cancelOrderApi({orderId,userId,productList}))
+        await dispatch(cancelOrderApi({ orderId, userId, productList }));
 
-        navigate('/account/order')
-    }
+        navigate('/account/order');
+    };
     useEffect(() => {
         dispatch(getOneOrderApi(orderId));
-
-
     }, []);
     return (
         <div className="AccountOrderDetail">
@@ -110,10 +108,7 @@ const OrderDetailPage = () => {
                                                 <Image src={item?.Product?.thumbnailUrl} />
                                             </div>
                                             <div className="product-info  d-flex align-items-center">
-                                                <div className="product-name">
-                                                    {' '}
-                                                    {item?.Product?.name}
-                                                </div>
+                                                <div className="product-name"> {item?.Product?.name}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -121,7 +116,9 @@ const OrderDetailPage = () => {
                                     <td className="price">{convertPrice(item?.price)} ₫</td>
                                     <td className="quantity">{item?.quantity}</td>
                                     <td className="discount-amount">{item?.discount} ₫</td>
-                                    <td className="total">{convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫</td>
+                                    <td className="total">
+                                        {convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -156,10 +153,17 @@ const OrderDetailPage = () => {
                     <tr>
                         <td colspan="4"></td>
                         <td>
-                            <div title="Hủy đơn hàng" className="cancel-order" onClick={() => handleCancelOrder(orderItem?.id)}>
-                                <Button variant="contained" color="warning">
-                                    Hủy đơn hàng
-                                </Button>
+                            <div
+                                title="Hủy đơn hàng"
+                                className="cancel-order"
+                                onClick={() => handleCancelOrder(orderItem?.id)}
+                            >
+                                {(orderItem && orderItem?.orderStatusDelivery !== 1) ||
+                                    (orderItem?.orderStatus === null && (
+                                        <Button variant="contained" color="warning" className='success-btn'>
+                                            Hủy đơn hàng
+                                        </Button>
+                                    ))}
                             </div>
                         </td>
                     </tr>

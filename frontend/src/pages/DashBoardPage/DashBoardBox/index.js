@@ -1,6 +1,5 @@
 import React from 'react';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-const DashBoardBox = (props, width) => {
+const DashBoardBox = (props) => {
     return (
         <div
             className="DashBoardBox"
@@ -11,12 +10,12 @@ const DashBoardBox = (props, width) => {
         >
             <div className="d-flex w-100">
                 <div className="col1">
-                    <h4 className="text-white">Tổng người dùng</h4>
-                    <span className="text-white">290</span>
+                    <h4 className="text-white">{props.title}</h4>
+                    <span className="text-white">{props.total}</span>
                 </div>
                 <div className="ms-auto">
                     <span className="icon">
-                        <AccountCircleIcon />
+                        {props.icon}
                     </span>
                 </div>
             </div>
