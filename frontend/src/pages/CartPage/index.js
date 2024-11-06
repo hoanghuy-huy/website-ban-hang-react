@@ -139,8 +139,8 @@ const CartPage = () => {
         }
 
         if (!addressDefault) {
-            dispatch(handleShowModalAddress());
             toast.warn('Vui lòng nhập địa chỉ giao hàng');
+            return;
         }
         
         dispatch(handlePurchaseProduct(data));
@@ -248,12 +248,9 @@ const CartPage = () => {
                                                 <Link to={'/address'}>Thay Đổi</Link>
                                             </div>
                                         ) : (
-                                            <div
-                                                onClick={() => dispatch(handleShowModalAddress())}
-                                                className="header__action"
-                                            >
+                                            <div className="header__action">
                                                 {' '}
-                                                Nhập
+                                                <Link to={'/address'}>Nhập</Link>
                                             </div>
                                         )}
                                     </div>

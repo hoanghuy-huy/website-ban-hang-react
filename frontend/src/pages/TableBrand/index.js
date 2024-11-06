@@ -44,7 +44,7 @@ const TableBrand = ({ setShow, setActions, setDataBrand, setBrandId }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {brandListAdminPagination && brandListAdminPagination.brands.map((brand) => {
+                        {brandListAdminPagination && brandListAdminPagination?.brands?.map((brand) => {
                             return (
                                 <tr>
                                     <td className="id-brand">#{brand.id}</td>

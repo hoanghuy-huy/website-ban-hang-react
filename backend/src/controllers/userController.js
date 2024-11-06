@@ -2,7 +2,6 @@ import userService from "../services/userService";
 import db from "../models/index";
 import userApiService from "../services/userApiService";
 
-
 class userController {
   async renderUserPage(req, res) {
     try {
@@ -40,25 +39,20 @@ class userController {
 
   async getInformation(req, res) {
     try {
-      let user = await  db.User.findOne(
-        { 
-          where: { id:1 },
-          include:  db.Group,
-          nest:true,
-          raw:true
-        },
-      );
-      
+      let user = await db.User.findOne({
+        where: { id: 1 },
+        include: db.Group,
+        nest: true,
+        raw: true,
+      });
+
       let role = await db.Group.findOne({
-        where:{ id: 1},
-        attributes: ['name', 'description'],
-        include: [
-          { model: db.Role, attributes:["url"]}
-        ],
-        raw:true,
-        nest:true
-        
-      })
+        where: { id: 1 },
+        attributes: ["name", "description"],
+        include: [{ model: db.Role, attributes: ["url"] }],
+        raw: true,
+        nest: true,
+      });
 
       return console.log("check role", role);
     } catch (error) {
@@ -66,149 +60,160 @@ class userController {
     }
   }
 
-
   async getAllUser(req, res) {
     try {
-      let { page, limit } = req.query
+      let { page, limit } = req.query;
 
-      let data = await userApiService.handleGetAllUser(+page, +limit)
-
+      let data = await userApiService.handleGetAllUser(+page, +limit);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
-    
   }
 
-  async deleteUser (req, res) {
+  async deleteUser(req, res) {
     try {
-      let data = await userApiService.handleDeleteUser(req.body.id)
-
+      let data = await userApiService.handleDeleteUser(req.body.id);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
-    
   }
 
   async getAllGroup(req, res) {
     try {
-      let data = await userApiService.handleGetGroupUser(+req.params.id)
-
+      let data = await userApiService.handleGetGroupUser(+req.params.id);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
 
   async createFunc(req, res) {
     try {
-      console.log(req.body)
-      let data = await userApiService.createNewUser(req.body)
-
+      console.log(req.body);
+      let data = await userApiService.createNewUser(req.body);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
   async getOneUser(req, res) {
     try {
-      let data = await userApiService.getOneUser(req.params.id)
+      let data = await userApiService.getOneUser(req.params.id);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({
-            EM: 'Error form server',
-            EC: -1,
-            DT: ''
-        })
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
-  
+
   async updateUser(req, res) {
     try {
-      let data = await userApiService.handleUpdateUser(req.body)
+      let data = await userApiService.handleUpdateUser(req.body);
 
       return res.status(200).json({
-          EM: data.EM,
-          EC: data.EC,
-          DT: data.DT
-      })
-
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.status(500).json({
-          EM: 'Error form server',
-          EC: -1,
-          DT: ''
-      })
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
 
   getAccount(req, res) {
     try {
-      let token = req.token
-      let data = req.user 
+      let token = req.token;
+      let data = req.user;
       res.status(200).json({
         EC: 0,
         EM: "Get account success",
-        DT:{
+        DT: {
           token,
-          data
-        }
-      })
+          data,
+        },
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.status(500).json({
-        EM: 'Error form server',
+        EM: "Error form server",
         EC: -1,
-        DT: ''
-    })
+        DT: "",
+      });
+    }
+  }
+
+  async countUser(req, res) {
+    try {
+      let totalUser = await db.User.count();
+
+      res.status(200).json({
+        EC: 0,
+        EM: "Count user success",
+        DT: totalUser,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
     }
   }
 }

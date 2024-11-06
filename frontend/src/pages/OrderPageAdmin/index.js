@@ -92,13 +92,13 @@ const OrderPageAdmin = () => {
     };
 
     const confirmOrderFunc = async (orderId) => {
-        dispatch(confirmOrderAdmin({ orderId, page: currentPage }));
+        await dispatch(confirmOrderAdmin({ orderId, page: currentPage }));
 
         window.location.reload();
     };
 
     const confirmOrderForShipmentFunc = async (orderId) => {
-        dispatch(confirmOrderForShipmentAdmin({ orderId, page: currentPage }));
+       await dispatch(confirmOrderForShipmentAdmin({ orderId, page: currentPage }));
 
         window.location.reload();
     };
@@ -171,6 +171,7 @@ const OrderPageAdmin = () => {
                         >
                             Đã từ chối
                         </div>
+                       
                     </div>
                     <div className="StyledOrder">
                         <div className="StyledOrder-container">
@@ -206,12 +207,12 @@ const OrderPageAdmin = () => {
                                                                             </>
                                                                         ) : (
                                                                             <>
-                                                                                <LocalShippingOutlinedIcon /> 
-                                                                                Đang trên đường vận chuyển                                                                             </>
+                                                                                <LocalShippingOutlinedIcon />
+                                                                                Đang trên đường vận chuyển{' '}
+                                                                            </>
                                                                         )}
                                                                     </>
                                                                 ) : (
-
                                                                     <>
                                                                         <CheckOutlinedIcon />
                                                                         Đã xác nhận, đang đợi giao hàng
@@ -255,7 +256,8 @@ const OrderPageAdmin = () => {
                                                                     {item.orderStatus === 0 ||
                                                                         (item.orderStatus === 1 ? (
                                                                             <></>
-                                                                        ) : item.orderStatusDelivery === 1 && item.status === 1? (
+                                                                        ) : item.orderStatusDelivery === 1 &&
+                                                                          item.status === 1 ? (
                                                                             <></>
                                                                         ) : (
                                                                             <>

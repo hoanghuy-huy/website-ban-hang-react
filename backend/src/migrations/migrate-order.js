@@ -51,6 +51,9 @@ module.exports = {
       phone: {
         type: Sequelize.STRING,
       },
+      statusReturnProduct: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

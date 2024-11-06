@@ -83,19 +83,36 @@ let handleGetAllOrderWithUserIdPagination = ({
   page,
   userId,
   pending,
+  statusReturnProduct,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!userId) {
-        return reject({ EM: "User ID không hợp lệ", EC: 400 });
+        return reject({ EM: "User ID không hợp lệ", EC: 1 });
       }
       limit = +limit;
       let offset = (page - 1) * limit;
 
       let { count, rows } = await db.Order.findAndCountAll({
         where: !pending
-          ? { userId }
-          : { [Op.and]: [{ userId: userId }, { status: 0 }, {orderStatus : !null}] },
+          ? {
+              [Op.and]: [
+                { userId: userId },
+                !!statusReturnProduct && { orderStatus: 1 },
+                !!statusReturnProduct && {
+                  statusReturnProduct: 1,
+                },
+              ],
+            }
+          : {
+              [Op.and]: [
+                { userId: userId },
+                { status: 1 },
+                { orderStatus: null },
+                { statusReturnProduct: null },
+                { orderStatusDelivery: 0 },
+              ],
+            },
         offset: offset,
         limit: limit,
         include: [
@@ -204,6 +221,8 @@ let handleGetAllOrderStatusWithUserIdPagination = ({
       if (!userId || !status) {
         return reject({ EM: "Missing value", EC: 400 });
       }
+
+      console.log(status);
       limit = +limit;
       let offset = (page - 1) * limit;
       let { count, rows } = await db.Order.findAndCountAll({
@@ -211,7 +230,9 @@ let handleGetAllOrderStatusWithUserIdPagination = ({
           [Op.and]: [
             { userId: userId },
             { orderStatus: status },
-            status == 1 && { orderStatusDelivery: true },
+            status == 0 && { orderStatusDelivery: 0 },
+            status == 1 && { orderStatusDelivery: 1 },
+            status == 1 && { statusReturnProduct: null },
           ],
         },
         offset: offset,
@@ -559,9 +580,9 @@ let handleConfirmOrderForShipmentFunc = ({ orderId }) => {
 let handleTotalProductSold = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const countProductSold = await db.Order.sum('quantityItem',{
+      const countProductSold = await db.Order.sum("quantityItem", {
         where: {
-          orderStatus: 1,
+          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
         },
       });
 
@@ -581,9 +602,11 @@ let handleTotalRevenue = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let totalPrice = await db.Order.sum("totalPrice", {
-        where: { orderStatus: 1 },
+        where: {
+          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
+        },
       });
-      console.log(totalPrice)
+      console.log(totalPrice);
       resolve({
         EM: "Ok",
         EC: 0,
@@ -627,6 +650,114 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
     }
   });
 };
+
+let handleCustomerReturnOrderFunc = ({ orderId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!orderId) {
+        reject({
+          EM: "missing value id order",
+          EC: 1,
+          DT: "",
+        });
+      }
+      let data = await db.Order.findOne({ where: orderId });
+      await db.Order.update(
+        {
+          statusReturnProduct: 1,
+        },
+        {
+          where: { id: +orderId },
+        }
+      );
+
+      resolve({
+        EM: "Ok update success",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleTotalOrderSold = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let totalOrderSold = await db.Order.count({
+        where: {
+          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
+        },
+      });
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalOrderSold,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleTotalOrderReturn = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let totalOrderSold = await db.Order.count({
+        where: {
+          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: 1 }],
+        },
+      });
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalOrderSold,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetAllRevenuePagination = ({ limit, page, year }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let totalRevenue = await db.Order.sum("totalPrice", {
+        where: {
+          [Op.and]: [
+            db.sequelize.where(
+              db.sequelize.fn("YEAR", db.sequelize.col("createdAt")),
+              2025
+            ),
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("createdAt")),
+              12
+            ),
+            { statusReturnProduct: null },
+            { orderStatus: null },
+          ],
+        },
+      });
+
+      let data = {
+        totalRevenue: totalRevenue,
+      };
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
 module.exports = {
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,
@@ -640,4 +771,8 @@ module.exports = {
   handleTotalProductSold,
   handleTotalRevenue,
   handleCustomerConfirmFunc,
+  handleCustomerReturnOrderFunc,
+  handleTotalOrderSold,
+  handleTotalOrderReturn,
+  handleGetAllRevenuePagination,
 };

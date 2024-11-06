@@ -5,6 +5,8 @@ import { checkUserLogin, checkUserPermission } from "../middleware/jwtUser";
 const router = express.Router();
 
 // router.all("*", checkUserLogin, checkUserPermission);
+router.get("/users/count", userController.countUser);
+
 router.get("/account", userController.getAccount);
 router.put("/users/update", userController.updateUser);
 router.get("/users/:id", userController.getOneUser);

@@ -44,15 +44,6 @@ class userApiService {
       let offset = (page - 1) * limit;
 
       const { count, rows } = await db.User.findAndCountAll({
-        attributes: [
-          "id",
-          "email",
-          "phone",
-          "groupId",
-          "address",
-          "gender",
-          "username",
-        ],
         offset: offset,
         limit: limit,
         include: [

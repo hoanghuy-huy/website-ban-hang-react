@@ -158,9 +158,9 @@ const OrderDetailPage = () => {
                                 className="cancel-order"
                                 onClick={() => handleCancelOrder(orderItem?.id)}
                             >
-                                {(orderItem && orderItem?.orderStatusDelivery !== 1) ||
+                                {(orderItem && orderItem?.orderStatusDelivery !== 1) &&
                                     (orderItem?.orderStatus === null && (
-                                        <Button variant="contained" color="warning" className='success-btn'>
+                                        <Button variant="contained" color="warning" >
                                             Hủy đơn hàng
                                         </Button>
                                     ))}

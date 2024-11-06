@@ -237,6 +237,82 @@ const customerConfirmOrderFunc = async (req, res) => {
   }
 };
 
+
+const customerReturnOrderFunc = async (req, res) => {
+  try {
+    let data = await orderApiService.handleCustomerReturnOrderFunc(req.body);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const totalOrderSold = async (req, res) => {
+  try {
+    let data = await orderApiService.handleTotalOrderSold();
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const totalOrderReturn = async (req, res) => {
+  try {
+    let data = await orderApiService.handleTotalOrderReturn();
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const getAllRevenuePagination = async (req, res) => {
+  try {
+    let data = await orderApiService.handleGetAllRevenuePagination(req.query);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
 module.exports = {
   createFunc,
   getAllOrderWithUserIdPagination,
@@ -249,5 +325,9 @@ module.exports = {
   confirmOrderForShipmentFunc,
   totalProductSold,
   totalRevenue,
-  customerConfirmOrderFunc
+  customerConfirmOrderFunc,
+  customerReturnOrderFunc,
+  totalOrderSold,
+  totalOrderReturn,
+  getAllRevenuePagination
 };

@@ -11,7 +11,7 @@ const MangerUsersPage = () => {
     const [listUsers, setListUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     // eslint-disable-next-line
-    const [currentLimit, setCurrentLimit] = useState(2);
+    const [currentLimit, setCurrentLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [showModalDelete, setShowDeleteModal] = useState(false);
     const [dataModal, setDataModal] = useState({});
@@ -79,11 +79,11 @@ const MangerUsersPage = () => {
     return (
         <div className="container">
             <div className="user-header">
-                <h3>Table Users</h3>
+                <h3>Người dùng</h3>
             </div>
             <div className="user-container mt-3">
                 <Button variant="success" onClick={() => handleShow()} className='mb-3'>
-                    Create New User
+                    Tạo người dùng
                 </Button>
                 <ModalUser
                     title={modalActions === 'EDIT' ? 'Edit User' : 'Create New User'}
@@ -98,8 +98,8 @@ const MangerUsersPage = () => {
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Vai trò</th>
+                            <th scope="col">Xử lý</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,10 +112,10 @@ const MangerUsersPage = () => {
                                         <td>{item.Group ? item.Group.name : ''}</td>
                                         <td>
                                             <Button variant="warning" onClick={() => handleEditModal(item)}>
-                                                Edit
+                                                Sửa
                                             </Button>{' '}
                                             <Button variant="danger" onClick={() => handleShowModalDelete(item)}>
-                                                Delete
+                                                Xóa
                                             </Button>
                                             <ModalUserDelete
                                                 handleCloseModalDelete={handleCloseModalDelete}
@@ -129,7 +129,7 @@ const MangerUsersPage = () => {
                             </>
                         ) : (
                             <tr>
-                                <td>user not found</td>
+                                <td>Không tìm thấy người dùng</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
