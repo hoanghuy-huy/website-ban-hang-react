@@ -29,7 +29,7 @@ export const getAllOrder = createAsyncThunk(
 
 export const getAllOrderWithUserIdApi = createAsyncThunk(
     'order/getAllOrderWithUserIdApi',
-    async ({ limit, page, userId, pending,statusReturnProduct }, thunkAPI) => {
+    async ({ limit, page, userId, pending, statusReturnProduct }, thunkAPI) => {
         const res = await httpRequest.get(
             `order/get-all-order-with-user-id?limit=${limit}&page=${page}&userId=${userId}${
                 pending ? `&pending=${pending}` : ''
@@ -128,12 +128,22 @@ export const customerConfirmOrderApi = createAsyncThunk(
     },
 );
 
-export const customerReturnOrderApi = createAsyncThunk('order/customerReturnOrderApi', async ({ orderId, userId }) => {
-    const res = await httpRequest.post(`order/customer-return-order`, { orderId: orderId });
-
-    return res ? res.DT : {};
-});
-
+export const customerReturnOrderApi = createAsyncThunk(
+    'order/customerReturnOrderApi',
+    async ({ orderId, userId, productId, productQuantity }) => {
+        const res = await httpRequest.post(`order/customer-return-order`, {
+            orderId: orderId,
+            productId: productId,
+            productQuantity: productQuantity,
+        });
+        if (res && res.EC === 0) {
+            toast.success('Đã trả sản phẩm này');
+        } else {
+            toast.error('Xảy ra lỗi vui lòng thử lại');
+        }
+        return res ? res.DT : {};
+    },
+);
 
 export const totalOrderSoldApi = createAsyncThunk('order/totalOrderSoldApi', async () => {
     const res = await httpRequest.get(`order/total-order-sold`);
@@ -153,8 +163,8 @@ export const orderSlice = createSlice({
         loading: false,
         error: false,
         totalPrice: null,
-        totalOrderSold:null,
-        totalOrderReturn:null,
+        totalOrderSold: null,
+        totalOrderReturn: null,
         totalRevenue: null,
         totalProductSold: null,
         orderId: null,
@@ -384,12 +394,12 @@ export const orderSlice = createSlice({
             .addCase(totalOrderReturnApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = false;
-                state.totalOrderSold = action.payload;
+                state.totalOrderReturn = action.payload;
             })
             .addCase(totalOrderReturnApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            })
+            });
     },
 });
 

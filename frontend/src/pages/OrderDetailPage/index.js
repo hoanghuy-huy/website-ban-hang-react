@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { customerReturnOrderApi, getAllStatusOrderWithUserIdApi } from '~/redux/features/orderSlice';
 import './OrderDetailPage.scss';
 import { cancelOrderApi, getOneOrderApi } from '~/redux/features/orderSlice';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,7 +14,7 @@ const OrderDetailPage = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log(orderItem);
+
     let totalPriceForEachProduct = (price, quantity) => {
         return price * quantity;
     };
@@ -40,9 +40,17 @@ const OrderDetailPage = () => {
 
         navigate('/account/order');
     };
+    const handleCustomerReturnOrder = async (orderId, productId, productQuantity) => {
+        await dispatch(
+            customerReturnOrderApi({ orderId: orderId, productId: productId, productQuantity: productQuantity }),
+        );
+
+        await dispatch(getOneOrderApi(orderId));
+    };
     useEffect(() => {
         dispatch(getOneOrderApi(orderId));
     }, []);
+    console.log(orderItem);
     return (
         <div className="AccountOrderDetail">
             <div className="heading">
@@ -94,6 +102,7 @@ const OrderDetailPage = () => {
                         <th>Số lượng</th>
                         <th>Giảm giá</th>
                         <th>Tạm tính</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,6 +128,45 @@ const OrderDetailPage = () => {
                                     <td className="total">
                                         {convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫
                                     </td>
+                                    <td className='d-flex flex-column justify-content-center align-item-center'>
+                                        {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && (
+                                            <div className="review-btn">
+                                                <Button
+                                                    size="small"
+                                                    outline
+                                                    className="info-btn"
+                                                    onClick={() => handleCustomerReturnOrder(orderItem.id)}
+                                                >
+                                                    Đánh giá
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {orderItem.orderStatus === 1 &&
+                                            orderItem.statusReturnProduct === null &&
+                                            item.returnItem === null && (
+                                                <div className="return-btn mt-2">
+                                                    <Button
+                                                        size="small"
+                                                        outline
+                                                        className="info-btn"
+                                                        onClick={() =>
+                                                            handleCustomerReturnOrder(
+                                                                orderItem.id,
+                                                                item?.productId,
+                                                                item?.quantity,
+                                                            )
+                                                        }
+                                                    >
+                                                        Trả hàng
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        {item.returnItem && (
+                                            <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
+                                                <span className="d-block">Đã trả hàng</span>
+                                            </div>
+                                        )}
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -128,6 +176,7 @@ const OrderDetailPage = () => {
                         <td colspan="4">
                             <span>Tạm tính</span>
                         </td>
+
                         <td>{convertPrice(totalPriceForOrder())} ₫</td>
                     </tr>
                     <tr>
@@ -158,12 +207,13 @@ const OrderDetailPage = () => {
                                 className="cancel-order"
                                 onClick={() => handleCancelOrder(orderItem?.id)}
                             >
-                                {(orderItem && orderItem?.orderStatusDelivery !== 1) &&
-                                    (orderItem?.orderStatus === null && (
-                                        <Button variant="contained" color="warning" >
+                                {orderItem &&
+                                    orderItem?.orderStatusDelivery !== 1 &&
+                                    orderItem?.orderStatus === null && (
+                                        <Button variant="contained" color="warning">
                                             Hủy đơn hàng
                                         </Button>
-                                    ))}
+                                    )}
                             </div>
                         </td>
                     </tr>

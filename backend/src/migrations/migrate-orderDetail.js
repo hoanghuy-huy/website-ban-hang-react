@@ -24,6 +24,15 @@ module.exports = {
       discount: {
         type: Sequelize.INTEGER,
       },
+      returnItem: {
+        type: Sequelize.BOOLEAN,
+      },
+      status: {
+        type: Sequelize.BOOLEAN,
+      },
+      totalPrice: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

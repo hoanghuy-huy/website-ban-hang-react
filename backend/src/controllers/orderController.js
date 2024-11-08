@@ -297,7 +297,7 @@ const totalOrderReturn = async (req, res) => {
 
 const getAllRevenuePagination = async (req, res) => {
   try {
-    let data = await orderApiService.handleGetAllRevenuePagination(req.query);
+    let data = await orderApiService.handleGetRevenueByDay(req.query);
 
     return res.status(200).json({
       EM: data.EM,

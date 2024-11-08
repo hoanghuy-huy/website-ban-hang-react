@@ -1,4 +1,4 @@
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import db from "../models/index";
 import emailService from "../services/emailService";
 let createNewOrder = (rawData) => {
@@ -30,6 +30,7 @@ let createNewOrder = (rawData) => {
         const buildDataOrderDetail = orderDetail.map((item) => {
           return {
             orderId: dataOrder.id,
+            totalPrice: item.quantity * item.price,
             ...item,
           };
         });
@@ -316,75 +317,6 @@ let handleGetOneOrder = (params) => {
   });
 };
 
-let handleDeleteFunc = (query, productList) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { orderId } = query;
-      if (!productList) {
-        reject({
-          EC: -1,
-          EM: "Missing Value Product List",
-          DT: [],
-        });
-      }
-      let productId = productList.map((item) => item.productId);
-      let productQuantity = productList.map((item) => item.quantity);
-
-      let products = await db.Product.findAll({
-        where: { id: productId },
-      });
-
-      const updateQuantities = products.map((product, index) => ({
-        id: product.id,
-        newInventory: product.inventoryNumber + productQuantity[index],
-      }));
-
-      if (!orderId) {
-        return reject({
-          EM: "Missing value",
-          DT: "",
-          EC: 1,
-        });
-      }
-
-      const order = await db.Order.findOne({ where: { id: orderId } });
-      if (!order) {
-        return reject({
-          EM: "Not Found Order",
-          DT: "",
-          EC: 1,
-        });
-      }
-
-      await order.update({
-        orderStatus: 0,
-      });
-
-      await Promise.all(
-        updateQuantities.map(({ id, newInventory }) =>
-          db.Product.update(
-            { inventoryNumber: newInventory },
-            { where: { id } }
-          )
-        )
-      );
-
-      resolve({
-        EM: "Ok reject order success",
-        DT: "",
-        EC: 0,
-      });
-    } catch (error) {
-      console.log(error);
-      reject({
-        EM: "An error occurred",
-        DT: error.message,
-        EC: 500,
-      });
-    }
-  });
-};
-
 let handleGetAllOrderPagination = ({
   limit,
   page,
@@ -439,7 +371,10 @@ let handleGetAllOrderPagination = ({
       if (orderStatus) {
         let { count, rows } = await db.Order.findAndCountAll({
           where: {
-            orderStatus: orderStatus,
+            [Op.and]: [
+              { orderStatus: orderStatus },
+              { statusReturnProduct: null },
+            ],
           },
           offset: offset,
           limit: limit,
@@ -580,9 +515,9 @@ let handleConfirmOrderForShipmentFunc = ({ orderId }) => {
 let handleTotalProductSold = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const countProductSold = await db.Order.sum("quantityItem", {
+      const countProductSold = await db.OrderDetail.sum("quantity", {
         where: {
-          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
+          [Op.and]: [{ status: 1 }, { returnItem: null }],
         },
       });
 
@@ -601,12 +536,11 @@ let handleTotalProductSold = () => {
 let handleTotalRevenue = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let totalPrice = await db.Order.sum("totalPrice", {
+      let totalPrice = await db.OrderDetail.sum("totalPrice", {
         where: {
-          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
+          [Op.and]: [{ status: 1 }, { returnItem: null }],
         },
       });
-      console.log(totalPrice);
       resolve({
         EM: "Ok",
         EC: 0,
@@ -618,7 +552,7 @@ let handleTotalRevenue = () => {
     }
   });
 };
-
+//delivery success
 let handleCustomerConfirmFunc = ({ orderId }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -639,6 +573,20 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
         }
       );
 
+      const orderDetail = await db.OrderDetail.findAll({
+        where: { orderId: +orderId },
+      });
+
+      if (orderDetail.length > 0) {
+        const updatePromises = orderDetail.map((order) => {
+          return order.update({
+            status: 1,
+          });
+        });
+
+        await Promise.all(updatePromises);
+      }
+
       resolve({
         EM: "Ok",
         EC: 0,
@@ -651,7 +599,80 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
   });
 };
 
-let handleCustomerReturnOrderFunc = ({ orderId }) => {
+let handleDeleteFunc = (query, productList) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { orderId } = query;
+      if (!productList) {
+        reject({
+          EC: -1,
+          EM: "Missing Value Product List",
+          DT: [],
+        });
+      }
+      let productId = productList.map((item) => item.productId);
+      let productQuantity = productList.map((item) => item.quantity);
+
+      let products = await db.Product.findAll({
+        where: { id: productId },
+      });
+
+      const updateQuantities = products.map((product, index) => ({
+        id: product.id,
+        newInventory: product.inventoryNumber + productQuantity[index],
+      }));
+
+      if (!orderId) {
+        return reject({
+          EM: "Missing value",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      const order = await db.Order.findOne({ where: { id: orderId } });
+      if (!order) {
+        return reject({
+          EM: "Not Found Order",
+          DT: "",
+          EC: 1,
+        });
+      }
+
+      await order.update({
+        orderStatus: 0,
+      });
+
+      await Promise.all(
+        updateQuantities.map(({ id, newInventory }) =>
+          db.Product.update(
+            { inventoryNumber: newInventory },
+            { where: { id } }
+          )
+        )
+      );
+
+      resolve({
+        EM: "Ok reject order success",
+        DT: "",
+        EC: 0,
+      });
+    } catch (error) {
+      console.log(error);
+      reject({
+        EM: "An error occurred",
+        DT: error.message,
+        EC: 500,
+      });
+    }
+  });
+};
+
+let handleCustomerReturnOrderFunc = ({
+  orderId,
+  productId,
+  productQuantity,
+}) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!orderId) {
@@ -661,20 +682,28 @@ let handleCustomerReturnOrderFunc = ({ orderId }) => {
           DT: "",
         });
       }
-      let data = await db.Order.findOne({ where: orderId });
-      await db.Order.update(
+
+      await db.OrderDetail.update(
+        { returnItem: 1 },
         {
-          statusReturnProduct: 1,
-        },
-        {
-          where: { id: +orderId },
+          where: {
+            [Op.and]: [{ orderId: orderId }, { productId: productId }],
+          },
         }
+      );
+      await db.Product.update(
+        {
+          inventoryNumber: db.sequelize.literal(
+            `inventoryNumber + ${productQuantity}`
+          ),
+        },
+        { where: { id: productId } }
       );
 
       resolve({
         EM: "Ok update success",
         EC: 0,
-        DT: data,
+        DT: "",
       });
     } catch (error) {
       console.log(error);
@@ -686,15 +715,19 @@ let handleCustomerReturnOrderFunc = ({ orderId }) => {
 let handleTotalOrderSold = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let totalOrderSold = await db.Order.count({
-        where: {
-          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: null }],
-        },
-      });
+      let quantityProductDeliverySuccess = await db.OrderDetail.sum(
+        "quantity",
+        {
+          where: {
+            [Op.and]: [{ returnItem: null }, { status: 1 }],
+          },
+        }
+      );
+
       resolve({
         EM: "Ok",
         EC: 0,
-        DT: totalOrderSold,
+        DT: quantityProductDeliverySuccess,
       });
     } catch (error) {
       console.log(error);
@@ -706,15 +739,15 @@ let handleTotalOrderSold = () => {
 let handleTotalOrderReturn = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let totalOrderSold = await db.Order.count({
+      let quantityProductDeliveryReturn = await db.OrderDetail.sum("quantity", {
         where: {
-          [Op.and]: [{ orderStatus: 1 }, { statusReturnProduct: 1 }],
+          [Op.and]: [{ returnItem: 1 }, { status: 1 }],
         },
       });
       resolve({
         EM: "Ok",
         EC: 0,
-        DT: totalOrderSold,
+        DT: quantityProductDeliveryReturn,
       });
     } catch (error) {
       console.log(error);
@@ -722,29 +755,82 @@ let handleTotalOrderReturn = () => {
     }
   });
 };
+let checkDate = (dateToCheck, datesAgo) => {
+  const today = new Date();
 
-let handleGetAllRevenuePagination = ({ limit, page, year }) => {
+  today.setHours(0, 0, 0, 0);
+
+  const targetDate = new Date(today);
+
+  targetDate.setDate(targetDate.getDate() - datesAgo);
+
+  return (
+    dateToCheck.getDate() === targetDate.getDate() &&
+    dateToCheck.getMonth() === targetDate.getMonth() &&
+    dateToCheck.getFullYear() === targetDate.getFullYear()
+  );
+};
+
+// tinh doanh thu theo ngay
+let handleGetRevenueByDay = ({ dateAgo }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let totalRevenue = await db.Order.sum("totalPrice", {
+      const today = new Date();
+
+      const targetDate = new Date(today);
+
+      targetDate.setDate(targetDate.getDate() - dateAgo);
+
+      let totalRevenue = await db.OrderDetail.sum("totalPrice", {
         where: {
           [Op.and]: [
-            db.sequelize.where(
-              db.sequelize.fn("YEAR", db.sequelize.col("createdAt")),
-              2025
-            ),
-            db.sequelize.where(
-              db.sequelize.fn("MONTH", db.sequelize.col("createdAt")),
-              12
-            ),
-            { statusReturnProduct: null },
-            { orderStatus: null },
+            !!dateAgo &&
+              db.sequelize.where(
+                db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
+                targetDate.getDate()
+              ),
+            { status: 1 },
+            { returnItem: null },
+          ],
+        },
+      });
+
+      let totalProductReturn = await db.OrderDetail.sum("quantity", {
+        where: {
+          [Op.and]: [
+            !!dateAgo &&
+              db.sequelize.where(
+                db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
+                targetDate.getDate()
+              ),
+            { status: 1 },
+            { returnItem: 1 },
+          ],
+        },
+      });
+
+      const totalProductSold = await db.OrderDetail.sum("quantity", {
+        where: {
+          [Op.and]: [
+            //  !!year && db.sequelize.where(
+            //      db.sequelize.fn("YEAR", db.sequelize.col("createdAt")),
+            //     year
+            //   ),
+            !!dateAgo &&
+              db.sequelize.where(
+                db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
+                targetDate.getDate()
+              ),
+            { returnItem: null },
+            { status: 1 },
           ],
         },
       });
 
       let data = {
-        totalRevenue: totalRevenue,
+        totalRevenue: totalRevenue ? totalRevenue : 0,
+        totalProductReturn: totalProductReturn ? totalProductReturn : 0,
+        totalProductSold: totalProductSold ? totalProductSold : 0,
       };
 
       resolve({
@@ -758,6 +844,7 @@ let handleGetAllRevenuePagination = ({ limit, page, year }) => {
     }
   });
 };
+
 module.exports = {
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,
@@ -774,5 +861,5 @@ module.exports = {
   handleCustomerReturnOrderFunc,
   handleTotalOrderSold,
   handleTotalOrderReturn,
-  handleGetAllRevenuePagination,
+  handleGetRevenueByDay,
 };

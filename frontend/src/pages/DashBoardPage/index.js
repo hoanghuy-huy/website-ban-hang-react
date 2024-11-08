@@ -7,9 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCategories } from '~/redux/features/categorySlice/categorySlice';
 import { getAllBrandAdmin } from '~/redux/features/brandSlice';
 import { totalUserApi } from '~/redux/features/userSlice';
-import { totalOrderReturnApi, totalOrderSoldApi, totalProductsSold, totalRevenueApi } from '~/redux/features/orderSlice';
+import {
+    totalOrderReturnApi,
+    totalOrderSoldApi,
+    totalProductsSold,
+    totalRevenueApi,
+} from '~/redux/features/orderSlice';
 import { countProductApi } from '~/redux/features/productSlice/productSlice';
 import { convertPrice } from '~/utils/convert';
+import RevenueChart from './RevenueChart';
 const DashBoardPage = () => {
     const catList = useSelector((state) => state.categories.categoryList);
     const brandList = useSelector((state) => state.brand.brandListAdmin);
@@ -31,7 +37,7 @@ const DashBoardPage = () => {
         dispatch(totalOrderSoldApi());
         dispatch(totalOrderReturnApi());
     }, []);
-    
+
     return (
         <div className="DashBoardPage w-100">
             <div className="row DashBoardWrapperRow">
@@ -39,9 +45,13 @@ const DashBoardPage = () => {
                     <div className="DashBoardPageWrapper d-flex">
                         <DashBoardBox title="Tổng người dùng" total={totalUser} color={['#1da256', '#48d483']} />
                         <DashBoardBox title="Tổng sản phẩm" total={totalProduct} color={['#c012e2', '#eb64fe']} />
-                        <DashBoardBox title="Tổng đơn hàng bị trả về" total={totalOrderReturn} color={['#2c78e5', '#60aff5']} />
                         <DashBoardBox
-                            title="Tổng đơn hàng đã bán"
+                            title="Tổng số lượng sản phẩm bị trả về"
+                            total={totalOrderReturn ? totalOrderReturn : 0}
+                            color={['#2c78e5', '#60aff5']}
+                        />
+                        <DashBoardBox
+                            title="Tổng sản phẩm đã bán"
                             total={totalOrderSold}
                             color={['#e1950e', '#f3cd29']}
                         />
@@ -64,7 +74,10 @@ const DashBoardPage = () => {
                     </div>
                 </div>
             </div>
-
+            <div className="col-md-12 mt-5">
+                <RevenueChart />
+            </div>
+ 
             <TableProduct cat={catList} brand={brandList} />
         </div>
     );

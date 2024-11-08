@@ -96,12 +96,7 @@ const OrderPage = () => {
         await dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
     };
 
-    const handleCustomerReturnOrder = async (orderId) => {
-        await dispatch(customerReturnOrderApi({ orderId: orderId }));
-        await dispatch(
-            getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: true }),
-        );
-    };
+
     return (
         <div className="OrderPage">
             <div className="OrderPage-container">
@@ -276,20 +271,7 @@ const OrderPage = () => {
                                                                         </Button>
                                                                     </Link>
                                                                 )}
-                                                            {item.orderStatus === 1 &&
-                                                                item.statusReturnProduct === null && (
-                                                                    <Link className="btn-info">
-                                                                        <Button
-                                                                            size="small"
-                                                                            outline
-                                                                            onClick={() =>
-                                                                                handleCustomerReturnOrder(item.id)
-                                                                            }
-                                                                        >
-                                                                            Trả hàng
-                                                                        </Button>
-                                                                    </Link>
-                                                                )}
+
                                                             {/* <Link className="success-btn">
                                                                 <Button
                                                                     size="small"

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/customer-return-order', orderController.customerReturnOrderFunc)
 router.post('/customer-confirm-order', orderController.customerConfirmOrderFunc)
-router.get('/get-all-revenue', orderController.getAllRevenuePagination)
+router.get('/get-revenue-by-day', orderController.getAllRevenuePagination)
 
 router.get('/total-order-return', orderController.totalOrderReturn)
 router.get('/total-order-sold', orderController.totalOrderSold)
