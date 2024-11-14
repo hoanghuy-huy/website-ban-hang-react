@@ -590,7 +590,7 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
       resolve({
         EM: "Ok",
         EC: 0,
-        DT: "",
+        DT: orderDetail,
       });
     } catch (error) {
       console.log(error);
@@ -697,6 +697,11 @@ let handleCustomerReturnOrderFunc = ({
             `inventoryNumber + ${productQuantity}`
           ),
         },
+        {
+          inventoryNumber: db.sequelize.literal(
+            `quantitySold - ${productQuantity}`
+          ),
+        },
         { where: { id: productId } }
       );
 
@@ -755,6 +760,7 @@ let handleTotalOrderReturn = () => {
     }
   });
 };
+
 let checkDate = (dateToCheck, datesAgo) => {
   const today = new Date();
 
@@ -789,6 +795,14 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
                 db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
                 targetDate.getDate()
               ),
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              targetDate.getMonth() + 1
+            ),
+            db.sequelize.where(
+              db.sequelize.fn("YEAR", db.sequelize.col("updatedAt")),
+              targetDate.getFullYear()
+            ),
             { status: 1 },
             { returnItem: null },
           ],
@@ -803,6 +817,14 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
                 db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
                 targetDate.getDate()
               ),
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              targetDate.getMonth() + 1
+            ),
+            db.sequelize.where(
+              db.sequelize.fn("YEAR", db.sequelize.col("updatedAt")),
+              targetDate.getFullYear()
+            ),
             { status: 1 },
             { returnItem: 1 },
           ],
@@ -821,6 +843,14 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
                 db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
                 targetDate.getDate()
               ),
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              targetDate.getMonth() + 1
+            ),
+            db.sequelize.where(
+              db.sequelize.fn("YEAR", db.sequelize.col("updatedAt")),
+              targetDate.getFullYear()
+            ),
             { returnItem: null },
             { status: 1 },
           ],
@@ -837,6 +867,134 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
         EM: "Ok",
         EC: 0,
         DT: data,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetMonthlyRevenue = ({}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const today = new Date();
+
+      const currentMonth = today.getMonth() + 1;
+
+      let totalRevenue = await db.OrderDetail.sum("totalPrice", {
+        where: {
+          [Op.and]: [
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              currentMonth
+            ),
+            { status: 1 },
+            { returnItem: null },
+          ],
+        },
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalRevenue,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetMonthlyReturn = ({}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const today = new Date();
+
+      const currentMonth = today.getMonth() + 1;
+
+      let totalProductReturn = await db.OrderDetail.sum("quantity", {
+        where: {
+          [Op.and]: [
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              currentMonth
+            ),
+            { status: 1 },
+            { returnItem: 1 },
+          ],
+        },
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalProductReturn,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+let handleGetMonthlySold = ({}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const today = new Date();
+
+      const currentMonth = today.getMonth() + 1;
+
+      const totalProductSold = await db.OrderDetail.sum("quantity", {
+        where: {
+          [Op.and]: [
+            db.sequelize.where(
+              db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
+              currentMonth
+            ),
+            { returnItem: null },
+            { status: 1 },
+          ],
+        },
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: totalProductSold,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleCustomerReviewProductFunc = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data) {
+        reject({
+          EM: "missing value id order",
+          EC: 1,
+          DT: "",
+        });
+      }
+
+      await db.Comment.create(data);
+
+      await db.OrderDetail.update(
+        {
+          statusReview: 1,
+        },
+        {
+          where: { id: data.orderDetailId },
+        }
+      );
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: "",
       });
     } catch (error) {
       console.log(error);
@@ -862,4 +1020,8 @@ module.exports = {
   handleTotalOrderSold,
   handleTotalOrderReturn,
   handleGetRevenueByDay,
+  handleGetMonthlyReturn,
+  handleGetMonthlyRevenue,
+  handleGetMonthlySold,
+  handleCustomerReviewProductFunc,
 };

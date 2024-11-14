@@ -6,6 +6,7 @@ import { fetchOneProduct, fetchProductPaginationWithCategoryId, fetchProductWith
 import { useParams } from 'react-router-dom';
 
 import './DetailProductPage.scss';
+import Loading from '~/components/Loading';
 
 const DetailProductPage = () => {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const DetailProductPage = () => {
     };
 
     if (loading === true && error === false) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     else if (loading === false && error === true) {

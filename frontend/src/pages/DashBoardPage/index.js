@@ -52,7 +52,7 @@ const DashBoardPage = () => {
                         />
                         <DashBoardBox
                             title="Tổng sản phẩm đã bán"
-                            total={totalOrderSold}
+                            total={totalOrderSold ? totalProductSold : 0}
                             color={['#e1950e', '#f3cd29']}
                         />
                     </div>
@@ -62,7 +62,7 @@ const DashBoardPage = () => {
                     <div className="box">
                         <div>
                             <h4 className="text-white">Tổng sản phẩm đã bán</h4>
-                            <span className="text-white">{totalProductSold}</span>
+                            <span className="text-white">{totalProductSold ? totalOrderSold : 0}</span>
                             <div>
                                 <div className="d-flex align-items-end justify-content-center">
                                     <h4 className="text-white mt-5 w-100  mb-0">Tổng doanh thu</h4>

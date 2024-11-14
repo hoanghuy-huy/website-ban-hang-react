@@ -26,6 +26,7 @@ import OrderPageAdmin from '~/pages/OrderPageAdmin';
 import AdminLayout from '~/layouts/AdminLayout';
 import DashBoardPage from '~/pages/DashBoardPage';
 import ProductAdminPage from '~/pages/ProductAdminPage/index.';
+import ReturnOrderPage from '~/pages/ReturnOrderPage';
 
 
 //Public Routes
@@ -45,6 +46,7 @@ const privateRoutes = [
     { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },
     { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
+    { path: '/account/return-order', component: ReturnOrderPage, layout: LayoutAccount },
     { path: '/payment/success', component: PaymentSuccessPage, layout: LayoutCheckout },
     { path: routes.addressPage, component: AddressPage, layout: LayoutCheckout },
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },

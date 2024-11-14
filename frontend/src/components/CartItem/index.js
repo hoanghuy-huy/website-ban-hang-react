@@ -105,7 +105,7 @@ const CartItem = ({ item, onClick }) => {
                         </div>
                     </div>
                 </Link>
-                <div
+                {/* <div
                     style={{
                         position: 'absolute',
                         top: 10,
@@ -127,7 +127,7 @@ const CartItem = ({ item, onClick }) => {
                             <ShoppingCartOutlinedIcon />
                         </IconButton>
                     </Tooltip>
-                </div>
+                </div> */}
             </div>
         </>
     );

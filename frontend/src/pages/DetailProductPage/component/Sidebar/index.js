@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Sidebar.scss';
 import Image from '~/components/Image';
 
-const Sidebar = ({ listImg }) => {
+const Sidebar = ({ listImg,item }) => {
     const defaultImage = listImg && listImg[0] ? listImg[0].urlImageLarge : '';
     const defaultActive = listImg && listImg[0] ? listImg[0].id : '';
     const [slider, setSlider] = useState(defaultImage);
@@ -11,11 +11,12 @@ const Sidebar = ({ listImg }) => {
         setActive(item?.id);
         setSlider(item?.urlImageLarge);
     };
+    console.log(item)
     return (
         <div className="content-left col-3 ms-3">
             <div className="product-img ps-4">
                 <div className="img-frame">
-                    <Image src={slider} alt="img-product" />
+                    <Image src={item.thumbnailUrl} alt="img-product" />
                 </div>
             </div>
             {/* <div className="product-img-thumbnail">

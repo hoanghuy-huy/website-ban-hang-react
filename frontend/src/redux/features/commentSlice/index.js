@@ -7,8 +7,14 @@ export const createNewComment = createAsyncThunk('comment/createNewComment', asy
     return res ? res.DT : [];
 });
 
-export const getAllComment = createAsyncThunk('comment/getAllComment', async ({ productId,limit, page }) => {
-    const res = await httpRequest.get(`comment/get-all?productId=${productId}&limit=${limit}&page=${page}`);
+export const getAllComment = createAsyncThunk('comment/getAllComment', async ({ productId, limit, page, starNumber }) => {
+    const res = await httpRequest.get(`comment/get-all?productId=${productId}&limit=${limit}&page=${page}${!!starNumber ? `&starNumber=${starNumber}` : ''}`);
+
+    return res ? res.DT : [];
+});
+
+export const getAverageRatingApi = createAsyncThunk('comment/getAverageRatingApi', async ({ productId }) => {
+    const res = await httpRequest.get(`comment/average-rating?productId=${productId}`);
 
     return res ? res.DT : [];
 });
@@ -18,6 +24,7 @@ export const commentSlice = createSlice({
     initialState: {
         loading: false,
         error: false,
+        averageRating: null,
         commentList: [],
     },
     reducers: {},
@@ -46,6 +53,20 @@ export const commentSlice = createSlice({
                 state.commentList = action.payload;
             })
             .addCase(getAllComment.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+
+            .addCase(getAverageRatingApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAverageRatingApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = true;
+                state.averageRating = action.payload;
+            })
+            .addCase(getAverageRatingApi.rejected, (state, action) => {
                 state.loading = true;
                 state.error = false;
             });

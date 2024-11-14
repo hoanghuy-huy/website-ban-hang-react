@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { customerReturnOrderApi, getAllStatusOrderWithUserIdApi } from '~/redux/features/orderSlice';
@@ -7,6 +7,7 @@ import { cancelOrderApi, getOneOrderApi } from '~/redux/features/orderSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { convertPrice } from '~/utils/convert';
 import Image from '~/components/Image';
+import ModalReviewProduct from './ModalReviewProduct';
 const OrderDetailPage = () => {
     const { orderItem } = useSelector((state) => state.order);
     const { userId } = useSelector((state) => state.account.account);
@@ -14,6 +15,8 @@ const OrderDetailPage = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [dataModal,setDataModal] = useState({})
+    const [showModal,setShowModal] = useState(false)
 
     let totalPriceForEachProduct = (price, quantity) => {
         return price * quantity;
@@ -50,7 +53,12 @@ const OrderDetailPage = () => {
     useEffect(() => {
         dispatch(getOneOrderApi(orderId));
     }, []);
-    console.log(orderItem);
+    
+    const handleShowModalReviewProduct = async (item) => {
+        await setDataModal(item);
+        await setShowModal(true)
+        console.log(item)
+    }
     return (
         <div className="AccountOrderDetail">
             <div className="heading">
@@ -129,16 +137,21 @@ const OrderDetailPage = () => {
                                         {convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫
                                     </td>
                                     <td className='d-flex flex-column justify-content-center align-item-center'>
-                                        {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && (
+                                        {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && item.statusReview === null && (
                                             <div className="review-btn">
                                                 <Button
                                                     size="small"
                                                     outline
                                                     className="info-btn"
-                                                    onClick={() => handleCustomerReturnOrder(orderItem.id)}
+                                                    onClick={() => handleShowModalReviewProduct(item)}
                                                 >
                                                     Đánh giá
                                                 </Button>
+                                            </div>
+                                        )}
+                                         {item.statusReview && (
+                                            <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
+                                                <span className="d-block">Đã đánh giá</span>
                                             </div>
                                         )}
                                         {orderItem.orderStatus === 1 &&
@@ -173,26 +186,26 @@ const OrderDetailPage = () => {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <span>Tạm tính</span>
                         </td>
 
                         <td>{convertPrice(totalPriceForOrder())} ₫</td>
                     </tr>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <span>Phí vận chuyển</span>
                         </td>
                         <td>{convertPrice(orderItem?.deliveryMethodFee)}₫</td>
                     </tr>
                     {/* <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <span>Khuyến mãi vận chuyển</span>
                         </td>
                         <td>-15.000 ₫</td>
                     </tr> */}
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <span>Tổng cộng</span>
                         </td>
                         <td>
@@ -200,7 +213,7 @@ const OrderDetailPage = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="4"></td>
+                        <td colspan="5"></td>
                         <td>
                             <div
                                 title="Hủy đơn hàng"
@@ -219,6 +232,8 @@ const OrderDetailPage = () => {
                     </tr>
                 </tfoot>
             </table>
+
+            <ModalReviewProduct userId={userId} show={showModal} setShow={setShowModal} data={dataModal}/>
         </div>
     );
 };

@@ -30,6 +30,9 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
       },
+      statusReview: {
+        type: Sequelize.BOOLEAN,
+      },
       totalPrice: {
         type: Sequelize.INTEGER,
       },

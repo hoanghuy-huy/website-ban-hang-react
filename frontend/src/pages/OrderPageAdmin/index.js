@@ -29,6 +29,7 @@ import {
     FETCH_STATUS_SUCCESS_ORDER,
     ROLE_MANAGER,
 } from '~/utils/constants';
+import PaginationComponent from '~/components/Pagination';
 const OrderPageAdmin = () => {
     const dispatch = useDispatch();
     const { orderListAdmin, actionFetchApi } = useSelector((state) => state.order);
@@ -69,7 +70,7 @@ const OrderPageAdmin = () => {
         } else if (actionFetchApi.type === FETCH_ALL_ORDER_SHIPPING) {
             dispatch(getAllOrder({ limit: limit, page: currentPage, pendingShipment: true }));
         }
-    }, [actionFetchApi]);
+    }, [actionFetchApi, currentPage]);
 
     const handleSelectActionToFetchApi = (type) => {
         dispatch(handleChoseActionToFetchApiOrder(type));
@@ -98,7 +99,7 @@ const OrderPageAdmin = () => {
     };
 
     const confirmOrderForShipmentFunc = async (orderId) => {
-       await dispatch(confirmOrderForShipmentAdmin({ orderId, page: currentPage }));
+        await dispatch(confirmOrderForShipmentAdmin({ orderId, page: currentPage }));
 
         window.location.reload();
     };
@@ -171,7 +172,6 @@ const OrderPageAdmin = () => {
                         >
                             Đã từ chối
                         </div>
-                       
                     </div>
                     <div className="StyledOrder">
                         <div className="StyledOrder-container">
@@ -222,7 +222,7 @@ const OrderPageAdmin = () => {
                                                         )}
                                                     </div>
                                                 </div>
-                                                {item.OrderDetails.map((product) => {
+                                                {item && item.OrderDetails && item.OrderDetails.length > 0 && item.OrderDetails.map((product) => {
                                                     return (
                                                         <div className="ProductItems">
                                                             <div className="ProductItem">
@@ -323,6 +323,16 @@ const OrderPageAdmin = () => {
                     </div>
                 </div>
             </div>
+            {totalPages && totalPages > 1 ? (
+                <div className="d-flex justify-content-center">
+                    <PaginationComponent
+                        page={currentPage}
+                        totalPages={totalPages}
+                        limit={limit}
+                        setCurrentPage={setCurrentPage}
+                    />
+                </div>
+            ) :<></>}
         </div>
     );
 };

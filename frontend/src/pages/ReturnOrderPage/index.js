@@ -3,7 +3,7 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import Button from '~/components/Button/Button';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import DoDisturbAltOutlinedIcon from '@mui/icons-material/DoDisturbAltOutlined';
-import './OrderPage.scss';
+import './ReturnOrderPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     customerConfirmOrderApi,
@@ -27,7 +27,7 @@ import {
     FETCH_STATUS_SUCCESS_ORDER,
 } from '~/utils/constants';
 import PaginationComponent from '~/components/Pagination';
-const OrderPage = () => {
+const ReturnOrderPage = () => {
     const dispatch = useDispatch();
     const { orderList, actionFetchApi } = useSelector((state) => state.order);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,81 +35,33 @@ const OrderPage = () => {
     const { userId } = useSelector((state) => state.account.account);
     const { totalPages, totalItems, orders } = orderList;
     useEffect(() => {
-        if (actionFetchApi.type === FETCH_ALL_ORDER) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        } else if (actionFetchApi.type === FETCH_ALL_ORDER_PENDING) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, pending: true }));
-        } else if (actionFetchApi.type === FETCH_ALL_ORDER_DELIVERY) {
-            dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        } else if (actionFetchApi.type === FETCH_STATUS_CANCEL_ORDER) {
-            dispatch(
-                getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: false }),
-            );
-        } else if (actionFetchApi.type === FETCH_STATUS_SUCCESS_ORDER) {
-            dispatch(getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: true }));
-        } else if (actionFetchApi.type === FETCH_STATUS_RETURN_ORDER) {
-            dispatch(
-                getAllOrderWithUserIdApi({
-                    limit: limit,
-                    page: currentPage,
-                    userId: userId,
-                    statusReturnProduct: true,
-                }),
-            );
-        } else {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        }
+
     }, []);
 
     useEffect(() => {
-        if (actionFetchApi.type === FETCH_ALL_ORDER) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        } else if (actionFetchApi.type === FETCH_ALL_ORDER_PENDING) {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, pending: true }));
-        } else if (actionFetchApi.type === FETCH_ALL_ORDER_DELIVERY) {
-            dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        } else if (actionFetchApi.type === FETCH_STATUS_CANCEL_ORDER) {
-            dispatch(
-                getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: false }),
-            );
-        } else if (actionFetchApi.type === FETCH_STATUS_SUCCESS_ORDER) {
-            dispatch(getAllStatusOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId, status: true }));
-        } else if (actionFetchApi.type === FETCH_STATUS_RETURN_ORDER) {
-            dispatch(
-                getAllOrderWithUserIdApi({
-                    limit: limit,
-                    page: currentPage,
-                    userId: userId,
-                    statusReturnProduct: true,
-                }),
-            );
-        } else {
-            dispatch(getAllOrderWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
-        }
+       
     }, [actionFetchApi, currentPage]);
 
     const handleSelectActionToFetchApi = (type) => {
-        dispatch(handleChoseActionToFetchApiOrder(type));
     };
 
     const handleCustomerConfirmOrder = async (orderId) => {
-        await dispatch(customerConfirmOrderApi({ orderId, userId }));
-        await dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
+
     };
 
     return (
-        <div className="OrderPage">
-            <div className="OrderPage-container">
+        <div className="ReturnOrderPage">
+            <div className="ReturnOrderPage-container">
                 <div className="heading mb-4">
                     <h5 className="title">Đơn hàng của tôi</h5>
                 </div>
                 <div className="content">
-                    <div className="StyledTab mb-4">
+                    <div className="StyledTab mb-4 ">
                         <div
                             className={
                                 actionFetchApi.type === FETCH_ALL_ORDER
-                                    ? 'StyledTab-item active col-2'
-                                    : 'StyledTab-item col-2'
+                                    ? 'StyledTab-item active col-4'
+                                    : 'StyledTab-item col-4'
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER })}
                         >
@@ -118,44 +70,24 @@ const OrderPage = () => {
                         <div
                             className={
                                 actionFetchApi.type === FETCH_ALL_ORDER_PENDING
-                                    ? 'StyledTab-item active col-2'
-                                    : 'StyledTab-item col-2'
+                                    ? 'StyledTab-item active col-4'
+                                    : 'StyledTab-item col-4'
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER_PENDING })}
                         >
-                            Đã được duyệt
+                            Đang đợi duyệt
                         </div>
-                        <div
-                            className={
-                                actionFetchApi.type === FETCH_ALL_ORDER_DELIVERY
-                                    ? 'StyledTab-item active col-2'
-                                    : 'StyledTab-item col-2'
-                            }
-                            onClick={() => handleSelectActionToFetchApi({ type: FETCH_ALL_ORDER_DELIVERY })}
-                        >
-                            Đang vận chuyển
-                        </div>
+
                         <div
                             className={
                                 actionFetchApi.type === FETCH_STATUS_SUCCESS_ORDER
-                                    ? 'StyledTab-item active col-2'
-                                    : 'StyledTab-item col-2'
+                                    ? 'StyledTab-item active col-4'
+                                    : 'StyledTab-item col-4'
                             }
                             onClick={() => handleSelectActionToFetchApi({ type: FETCH_STATUS_SUCCESS_ORDER })}
                         >
-                            Đã giao
+                            Trả hàng thành công
                         </div>
-                        <div
-                            className={
-                                actionFetchApi.type === FETCH_STATUS_CANCEL_ORDER
-                                    ? 'StyledTab-item active col-2'
-                                    : 'StyledTab-item col-2'
-                            }
-                            onClick={() => handleSelectActionToFetchApi({ type: FETCH_STATUS_CANCEL_ORDER })}
-                        >
-                            Đã hủy
-                        </div>
-
                     </div>
                     <div className="StyledOrder">
                         <div className="StyledOrder-container">
@@ -300,9 +232,11 @@ const OrderPage = () => {
                         setCurrentPage={setCurrentPage}
                     />
                 </div>
-            ) :<></>}
+            ) : (
+                <></>
+            )}
         </div>
     );
 };
 
-export default OrderPage;
+export default ReturnOrderPage;

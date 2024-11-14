@@ -157,11 +157,38 @@ export const totalOrderReturnApi = createAsyncThunk('order/totalOrderReturnApi',
     return res ? res.DT : {};
 });
 
+export const getMonthlyProductReturnApi = createAsyncThunk('order/getMonthlyProductReturnApi', async () => {
+    const res = await httpRequest.get(`order/get-monthly-return`);
+
+    return res ? res.DT : {};
+});
+
+export const getMonthlyProductRevenueApi = createAsyncThunk('order/getMonthlyProductRevenueApi', async () => {
+    const res = await httpRequest.get(`order/get-monthly-revenue`);
+
+    return res ? res.DT : {};
+});
+
+export const getMonthlyProductSoldApi = createAsyncThunk('order/getMonthlyProductSoldApi', async () => {
+    const res = await httpRequest.get(`order/get-monthly-sold`);
+
+    return res ? res.DT : {};
+});
+
+
+export const customerReviewProductApi = createAsyncThunk('order/customerReviewProductApi', async (data) => {
+    const res = await httpRequest.post(`order/customer-review-product`, data);
+
+    return res ? res.DT : {};
+});
 export const orderSlice = createSlice({
     name: 'order',
     initialState: {
         loading: false,
         error: false,
+        totalRevenueMonthly:null,
+        totalProductsReturnMonthly:null,
+        totalProductsSoldMonthly:null,
         totalPrice: null,
         totalOrderSold: null,
         totalOrderReturn: null,
@@ -399,7 +426,62 @@ export const orderSlice = createSlice({
             .addCase(totalOrderReturnApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            });
+            })
+
+            .addCase(getMonthlyProductReturnApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getMonthlyProductReturnApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.totalProductsReturnMonthly = action.payload;
+            })
+            .addCase(getMonthlyProductReturnApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(getMonthlyProductRevenueApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getMonthlyProductRevenueApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.totalRevenueMonthly = action.payload;
+            })
+            .addCase(getMonthlyProductRevenueApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(getMonthlyProductSoldApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getMonthlyProductSoldApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.totalProductsSoldMonthly = action.payload;
+            })
+            .addCase(getMonthlyProductSoldApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(customerReviewProductApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(customerReviewProductApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(customerReviewProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
     },
 });
 

@@ -87,6 +87,7 @@ const CartPage = () => {
         };
 
         fetchDataCity();
+        getAddressDefault(userId)
     }, []);
 
     const checkSelectedAll = () => {

@@ -31,11 +31,10 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     if (!item) {
         return <div>error from server.</div>;
     }
-
     return (
         <div className="col-9">
             <div className="d-flex">
-                <Sidebar listImg={ProductImages} />
+                <Sidebar listImg={ProductImages} item={item} />
                 <div className="content-center col-7 ms-3">
                     <div className="information-product-contain">
                         <div className="information-product-body">

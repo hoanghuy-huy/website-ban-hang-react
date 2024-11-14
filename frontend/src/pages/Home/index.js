@@ -116,7 +116,7 @@ function Home() {
             )}
 
             <div>
-                <FeaturedCategory />
+                {/* <FeaturedCategory /> */}
             </div>
             <div>
                 <HotProductBox listHotProduct={listProductHot} />

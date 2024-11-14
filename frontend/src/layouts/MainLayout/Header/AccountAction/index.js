@@ -30,10 +30,18 @@ const AccountActions = (props) => {
                                     <div className="account-menu__content py-2">
                                         {role === ROLE_MANAGER ? (
                                             <>
+                                            <Link to={'/admin/dash-board'}>
+                                                <div className="account-menu__item py-1">Thông kê sản phẩm  </div>
+                                            </Link>
                                             <Link to={'/admin/order'}>
                                                 <div className="account-menu__item py-1">Quản lý đơn hàng</div>
                                             </Link>
-                             
+                                            <Link to={'/admin/product'}>
+                                                <div className="account-menu__item py-1">Quản lý sản phẩm</div>
+                                            </Link>
+                                            <Link to={'/admin/user'}>
+                                                <div className="account-menu__item py-1">Quản lý người dùng</div>
+                                            </Link>
                                             </>
                                             
                                         ) : (

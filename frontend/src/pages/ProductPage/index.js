@@ -11,6 +11,9 @@ import FilterWrapper from '~/components/FilterWrapper';
 import CartItem from '~/components/CartItem';
 import './Product.scss';
 import { ThreeDots } from 'react-loader-spinner';
+import Pagination from '~/components/Pagination';
+import PaginationComponent from '~/components/Pagination';
+import ScrollToTop from '~/components/ScrollToTop';
 
 const ProductPage = () => {
     const {
@@ -33,7 +36,7 @@ const ProductPage = () => {
     const [sortPrice, setSortPrice] = useState(itemSortPrice[0] || []);
     const dispatch = useDispatch();
     const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName);
-
+    ScrollToTop();
     useEffect(() => {
         if (actionFetchProductCategory.type === 'fetch all product') {
             dispatch(
@@ -89,9 +92,10 @@ const ProductPage = () => {
         setCurrentPage(1);
     }, [categoryId]);
 
+
     if (loading === true && error === false) {
         return (
-            <div className='d-flex justify-content-center align-items-center' style={{height: '100vh'}}>
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
                 <ThreeDots
                     visible={true}
                     height="80"
@@ -146,6 +150,16 @@ const ProductPage = () => {
                     </div>
                 </div>
             )}
+
+            <div className="col-12 d-flex justify-content-center mt-4">
+                <PaginationComponent
+                    setCurrentPage={setCurrentPage}
+                    page={currentPage}
+                    limit={limit}
+                    totalPages={listProductPaginationWithCategory?.totalPages}
+                    color="primary"
+                />
+            </div>
         </div>
     );
 };

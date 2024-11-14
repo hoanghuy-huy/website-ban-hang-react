@@ -37,23 +37,29 @@ import TableCategory from '../TableCategory';
 import TableBrand from '../TableBrand';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { totalProductsSold, totalRevenueApi } from '~/redux/features/orderSlice';
+import {
+    getMonthlyProductReturnApi,
+    getMonthlyProductRevenueApi,
+    getMonthlyProductSoldApi,
+    totalProductsSold,
+    totalRevenueApi,
+} from '~/redux/features/orderSlice';
 import TableRevenueProduct from '../TableRevenueProduct';
 const ProductAdminPage = () => {
     const [showFromCreateProduct, setShowFromCreateProduct] = useState(false);
     const [actions, setActions] = useState('Add');
     const [actionBrand, setActionBrand] = useState('Add');
     const [actionCat, setActionCat] = useState('Add');
-    const countProduct = useSelector((state) => state.products.countProduct);
-    const totalProductSold = useSelector((state) => state.order.totalProductSold);
-    const totalRevenue = useSelector((state) => state.order.totalRevenue);
+    const totalProductSold = useSelector((state) => state.order.totalProductsSoldMonthly);
+    const totalProductReturn = useSelector((state) => state.order.totalProductsReturnMonthly);
+    const totalRevenueMonthly = useSelector((state) => state.order.totalRevenueMonthly);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchAllCategories());
         dispatch(getAllBrandAdmin());
-        dispatch(countProductApi());
-        dispatch(totalProductsSold());
-        dispatch(totalRevenueApi());
+        dispatch(getMonthlyProductReturnApi());
+        dispatch(getMonthlyProductRevenueApi());
+        dispatch(getMonthlyProductSoldApi());
     }, []);
 
     const defaultDataProduct = {
@@ -306,22 +312,16 @@ const ProductAdminPage = () => {
         <div className="product-admin-page">
             <div className="product-admin-container">
                 <div className="w-100 shadow title bg-white">
-                    <h3>Trang sản phẩm</h3>
+                    <h3>Thống kê sản phẩm theo tháng</h3>
                 </div>
                 <div className="DashBoardPage w-100 mt-4 ">
                     <div className="row DashBoardWrapperRow">
                         <div className="col-md-12">
                             <div className="DashBoardPageWrapper d-flex">
                                 <DashBoardBox
-                                    icon={<InventoryIcon />}
-                                    title="Tổng số lượng sản phẩm"
-                                    total={countProduct ? countProduct : 0}
-                                    color={['#1da256', '#48d483']}
-                                />
-                                <DashBoardBox
                                     icon={<MonetizationOnIcon />}
-                                    title="Tổng danh thu"
-                                    total={convertPrice(totalRevenue) + ' VND'}
+                                    title="Tổng doanh thu"
+                                    total={convertPrice(totalRevenueMonthly) + ' VND'}
                                     color={['#c012e2', '#eb64fe']}
                                 />
                                 <DashBoardBox
@@ -329,6 +329,12 @@ const ProductAdminPage = () => {
                                     title="Tổng sản phẩm đã bán"
                                     total={totalProductSold ? totalProductSold : 0}
                                     color={['#2c78e5', '#60aff5']}
+                                />
+                                <DashBoardBox
+                                    icon={<InventoryIcon />}
+                                    title="Tổng sản phẩm trả về"
+                                    total={totalProductReturn ? totalProductReturn : 0}
+                                    color={['#1da256', '#48d483']}
                                 />
                             </div>
                         </div>
@@ -690,8 +696,6 @@ const ProductAdminPage = () => {
                     </form>
                 )}
 
-                <TableRevenueProduct />
-                
                 <TableProduct
                     cat={catList}
                     brand={brandList}

@@ -3,6 +3,11 @@ import orderController from "../controllers/orderController";
 
 const router = express.Router();
 
+router.get('/get-monthly-return', orderController.getMonthlyReturn)
+router.get('/get-monthly-sold', orderController.getMonthlySold)
+router.get('/get-monthly-revenue', orderController.getMonthlyRevenue)
+
+router.post('/customer-review-product', orderController.customerReviewProductFunc)
 router.post('/customer-return-order', orderController.customerReturnOrderFunc)
 router.post('/customer-confirm-order', orderController.customerConfirmOrderFunc)
 router.get('/get-revenue-by-day', orderController.getAllRevenuePagination)
