@@ -16,6 +16,7 @@ import {
 import { countProductApi } from '~/redux/features/productSlice/productSlice';
 import { convertPrice } from '~/utils/convert';
 import RevenueChart from './RevenueChart';
+import Loading from '~/components/Loading';
 const DashBoardPage = () => {
     const catList = useSelector((state) => state.categories.categoryList);
     const brandList = useSelector((state) => state.brand.brandListAdmin);
@@ -25,6 +26,8 @@ const DashBoardPage = () => {
     const totalProductSold = useSelector((state) => state.order.totalProductSold);
     const totalOrderSold = useSelector((state) => state.order.totalOrderSold);
     const totalOrderReturn = useSelector((state) => state.order.totalOrderReturn);
+    const loading  = useSelector((state) => state.order.loading);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -37,7 +40,9 @@ const DashBoardPage = () => {
         dispatch(totalOrderSoldApi());
         dispatch(totalOrderReturnApi());
     }, []);
-
+    if(loading) {
+        <Loading />
+    }
     return (
         <div className="DashBoardPage w-100">
             <div className="row DashBoardWrapperRow">
@@ -77,7 +82,7 @@ const DashBoardPage = () => {
             <div className="col-md-12 mt-5">
                 <RevenueChart />
             </div>
- 
+
             <TableProduct cat={catList} brand={brandList} />
         </div>
     );

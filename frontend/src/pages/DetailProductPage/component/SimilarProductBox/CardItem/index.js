@@ -7,6 +7,7 @@ import style from './CardItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Image from '~/components/Image';
+import { Rating } from '@mui/material';
 
 const cx = classNames.bind(style);
 const CardItem = ({ item, onClick }) => {
@@ -51,13 +52,8 @@ const CardItem = ({ item, onClick }) => {
 
                     <div className={cx('average-rating')}>
                         <div className={cx('number-start-container')}>
-                            <div className='d-flex gap-1 py-1'>
-                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
-                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
-                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
-                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
-                                <FontAwesomeIcon icon={faStar} style={{height: '12', width: '12', color:'#ffc400'}}/>
-
+                            <div className="d-flex gap-1 py-1">
+                                <Rating name="read-only" value={item?.starNumber} size="small" readOnly />
                             </div>
                         </div>
                     </div>
@@ -68,7 +64,6 @@ const CardItem = ({ item, onClick }) => {
                             <sup>₫</sup>
                         </div>
                     </div>
-
                 </div>
             </div>
         </Link>

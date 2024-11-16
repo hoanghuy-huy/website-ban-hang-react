@@ -7,7 +7,7 @@ export const FETCH_ALL_ORDER_SHIPPING = 'get-all-order-shipping'
 export const FETCH_STATUS_CANCEL_ORDER= 'get-all-status-cancel-order'
 export const FETCH_STATUS_SUCCESS_ORDER= 'get-all-status-success-order'
 export const FETCH_STATUS_RETURN_ORDER = 'get-all-status-return-order'
-export const ROLE_MANAGER = 'manager'
+export const ROLE_MANAGER = 'admin'
 
 export const FETCH_All_CUSTOMER_RETURN_ORDER_WITH_USER_ID = 'FETCH_All_CUSTOMER_RETURN_ORDER_WITH_USER_ID'
 export const FETCH_All_CUSTOMER_PENDING_RETURN_ORDER_WITH_USER_ID = 'FETCH_All_CUSTOMER_PENDING_RETURN_ORDER_WITH_USER_ID'

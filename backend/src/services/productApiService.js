@@ -231,12 +231,13 @@ class productApiService {
       let product;
       let convertPriceToObject = price ? price.split(",") : "";
       let convertBrandToObject = brand ? brand.split(",") : "";
+      
       if (sort) {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
-              { categoryId: categoryId },
+              { categoryId: +categoryId },
               convertPriceToObject &&
                 +convertPriceToObject[1] !== 0 && {
                   price: {
@@ -257,12 +258,13 @@ class productApiService {
           limit: limit,
           order: [["price", sort]],
         });
-      } else {
+      } else  {
+      console.log(+categoryId)
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
               !!+starNumber && { starsNumber: { [Op.gt]: 3.9 } },
-              { categoryId: categoryId },
+              { categoryId: +categoryId },
               convertPriceToObject &&
                 +convertPriceToObject[1] !== 0 && {
                   price: {
@@ -272,7 +274,7 @@ class productApiService {
                     ],
                   },
                 },
-              convertBrandToObject &&
+              !!convertBrandToObject &&
                 convertBrandToObject[0] !== "" &&
                 convertBrandToObject.length > 0 && {
                   brandName: { [Op.or]: [...convertBrandToObject] },
@@ -283,8 +285,8 @@ class productApiService {
           limit: limit,
         });
       }
-      const { count, rows } = product;
 
+      const { count, rows } = product;
       let totalPages = Math.ceil(count / limit);
 
       const data = {

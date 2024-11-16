@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '~/components/Button/Button';
 import './BoxBuy.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProductToCart, fetchAllCart } from '~/redux/features/cartSlice';
+import { addProductToCart, fetchAllCart, handlePurchaseProduct } from '~/redux/features/cartSlice';
 import { showLoginForm } from '~/redux/features/accountSlice';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import SnackbarComp from '../Snackbar';
 import { convertPrice } from '~/utils/convert';
+import { getAddressDefault } from '~/redux/features/addressSlice';
+import { toast } from 'react-toastify';
 const BoxBuy = ({ item }) => {
     const userId = useSelector((state) => state.account.account.userId);
     const auth = useSelector((state) => state.account.auth);
@@ -18,24 +20,28 @@ const BoxBuy = ({ item }) => {
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [messageSnackbar, setMessageSnackbar] = useState('');
     const cartItem = cartList.find((product) => product.productId === item.id);
-    console.log(cartItem)
-    const handlePrice = (type,_quantity) => {
+    const { addressDefault } = useSelector((state) => state.address);
+    const handlePrice = (type, _quantity) => {
         if (_quantity < 1) {
             return;
         }
 
-       if(!!cartItem) {
-            if(cartItem.quantity + _quantity > item.inventoryNumber && type == 'plus'){
-                setMessageSnackbar(`Số lượng sản phẩm trong kho chỉ còn ${item.inventoryNumber} và bạn đã thêm vào giỏ ${cartItem.quantity} rồi`)
+        if (!!cartItem) {
+            if (cartItem.quantity + _quantity > item.inventoryNumber && type == 'plus') {
+                setMessageSnackbar(
+                    `Số lượng sản phẩm trong kho chỉ còn ${item.inventoryNumber} và bạn đã thêm vào giỏ ${cartItem.quantity} rồi`,
+                );
                 setShowSnackbar(true);
                 return;
             }
-            if(cartItem.quantity + _quantity > 10 && type == 'plus') {
-                setMessageSnackbar(`Số lượng tối đa để đặt hàng là 10 sản phẩm trong giỏ hàng của bạn đã có ${cartItem.quantity} rồi`)
+            if (cartItem.quantity + _quantity > 10 && type == 'plus') {
+                setMessageSnackbar(
+                    `Số lượng tối đa để đặt hàng là 10 sản phẩm trong giỏ hàng của bạn đã có ${cartItem.quantity} rồi`,
+                );
                 setShowSnackbar(true);
                 return;
             }
-       }
+        }
 
         if (_quantity > 10) {
             setShowSnackbar(true);
@@ -62,9 +68,11 @@ const BoxBuy = ({ item }) => {
     const handleAddItemToCart = (item) => {
         let productId = item.id;
         if (auth) {
-            if(cartItem?.quantity >= 10) {
-                setMessageSnackbar(`Bạn không thể thêm trên 10 sản phẩm và trong giỏ hàng của bạn đang có ${cartItem.quantity}`)
-                setShowSnackbar(true)
+            if (cartItem?.quantity >= 10) {
+                setMessageSnackbar(
+                    `Bạn không thể thêm trên 10 sản phẩm và trong giỏ hàng của bạn đang có ${cartItem.quantity}`,
+                );
+                setShowSnackbar(true);
                 return;
             }
             dispatch(addProductToCart({ productId, userId, quantity }));
@@ -72,7 +80,25 @@ const BoxBuy = ({ item }) => {
             dispatch(showLoginForm());
         }
     };
+    const handleBuyNowProduct = async (item) => {
+        let productId = item.id;
+        if (auth) {
+            if (!addressDefault) {
+                window.location.href = '/address';
+                return;
+            }
+            let arr = []
+            let obj = { productId, userId, quantity, Product: item } 
+            arr.push(obj)
+            dispatch(handlePurchaseProduct(arr));
+        } else {
+            dispatch(showLoginForm());
+        }
+    };
 
+    useEffect(() => {
+        getAddressDefault(userId);
+    }, []);
     return (
         <div className="content-right col-3 gap-5">
             {item?.inventoryNumber > 0 ? (
@@ -81,7 +107,7 @@ const BoxBuy = ({ item }) => {
                         <p className="label mt-2">Số Lượng</p>
                         <div className="group-input">
                             <button
-                                onClick={() => handlePrice('minus',quantity - 1)}
+                                onClick={() => handlePrice('minus', quantity - 1)}
                                 className={quantity === 1 ? 'disable' : ''}
                             >
                                 <img
@@ -92,7 +118,7 @@ const BoxBuy = ({ item }) => {
                                 />
                             </button>
                             <input type="text" value={quantity} className="input" tabIndex="-1" />
-                            <button onClick={() => handlePrice('plus',quantity + 1)}>
+                            <button onClick={() => handlePrice('plus', quantity + 1)}>
                                 <img
                                     src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
                                     alt="add-icon"
@@ -105,13 +131,13 @@ const BoxBuy = ({ item }) => {
                     <div className="content-right__price-container mx-3">
                         <div className="label">Tạm tính</div>
                         <div className="price">
-                            <div>
-                                {convertPrice(price)}
-                            </div>
+                            <div>{convertPrice(price)}</div>
                         </div>
                     </div>
                     <div className="content-right__group-button mx-3 mt-4">
-                        <Button primary>Mua Ngay</Button>
+                        <Button primary onClick={() => handleBuyNowProduct(item)}>
+                            Mua Ngay
+                        </Button>
                         <Button normal outline onClick={() => handleAddItemToCart(item)}>
                             Thêm Vào Giỏ Hàng
                         </Button>

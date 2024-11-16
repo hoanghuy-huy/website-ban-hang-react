@@ -6,17 +6,24 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { loginAccount, showLoginForm } from '~/redux/features/accountSlice';
+import { loginAccount, registerApi, showLoginForm } from '~/redux/features/accountSlice';
 import './AuthForm.scss';
+import { toast } from 'react-toastify';
 
 const AuthForm = () => {
-    const [valueLogin, setValueLogin] = useState(null);
-    const [password, setPassword] = useState(null);
+    const REGISTER_FORM = 'register';
 
+    const [valueLogin, setValueLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [form, setFrom] = useState(null);
     const { showLogin, auth } = useSelector((state) => state.account);
     const dispatch = useDispatch();
 
     const handleLogin = async () => {
+        if (valueLogin === '' || password === '') {
+            toast.error('Vui lòng không để trống');
+            return;
+        }
         const check = await dispatch(loginAccount({ valueLogin, password }));
         if (check) {
             setValueLogin(null);
@@ -24,58 +31,89 @@ const AuthForm = () => {
         }
     };
 
+    const handleRegister = async () => {
+        if (valueLogin === '' || password === '') {
+            toast.error('Vui lòng không để trống');
+            return;
+        }
+        await dispatch(registerApi({ email: valueLogin, password: password }));
+
+    };
     useEffect(() => {
-        setValueLogin(null)
-        setPassword(null)
-    },[])
+        setValueLogin('');
+        setPassword('');
+        setFrom(null)
+    }, []);
+    useEffect(() => {
+        setValueLogin('');
+        setPassword('');
+        setFrom(null)
+    }, [showLogin]);
     return (
         <>
-            {!auth && <Modal centered show={showLogin} animation={true} onHide={() => dispatch(showLoginForm())}>
-                <div className="container-modal-account d-flex">
-                    <div className="modal-account-left">
-                        <div className="modal-account-left__loginStyled">
-                            <div className="heading">
-                                <h4>Xin chào,</h4>
-                                <p>Đăng nhập tài khoản của bạn</p>
-                            </div>
-                            <div className="input mb-3">
-                                <input
-                                    placeholder="Nhập số điện thoại hoặc email"
-                                    value={valueLogin}
-                                    onChange={(e) => setValueLogin(e.target.value)}
-                                />
-                            </div>
-                            <div className="input">
-                                <input
-                                    type="password"
-                                    placeholder="Nhập password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
-                            <div className="btn-continue">
-                                <Button primary onClick={handleLogin}>
-                                    Đăng nhập
-                                </Button>
-                            </div>
-                            <div className="actions">
-                                <p>
-                                    Bạn chưa có tài khoản ? <span>Đăng kí</span>{' '}
-                                </p>
+            {!auth && (
+                <Modal centered show={showLogin} animation={true} onHide={() => dispatch(showLoginForm())}>
+                    <div className="container-modal-account d-flex">
+                        <div className="modal-account-left">
+                            <div className="modal-account-left__loginStyled">
+                                <div className="heading">
+                                    <h4>Xin chào,</h4>
+                                    {form === REGISTER_FORM ? (
+                                        <p>Đăng kí tài khoản của bạn</p>
+                                    ) : (
+                                        <p>Đăng nhập tài khoản của bạn</p>
+                                    )}
+                                </div>
+                                <div className="input mb-3">
+                                    <input
+                                        placeholder="Nhập email của bạn"
+                                        value={valueLogin}
+                                        onChange={(e) => setValueLogin(e.target.value)}
+                                    />
+                                </div>
+                                <div className="input">
+                                    <input
+                                        type="password"
+                                        placeholder="Nhập password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </div>
+                                <div className="btn-continue">
+                                    {form === REGISTER_FORM ? (
+                                        <Button success onClick={handleRegister}>
+                                            Đăng ký
+                                        </Button>
+                                    ) : (
+                                        <Button primary onClick={handleLogin}>
+                                            Đăng nhập
+                                        </Button>
+                                    )}
+                                </div>
+                                <div className="actions">
+                                    {form !== REGISTER_FORM ? (
+                                        <p>
+                                            Bạn chưa có tài khoản ?{' '}
+                                            <span onClick={() => setFrom(REGISTER_FORM)}> Đăng kí</span>{' '}
+                                        </p>
+                                    ) : (
+                                        <p>
+                                            Bạn đã có tài khoản ? <span onClick={() => setFrom(null)}> Đăng nhập</span>{' '}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                                
-                    <div className="modal-account-right" onClick={() => dispatch(showLoginForm())}>
-                        <div className="icon">
-                            <FontAwesomeIcon
-                                icon={faX}
-                                className="icon-close"
-                            />
+
+                        <div className="modal-account-right" onClick={() => dispatch(showLoginForm())}>
+                            <div className="icon">
+                                <FontAwesomeIcon icon={faX} className="icon-close" />
+                            </div>
+                            <img src="https://salt.tikicdn.com/ts/upload/eb/f3/a3/25b2ccba8f33a5157f161b6a50f64a60.png" />
                         </div>
-                        <img src="https://salt.tikicdn.com/ts/upload/eb/f3/a3/25b2ccba8f33a5157f161b6a50f64a60.png" />
                     </div>
-                </div>
-            </Modal>}
+                </Modal>
+            )}
         </>
     );
 };

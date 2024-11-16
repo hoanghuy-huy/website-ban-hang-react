@@ -151,7 +151,7 @@ const ProductPage = () => {
                 </div>
             )}
 
-            <div className="col-12 d-flex justify-content-center mt-4">
+            <div className="col-12 d-flex justify-content-center mt-4 mb-5">
                 <PaginationComponent
                     setCurrentPage={setCurrentPage}
                     page={currentPage}

@@ -49,43 +49,34 @@ class authService {
 
       if (isEmailExist)
         return {
-          EM: "The email is already exists",
-          EC: 1,
-        };
-
-      let isPhoneExist = await this.checkPhoneExist(rawData.phone);
-
-      if (isPhoneExist)
-        return {
-          EM: "The phone is already exists",
+          EM: "Tài khoản này đã tồn tại rồi",
           EC: 1,
         };
 
       if (rawData.password && rawData.password.length < 4) {
         return {
-          EM: "Your password must have more than 3 letters",
+          EM: "Mật khẩu phải lớn hơn 3 kí tự",
           EC: 1,
         };
       }
-
       // hash password
       let hashPass = this.hashPassword(rawData.password);
 
       let defaultGroupUser = await db.Group.findOne({
-        where: { name: "guest" },
+        where: { name: "customer" },
       });
 
       // Create new user
       await db.User.create({
         email: rawData.email,
-        phone: rawData.phone,
         password: hashPass,
         groupId: defaultGroupUser.id,
       });
 
       return {
-        EM: "A user is created successfully",
+        EM: "Đăng kí thành công",
         EC: 0,
+        DT: 1,
       };
     } catch (error) {
       console.log(error);
@@ -113,7 +104,7 @@ class authService {
           let group = await db.Group.findOne({
             where: { id: user.groupId },
           });
-          
+
           let payload = {
             id: user.id,
             email: user.email,
@@ -129,12 +120,12 @@ class authService {
             EM: "Sign in successfully !!",
             EC: 0,
             DT: {
-              userId: user.id, 
+              userId: user.id,
               token,
               groupWithRoleUser: roles,
               email: user.email,
               username: user.username,
-              userGroup: group.name
+              userGroup: group.name,
             },
           };
         }

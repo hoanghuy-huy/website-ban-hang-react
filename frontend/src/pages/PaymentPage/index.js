@@ -42,7 +42,7 @@ const PaymentPage = () => {
     const [methodPayment, setMethodPayment] = useState(cash);
     const [sdkReady, setSdkReady] = useState(false);
     const dispatch = useDispatch();
-
+    console.log(itemsToOrder)
     const handleOnChangeInput = (value, item) => {
         setMethodDelivery(item);
     };
