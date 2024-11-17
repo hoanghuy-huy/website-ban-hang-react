@@ -53,7 +53,7 @@ const CardItem = ({ item, onClick }) => {
                     <div className={cx('average-rating')}>
                         <div className={cx('number-start-container')}>
                             <div className="d-flex gap-1 py-1">
-                                <Rating name="read-only" value={item?.starNumber} size="small" readOnly />
+                                <Rating name="read-only" value={item?.starsNumber} size="small" readOnly />
                             </div>
                         </div>
                     </div>

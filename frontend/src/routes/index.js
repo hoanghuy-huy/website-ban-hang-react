@@ -8,7 +8,7 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutAccount, LayoutCategoryProduct , LayoutCheckout, LayoutClientNoSidebar, LayoutNoHeader, MainLayout } from '~/layouts';
+import { LayoutAccount, LayoutCategoryProduct , LayoutCheckout, LayoutClientNoSidebar, LayoutNoHeader, LayoutSearchProduct, MainLayout } from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -27,10 +27,12 @@ import AdminLayout from '~/layouts/AdminLayout';
 import DashBoardPage from '~/pages/DashBoardPage';
 import ProductAdminPage from '~/pages/ProductAdminPage/index.';
 import ReturnOrderPage from '~/pages/ReturnOrderPage';
+import SearchPage from '~/pages/SearchPage';
 
 
 //Public Routes
 const publicRoutes = [
+    { path: '/search', component: SearchPage, layout: LayoutSearchProduct },
     { path: routes.home, component: Home, layout: MainLayout },
     { path: routes.product, component: ProductPage, layout: LayoutCategoryProduct },
     { path: routes.productChild, component: ProductPageChild, layout: MainLayout },

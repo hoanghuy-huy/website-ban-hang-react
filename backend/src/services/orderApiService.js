@@ -583,7 +583,19 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
             status: 1,
           });
         });
-
+        
+        orderDetail.map(async (order) => {
+          await db.Product.update(
+            {
+              quantitySold: db.Sequelize.literal(
+                `quantitySold + ${order.quantity}`
+              ),
+            },
+            {
+              where: { id: order.productId },
+            }
+          );
+        })
         await Promise.all(updatePromises);
       }
 
@@ -693,14 +705,8 @@ let handleCustomerReturnOrderFunc = ({
       );
       await db.Product.update(
         {
-          inventoryNumber: db.sequelize.literal(
-            `inventoryNumber + ${productQuantity}`
-          ),
-        },
-        {
-          inventoryNumber: db.sequelize.literal(
-            `quantitySold - ${productQuantity}`
-          ),
+          inventoryNumber: db.sequelize.literal(`inventoryNumber + ${productQuantity}`),
+          quantitySold: db.sequelize.literal(`quantitySold - ${productQuantity}`),
         },
         { where: { id: productId } }
       );
@@ -973,15 +979,40 @@ let handleGetMonthlySold = ({}) => {
 let handleCustomerReviewProductFunc = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data) {
-        reject({
-          EM: "missing value id order",
+      if (!data || !data.productId || !data.starNumber) {
+        return reject({
+          EM: "missing value productId or starNumber",
           EC: 1,
           DT: "",
         });
       }
 
+      // Lấy tất cả các đánh giá hiện có
+      let ratings = await db.Comment.findAll({
+        where: { productId: data.productId },
+        attributes: ["starNumber"],
+      });
+
+      let totalStars = ratings.reduce((acc, rating) => acc + rating.starNumber, 0);
+      let totalCount = ratings.length;
+
+      totalStars += data.starNumber;
+      totalCount += 1; 
+
+      const averageRating = totalStars / totalCount;
+      const roundedAverageRating = Math.round(averageRating);
+
       await db.Comment.create(data);
+
+      await db.Product.update(
+        {
+          starsNumber: roundedAverageRating,
+          totalRating: totalCount,
+        },
+        {
+          where: { id: data.productId },
+        }
+      );
 
       await db.OrderDetail.update(
         {
@@ -991,6 +1022,7 @@ let handleCustomerReviewProductFunc = (data) => {
           where: { id: data.orderDetailId },
         }
       );
+
       resolve({
         EM: "Ok",
         EC: 0,

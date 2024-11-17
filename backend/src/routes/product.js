@@ -2,6 +2,7 @@ import express from "express";
 import productController from "../controllers/productController";
 
 const router = express.Router();
+router.get("/products/search", productController.searchFunc);
 
 router.get("/products/count", productController.countProduct);
 

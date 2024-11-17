@@ -19,8 +19,12 @@
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     .loading-icon {
@@ -28,7 +32,8 @@
     }
 
     .clear-icon {
-        cursor: pointer;
+        right: 90px !important;
+        top: 47% !important;
     }
     .me-5 {
         margin-right: 6rem !important;
@@ -65,4 +70,3 @@
         height: 24px;
     }
 }
-

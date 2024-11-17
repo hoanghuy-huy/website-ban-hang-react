@@ -146,11 +146,29 @@ export const countProductApi = createAsyncThunk('products/countProductApi', asyn
 });
 
 
+export const searchAllProductApi = createAsyncThunk(
+    'products/searchAllProductApi',
+    async ({ keyword, type,limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
+        const res = await httpRequest.get(
+            `products/search?&type=${type}&page=${page}&limit=${limit}&keyword=${keyword}&sort=${
+                sort ? sort : ''
+            }&starNumber=${starNumber ? 1 : 0}&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${
+                brand ? brand : []
+            }`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+
 const initialState = {
     category: [],
     product: [],
     countProduct:null,
     categoryId: null,
+    keyword:null,
+    listProductSearch:[],   
     categoryProduct: [],
     listProductHot: [],
     productDetail: [],
@@ -216,6 +234,9 @@ export const productSlice = createSlice({
         },
         handleChangeBrandValueToFilter: (state, action) => {
             state.brandValueToFilter = action.payload;
+        },
+        saveKeywordSearch: (state, action) => {
+            state.keyword = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -426,6 +447,20 @@ export const productSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
+
+            .addCase(searchAllProductApi.pending, (state, action) => {
+                // state.loading = true;
+                state.error = false;
+            })
+            .addCase(searchAllProductApi.fulfilled, (state, action) => {
+                // state.loading = false;
+                state.error = false;
+                state.listProductSearch = action.payload
+            })
+            .addCase(searchAllProductApi.rejected, (state, action) => {
+                // state.loading = false;
+                state.error = true;
+            })
     },
 });
 export const {
@@ -435,6 +470,7 @@ export const {
     handleChangeStarNumberCheckBoxValue,
     handleFetchDataWithFilterPrice,
     handleChangeBrandValueToFilter,
+    saveKeywordSearch
 } = productSlice.actions;
 
 export default productSlice.reducer;

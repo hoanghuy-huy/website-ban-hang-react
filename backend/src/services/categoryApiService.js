@@ -166,7 +166,7 @@ class categoryApiService {
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
-              { quantitySold: { [Op.gt]: 50 } },
+              { quantitySold: { [Op.gt]: 100 } },
               { categoryId: categoryId },
               !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
               +convertPriceToObject[1] !== 0 && {

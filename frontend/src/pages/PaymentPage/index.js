@@ -12,10 +12,10 @@ import Button from '~/components/Button/Button';
 import { getAddressDefault } from '~/redux/features/addressSlice';
 import * as paymentService from '~/services/paymentService';
 import _ from 'lodash';
-
 import './PaymentPage.scss';
 import { createNewOrderApi } from '~/redux/features/orderSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PaymentPage = () => {
     const navigate = useNavigate();
@@ -42,7 +42,7 @@ const PaymentPage = () => {
     const [methodPayment, setMethodPayment] = useState(cash);
     const [sdkReady, setSdkReady] = useState(false);
     const dispatch = useDispatch();
-    console.log(itemsToOrder)
+    console.log(itemsToOrder);
     const handleOnChangeInput = (value, item) => {
         setMethodDelivery(item);
     };
@@ -110,7 +110,7 @@ const PaymentPage = () => {
         order.quantityItem = itemsToOrder.length;
         order.totalPrice = totalPriceToOrder();
         order.totalDiscount = 0;
-        order.orderPaymentStatus = false;
+        order.orderPaymentStatus = methodPayment === cash ? false : true;
         order.orderStatusDelivery = false;
         order.paymentMethod = methodPayment;
         order.deliveryMethodName = methodDelivery.name;
@@ -327,17 +327,19 @@ const PaymentPage = () => {
                                     amount={totalPriceToOrder() / 20000}
                                     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                                     onSuccess={(details, data) => {
-                                        alert('Transaction completed by ' + details.payer.name.given_name);
+                                        toast.success('Thanh toán thành công');
+                                        handleOnClickOrderProduct();
 
-                                        // OPTIONAL: Call your server to save the transaction
-                                        return fetch('/paypal-transaction-complete', {
-                                            method: 'post',
-                                            body: JSON.stringify({
-                                                orderID: data.orderID,
-                                            }),
-                                        });
+                                        // // OPTIONAL: Call your server to asve the transaction
+                                        // return fetch('/paypal-transaction-complete', {
+                                        //     method: 'post',
+                                        //     body: JSON.stringify({
+                                        //         orderID: data.orderID,
+                                        //     }),
+                                        // });
+                                        return;
                                     }}
-                                    onError={() => handleErrorPaypal()}
+                                    onError={() => toast.error('Có lỗi xảy ra vui lòng thử lại')}
                                 />
                             ) : (
                                 <Button primary onClick={() => handleOnClickOrderProduct()}>

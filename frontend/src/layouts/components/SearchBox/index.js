@@ -8,23 +8,23 @@ import SearchItem from '~/components/SearchItem';
 import './SearchBox.scss';
 import { apiSearchUser } from '~/services/testService';
 import { useDebounce } from '~/hooks';
-
+import { useDispatch } from 'react-redux';
+import { saveKeywordSearch, searchAllProductApi } from '~/redux/features/productSlice/productSlice';
+import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 const SearchBox = () => {
     const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
-
-    const valueDebounce = useDebounce(searchValue, 600)
-
-
-
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const valueDebounce = useDebounce(searchValue, 600);
 
     const refInput = useRef();
 
     const handleOnChangeResultValue = (searchValue) => {
-        if(searchValue.startsWith(' ')) {
+        if (searchValue.startsWith(' ')) {
             return;
         }
         setSearchValue(searchValue);
@@ -52,9 +52,18 @@ const SearchBox = () => {
             return;
         }
         // fetchData();
+        // dispatch(searchAllProductApi({ keyword: valueDebounce, page: 1, limit: 10 }));
         // eslint-disable-next-line
     }, [valueDebounce]);
 
+    const handleSearchItem = async () => {
+        if (!valueDebounce.trim()) {
+            return;
+        }
+        await dispatch(searchAllProductApi({ keyword: searchValue, page: 1, limit: 10 }));
+        await dispatch(saveKeywordSearch(searchValue));
+        navigate('/search');
+    };
     return (
         <Tippy
             appendTo={document.body}
@@ -93,15 +102,15 @@ const SearchBox = () => {
                 </div>
 
                 <div
-                    className="position-absolute top-50 end-0 translate-middle-y"
+                    className="position-absolute top-50 end-0 translate-middle-y clear-icon"
                     onClick={() => handleOnClickClearSearchValue()}
                 >
-                    {!loading && searchValue.length > 0 && (
-                        <FontAwesomeIcon className="clear-icon me-5" icon={faXmark} />
-                    )}
+                    {!loading && searchValue.length > 0 && <CloseIcon />}
                 </div>
 
-                <button className="search-btn pe-2 ">Tìm Kiếm</button>
+                <button className="search-btn pe-2 " onClick={handleSearchItem}>
+                    Tìm Kiếm
+                </button>
             </div>
         </Tippy>
     );

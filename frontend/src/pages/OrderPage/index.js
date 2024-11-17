@@ -92,8 +92,8 @@ const OrderPage = () => {
         dispatch(handleChoseActionToFetchApiOrder(type));
     };
 
-    const handleCustomerConfirmOrder = async (orderId) => {
-        await dispatch(customerConfirmOrderApi({ orderId, userId }));
+    const handleCustomerConfirmOrder = async (orderId, quantity) => {
+        await dispatch(customerConfirmOrderApi({ orderId, userId, quantity }));
         await dispatch(getAllOrderDeliveryWithUserIdApi({ limit: limit, page: currentPage, userId: userId }));
     };
 
@@ -255,7 +255,7 @@ const OrderPage = () => {
                                                                             size="small"
                                                                             outline
                                                                             onClick={() =>
-                                                                                handleCustomerConfirmOrder(item.id)
+                                                                                handleCustomerConfirmOrder(item.id,item.quantityItem)
                                                                             }
                                                                         >
                                                                             Đã nhận được hàng

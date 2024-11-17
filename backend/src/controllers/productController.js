@@ -293,9 +293,28 @@ class productController {
       const productCount = await db.Product.count();
 
       return res.status(200).json({
-        EM: 'Success',
+        EM: "Success",
         EC: 0,
         DT: productCount,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async searchFunc(req, res) {
+    try {
+      let data = await productApiService.handleSearchFunc(req.query);
+
+      return res.status(200).json({
+        EM: data.EM,
+        EC: data.EC,
+        DT: data.DT,
       });
     } catch (error) {
       console.log(error);

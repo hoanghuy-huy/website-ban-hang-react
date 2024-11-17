@@ -4,7 +4,7 @@ class productApiService {
   async handleGetAllProductPagination(page, limit, brandId, categoryId) {
     try {
       let offset = (page - 1) * limit;
-      console.log(brandId, categoryId)
+      console.log(brandId, categoryId);
       if (!!brandId === true || !!categoryId === true) {
         const { count, rows } = await db.Product.findAndCountAll({
           where: {
@@ -231,7 +231,7 @@ class productApiService {
       let product;
       let convertPriceToObject = price ? price.split(",") : "";
       let convertBrandToObject = brand ? brand.split(",") : "";
-      
+
       if (sort) {
         product = await db.Product.findAndCountAll({
           where: {
@@ -258,8 +258,8 @@ class productApiService {
           limit: limit,
           order: [["price", sort]],
         });
-      } else  {
-      console.log(+categoryId)
+      } else {
+        console.log(+categoryId);
         product = await db.Product.findAndCountAll({
           where: {
             [Op.and]: [
@@ -547,6 +547,114 @@ class productApiService {
       console.log(error);
       return {
         EM: " Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleSearchFunc({
+    page,
+    limit,
+    keyword,
+    sort,
+    starNumber,
+    price,
+    brand,
+  }) {
+    try {
+      page = +page;
+      limit = +limit;
+      let product;
+      let convertPriceToObject =price ? price.split(",") : "";
+      let convertBrandToObject = brand ? brand.split(",") : "";
+      let offset = (page - 1) * limit;
+      if (sort) {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              {
+                name: {
+                  [Op.like]: `%${keyword}%`,
+                },
+              },
+              { quantitySold: { [Op.gt]: 100 } },
+              !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
+              +convertPriceToObject[1] !== 0 && {
+                price: {
+                  [Op.between]: [
+                    convertPriceToObject[0],
+                    convertPriceToObject[1],
+                  ],
+                },
+              },
+              convertBrandToObject[0] !== "" &&
+                convertBrandToObject.length > 0 && {
+                  brandName: { [Op.or]: [...convertBrandToObject] },
+                },
+            ],
+          },
+          offset: offset,
+          limit: limit,
+          order: [["price", sort]],
+        });
+      } else {
+        product = await db.Product.findAndCountAll({
+          where: {
+            [Op.and]: [
+              {
+                name: {
+                  [Op.like]: `%${keyword}%`,
+                },
+              },
+              { quantitySold: { [Op.gt]: 100 } },
+              !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
+              +convertPriceToObject[1] !== 0 && {
+                price: {
+                  [Op.between]: [
+                    convertPriceToObject[0],
+                    convertPriceToObject[1],
+                  ],
+                },
+              },
+              convertBrandToObject[0] !== "" &&
+                convertBrandToObject.length > 0 && {
+                  brandName: { [Op.or]: [...convertBrandToObject] },
+                },
+            ],
+          },
+          offset: offset,
+          limit: limit,
+        });
+      }
+
+      const { count, rows } = await db.Product.findAndCountAll({
+        where: {
+          name: {
+            [Op.like]: `%${keyword}%`,
+          },
+        },
+        offset: offset,
+        limit: limit,
+        order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: "Something wrong in service",
         EC: 2,
       };
     }

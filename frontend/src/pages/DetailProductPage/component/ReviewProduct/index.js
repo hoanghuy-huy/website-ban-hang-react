@@ -14,6 +14,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PaginationComponent from '~/components/Pagination';
 import { useState } from 'react';
 const ReviewProduct = ({ product }) => {
+
     const dispatch = useDispatch();
     const { commentList, averageRating } = useSelector((state) => state.comment);
     const [starNumber, setStarNumber] = useState(null);
@@ -32,7 +33,7 @@ const ReviewProduct = ({ product }) => {
         dispatch(getAllComment({ productId: product.id, page: currentPage, limit: limit, starNumber: starNumber }));
     }, [starNumber]);
     const { totalPages, comments } = commentList;
-
+console.log(product)
     return (
         <div className="ReviewProduct">
             <div className="ReviewProductContainer">
@@ -41,14 +42,14 @@ const ReviewProduct = ({ product }) => {
                 </div>
                 <div className="product-rating-overview d-flex justify-content-center">
                     <div className="product-rating-overview__briefing">
-                        {averageRating == !0 ? (
+                        {product.starsNumber > 0 ? (
                             <>
                                 <div className="product-rating-overview__score-wrapper">
-                                    <span class="product-rating-overview__rating-score">{averageRating}</span>
+                                    <span class="product-rating-overview__rating-score">{product.starsNumber}</span>
                                     <span class="product-rating-overview__rating-score-out-of"> trên 5 </span>
                                 </div>
                                 <div className="product-rating-overview__stars">
-                                    <Rating value={averageRating} readOnly sx={{ fontSize: 20 }} />
+                                    <Rating value={product.starsNumber} readOnly sx={{ fontSize: 20 }} />
                                 </div>
                             </>
                         ) : (
@@ -62,7 +63,7 @@ const ReviewProduct = ({ product }) => {
                             </>
                         )}
                     </div>
-                    {averageRating !== 0 && (
+                    {product.starsNumber !== 0 && (
                         <div className="product-rating-overview__filters col-12">
                             <div className="row gap-3">
                                 <Button
