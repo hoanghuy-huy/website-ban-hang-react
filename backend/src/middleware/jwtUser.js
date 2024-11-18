@@ -3,7 +3,9 @@ import groupRoleService from "../services/groupRoleService";
 
 require("dotenv").config();
 
-const nonSecurePath = ["/", "/account"];
+const nonSecurePath = ["/", "/account", ""];
+const securePaths  = ["/admin/dash-board", "/admin/product", "/admin/user", "/admin/roles", "/admin/group-role", "/admin/order"];
+
 
 const createToken = (payload) => {
   try {
@@ -68,9 +70,17 @@ const checkUserLogin = (req, res, next) => {
 
 const checkUserPermission = async (req, res, next) => {
   try {
-    if (nonSecurePath.includes(req.path) || req.path === "/account" || req.path === "/") {
-      return next();
+    // console.log(req.path)
+    // if (nonSecurePath.includes(req.path) || req.path === "/account" || req.path === "/" ) {
+    //   return next();
+    // }
+    // console.log("")
+    console.log(req.path)
+     if (!securePaths.includes(req.path)) {
+      return next(); 
     }
+    
+
     if (req.user) {
       let email = req.user.email;
       let groupId = req.user.groupId;

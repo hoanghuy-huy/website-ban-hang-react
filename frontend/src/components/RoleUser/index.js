@@ -66,7 +66,7 @@ const RoleUser = () => {
     return (
         <div className="container">
             <div className="role-container">
-                <h4 className="role-title mb-3">Add new role</h4>
+                <h4 className="role-title mb-3">Thêm link truy cập</h4>
                 <div className="role-parent col-12">
                     {Object.entries(listRole).map(([key, value], index) => {
                         return (
@@ -80,7 +80,7 @@ const RoleUser = () => {
                                     />
                                 </div>
                                 <div className="col-10 col-sm-5">
-                                    <label>Description</label>
+                                    <label>Mô tả </label>
                                     <input
                                         className="form-control"
                                         value={value.description}
@@ -89,7 +89,7 @@ const RoleUser = () => {
                                         }
                                     />
                                 </div>
-                                <div className="col-2 role-actions">
+                                <div className="col-2 role-actions d-flex align-items-center">
                                     <FontAwesomeIcon
                                         icon={faPlus}
                                         className="icon add"

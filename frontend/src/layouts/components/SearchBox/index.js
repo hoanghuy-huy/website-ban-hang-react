@@ -60,7 +60,7 @@ const SearchBox = () => {
         if (!valueDebounce.trim()) {
             return;
         }
-        await dispatch(searchAllProductApi({ keyword: searchValue, page: 1, limit: 10 }));
+        await dispatch(searchAllProductApi({ keyword: searchValue, page: 1, limit: 8 }));
         await dispatch(saveKeywordSearch(searchValue));
         navigate('/search');
     };

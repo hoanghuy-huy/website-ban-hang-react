@@ -11,9 +11,9 @@ function LayoutSearchProduct({ children }) {
             <div className="body-container">
                 <div className="row px-4">
                     <div className="col-sm-2 mt-4">
-                        <SidebarFilter />
+                        {/* <SidebarFilter /> */}
                     </div>
-                    <div className="col-sm-10 mt-3 main-content">
+                    <div className="col-sm-12 mt-3 main-content">
                         {children}
                     </div>
                 </div>

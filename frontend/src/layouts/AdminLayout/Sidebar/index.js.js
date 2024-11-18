@@ -6,6 +6,9 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import CategoryIcon from '@mui/icons-material/Category';
 import { Link, NavLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import routes from '~/config/routes';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import LinkIcon from '@mui/icons-material/Link';
 const Sidebar = () => {
     const [activeTab, setActiveTab] = useState(null);
     const [isToggleSubmenu, setToggleSubmenu] = useState(false);
@@ -113,6 +116,26 @@ const Sidebar = () => {
                         </Button>
                     </NavLink>
                 </li>
+                {/* <li>
+                    <NavLink to={'/admin/roles'}>
+                        <Button className="w-100">
+                            <span className="icon">
+                                <LinkIcon />
+                            </span>
+                            <span className="text">Link truy cập</span>
+                        </Button>
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to={routes.groupRole}>
+                        <Button className="w-100">
+                            <span className="icon">
+                                <AdminPanelSettingsIcon />
+                            </span>
+                            <span className="text">Quyền truy cập</span>
+                        </Button>
+                    </NavLink>
+                </li> */}
             </ul>
         </div>
     );

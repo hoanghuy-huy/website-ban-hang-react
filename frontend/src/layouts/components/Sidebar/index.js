@@ -27,7 +27,7 @@ const Sidebar = () => {
             <div className="title">Danh Mục</div>
             <div>
                 <div className="category-container">
-                    {categoryList?.map((item) => {
+                    {categoryList && categoryList?.map((item) => {
                         return (
                             <Link to={'/products' + item?.path} onClick={() => handleFetchData(item?.id, item?.path)}>
                                 <div className="d-flex gap-3 category__item">

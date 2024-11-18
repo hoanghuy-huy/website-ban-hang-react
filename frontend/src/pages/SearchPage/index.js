@@ -5,15 +5,16 @@ import {
     fetchAllProductHotPaginationWithCategoryId,
     fetchProductPaginationWithCategoryId,
     handleChangeValueSort,
+    searchAllProductApi,
 } from '~/redux/features/productSlice/productSlice';
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import FilterWrapper from '~/components/FilterWrapper';
 import CartItem from '~/components/CartItem';
 import './SearchPage.scss';
 import { ThreeDots } from 'react-loader-spinner';
 import Pagination from '~/components/Pagination';
 import PaginationComponent from '~/components/Pagination';
 import ScrollToTop from '~/components/ScrollToTop';
+import FilterWrapper from './FilterWrapper';
 
 const SearchPage = () => {
     const {
@@ -21,7 +22,6 @@ const SearchPage = () => {
         error,
         category,
         listProductSearch,
-        actionFetchProductCategory,
         sortValue,
         starNumberCheckBoxValue,
         minPriceRedux,
@@ -29,28 +29,27 @@ const SearchPage = () => {
     } = useSelector((state) => state.products);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(8);
-    const { descendingPrice, ascendingPrice, brandValueToFilter } = useSelector((state) => state.products);
-
+    const { descendingPrice, ascendingPrice, brandValueToFilter, keyword } = useSelector((state) => state.products);
     const itemSortPrice = ['Giá', descendingPrice, ascendingPrice];
     const [sortPrice, setSortPrice] = useState(itemSortPrice[0] || []);
     const dispatch = useDispatch();
     const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName);
     ScrollToTop();
     useEffect(() => {
-        // dispatch(
-        //     fetchProductPaginationWithCategoryId({
-        //         page: currentPage,
-        //         limit: limit,
-        //         sort: sortValue,
-        //         starNumber: starNumberCheckBoxValue,
-        //         minPrice: minPriceRedux,
-        //         maxPrice: maxPriceRedux,
-        //         brand: listBrandToFilter,
-        //     }),
-        // );
+        dispatch(
+            searchAllProductApi({
+                keyword: keyword,
+                page: currentPage,
+                limit: limit,
+                sort: sortValue,
+                starNumber: starNumberCheckBoxValue,
+                minPrice: minPriceRedux,
+                maxPrice: maxPriceRedux,
+                brand: listBrandToFilter,
+            }),
+        );
     }, [
         currentPage,
-        actionFetchProductCategory,
         sortValue,
         starNumberCheckBoxValue,
         minPriceRedux,
@@ -79,16 +78,8 @@ const SearchPage = () => {
 
     return (
         <div className="product-container">
-            <div className="title mt-2">Kết quả tìm kiếm của "{'hOANG HUY'}"</div>
-            <FilterWrapper
-                sortPrice={sortPrice}
-                setSortPrice={setSortPrice}
-                itemSortPrice={itemSortPrice}
-                totalPages={listProductSearch?.totalPages}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                actionFetchProductCategory={actionFetchProductCategory}
-            />
+            <div className="title card shadow p-3">Kết quả tìm kiếm của "{keyword ? keyword : 'chưa có'}"</div>
+
             {listProductSearch?.products?.length > 0 ? (
                 <div className="container-cart-item d-flex">
                     <div className="col-12">

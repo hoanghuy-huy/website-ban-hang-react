@@ -41,7 +41,7 @@ const Sidebar = () => {
             <div className="title">Danh Mục</div>
             <div>   
                 <div className="category-container">
-                    {categoryList?.map((item) => {
+                    {categoryList &&categoryList?.map((item) => {
                         return (
                             <NavLink
                                 to={'/products' + item?.path}

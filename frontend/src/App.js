@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Fragment } from 'react';
 import { Oval } from 'react-loader-spinner';
-import { privateRoutes, publicRoutes } from './routes';
+import { adminRoutes, privateRoutes, publicRoutes } from './routes';
 import { DefaultLayout } from '~/layouts';
 import { PrivateRoute } from './routes/PrivateRoute';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 import { useDispatch } from 'react-redux';
 import { fetchDataAccount } from './redux/features/accountSlice';
+import { AdminRoute } from './routes/AdminRoute';
 function App() {
     const user = true;
     const dispatch = useDispatch();
@@ -49,8 +50,8 @@ function App() {
 
                                 return (
                                     <Route
-                                    key={index}
-                                    exact={true}
+                                        key={index}
+                                        exact={true}
                                         path={route.path}
                                         element={
                                             <Layout>
@@ -78,6 +79,29 @@ function App() {
                                                 <PrivateRoute>
                                                     <Page />
                                                 </PrivateRoute>
+                                            </Layout>
+                                        }
+                                    />
+                                );
+                            })}
+
+                            {adminRoutes.map((route, index) => {
+                                let Page = route.component;
+                                let Layout = DefaultLayout;
+
+                                if (route.layout) {
+                                    Layout = route.layout;
+                                } else if (route.layout === null) Layout = Fragment;
+
+                                return (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        element={
+                                            <Layout>
+                                                <AdminRoute>
+                                                    <Page />
+                                                </AdminRoute>
                                             </Layout>
                                         }
                                     />

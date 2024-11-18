@@ -43,9 +43,12 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
-    { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },
-    { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    // { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
+    // { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },
+    // { path: routes.user, component: MangerUsersPage, layout: AdminLayout },
+    // { path: routes.role, component: RoleUser, layout: AdminLayout },
+    // { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
+    // { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },
     { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
     { path: '/account/return-order', component: ReturnOrderPage, layout: LayoutAccount },
@@ -53,9 +56,15 @@ const privateRoutes = [
     { path: routes.addressPage, component: AddressPage, layout: LayoutCheckout },
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },
     { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
-    { path: routes.user, component: MangerUsersPage, layout: AdminLayout },
-    { path: routes.role, component: RoleUser },
-    { path: routes.groupRole, component: GroupRole },
 ];
 
-export { publicRoutes, privateRoutes };
+
+const adminRoutes = [
+    { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
+    { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },
+    { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    { path: routes.user, component: MangerUsersPage, layout: AdminLayout },
+    { path: routes.role, component: RoleUser, layout: AdminLayout },
+    { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
+];
+export { publicRoutes, privateRoutes, adminRoutes };

@@ -11,11 +11,12 @@ import addressRouter from './address.js'
 import paymentRouter from './payment.js'
 import orderRouter from './order.js'
 import commentRouter from './comment.js'
+import middleware from '../middleware/jwtUser.js'
 function initApiRoutes(app) {
   app.use("/api/v1", authRouter);
   app.use("/api/v1", userRouter);
   app.use("/api/v1", groupRouter);
-  app.use("/api/v1", roleRouter);
+  app.use("/api/v1",roleRouter);
   app.use("/api/v1", groupRoleRouter);
   app.use("/api/v1", productRouter);
   app.use("/api/v1", categoryRouter);
