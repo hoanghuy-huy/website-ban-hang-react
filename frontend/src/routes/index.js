@@ -28,6 +28,7 @@ import DashBoardPage from '~/pages/DashBoardPage';
 import ProductAdminPage from '~/pages/ProductAdminPage/index.';
 import ReturnOrderPage from '~/pages/ReturnOrderPage';
 import SearchPage from '~/pages/SearchPage';
+import PageTest from '~/pages/PageTest';
 
 
 //Public Routes
@@ -39,6 +40,7 @@ const publicRoutes = [
     { path: routes.detailProduct, component: DetailProductPage, layout: LayoutClientNoSidebar },
     { path: routes.register, component: Register, layout: LayoutNoHeader },
     { path: routes.login, component: Login, layout: LayoutNoHeader },
+    { path: '/test', component: PageTest, layout: LayoutNoHeader },
     { path: '*', component: NotFoundPage, layout: LayoutClientNoSidebar },
 ];
 

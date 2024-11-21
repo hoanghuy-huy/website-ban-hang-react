@@ -14,6 +14,7 @@ import SearchBox from '~/layouts/components/SearchBox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import './Header.scss';
 import { Badge } from '@mui/material';
+import ImageClassifier from '~/components/ImageClassifier';
 const Header = () => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);
@@ -80,6 +81,7 @@ const Header = () => {
 
                 <AuthForm />
             </div>
+            {/* <ImageClassifier /> */}
         </header>
     );
 };

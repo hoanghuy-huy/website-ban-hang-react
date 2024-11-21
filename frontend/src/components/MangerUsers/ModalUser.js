@@ -261,11 +261,11 @@ function ModalUser(props) {
                     </Button>
                     {props.actions !== 'EDIT' ? (
                         <Button variant="primary" onClick={handleSubmitForm}>
-                            Save Changes
+                           Lưu
                         </Button>
                     ) : (
                         <Button variant="warning" onClick={handleSubmitForm}>
-                            Save Changes
+                           Lưu
                         </Button>
                     )}
                 </Modal.Footer>

@@ -560,74 +560,125 @@ class productApiService {
     starNumber,
     price,
     brand,
+    categoryId
   }) {
     try {
       page = +page;
       limit = +limit;
-      let product;
-      let convertPriceToObject =price ? price.split(",") : "";
-      let convertBrandToObject = brand ? brand.split(",") : "";
-      let offset = (page - 1) * limit;
-      if (sort) {
-        product = await db.Product.findAndCountAll({
-          where: {
-            [Op.and]: [
-              {
-                name: {
-                  [Op.like]: `%${keyword}%`,
-                },
-              },
-              { quantitySold: { [Op.gt]: 100 } },
-              !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
-              +convertPriceToObject[1] !== 0 && {
-                price: {
-                  [Op.between]: [
-                    convertPriceToObject[0],
-                    convertPriceToObject[1],
-                  ],
-                },
-              },
-              convertBrandToObject[0] !== "" &&
-                convertBrandToObject.length > 0 && {
-                  brandName: { [Op.or]: [...convertBrandToObject] },
-                },
-            ],
-          },
-          offset: offset,
-          limit: limit,
-          order: [["price", sort]],
-        });
-      } else {
-        product = await db.Product.findAndCountAll({
-          where: {
-            [Op.and]: [
-              {
-                name: {
-                  [Op.like]: `%${keyword}%`,
-                },
-              },
-              { quantitySold: { [Op.gt]: 100 } },
-              !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
-              +convertPriceToObject[1] !== 0 && {
-                price: {
-                  [Op.between]: [
-                    convertPriceToObject[0],
-                    convertPriceToObject[1],
-                  ],
-                },
-              },
-              convertBrandToObject[0] !== "" &&
-                convertBrandToObject.length > 0 && {
-                  brandName: { [Op.or]: [...convertBrandToObject] },
-                },
-            ],
-          },
-          offset: offset,
-          limit: limit,
-        });
-      }
+      let offset = (page - 1) * limit; 
+      // let product;
+      // let convertPriceToObject = price ? price.split(",") : "";
+      // let convertBrandToObject = brand ? brand.split(",") : "";
+      // if (sort) {
+      //   product = await db.Product.findAndCountAll({
+      //     where: {
+      //       [Op.and]: [
+      //         {
+      //           name: {
+      //             [Op.like]: `%${keyword}%`,
+      //           },
+      //         },
+      //         { quantitySold: { [Op.gt]: 100 } },
+      //         !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
+      //         +convertPriceToObject[1] !== 0 && {
+      //           price: {
+      //             [Op.between]: [
+      //               convertPriceToObject[0],
+      //               convertPriceToObject[1],
+      //             ],
+      //           },
+      //         },
+      //         convertBrandToObject[0] !== "" &&
+      //           convertBrandToObject.length > 0 && {
+      //             brandName: { [Op.or]: [...convertBrandToObject] },
+      //           },
+      //       ],
+      //     },
+      //     offset: offset,
+      //     limit: limit,
+      //     order: [["price", sort]],
+      //   });
+      // } else {
+      //   product = await db.Product.findAndCountAll({
+      //     where: {
+      //       [Op.and]: [
+      //         {
+      //           name: {
+      //             [Op.like]: `%${keyword}%`,
+      //           },
+      //         },
+      //         { quantitySold: { [Op.gt]: 100 } },
+      //         !!starNumber && { starsNumber: { [Op.gt]: 3.9 } },
+      //         +convertPriceToObject[1] !== 0 && {
+      //           price: {
+      //             [Op.between]: [
+      //               convertPriceToObject[0],
+      //               convertPriceToObject[1],
+      //             ],
+      //           },
+      //         },
+      //         convertBrandToObject[0] !== "" &&
+      //           convertBrandToObject.length > 0 && {
+      //             brandName: { [Op.or]: [...convertBrandToObject] },
+      //           },
+      //       ],
+      //     },
+      //     offset: offset,
+      //     limit: limit,
+      //   });
+      // }
 
       const { count, rows } = await db.Product.findAndCountAll({
+        where: {
+          ...(categoryId ? { categoryId } : {}), 
+          ...(categoryId ? {} : { 
+            name: {
+              [Op.like]: `%${keyword}%`,
+            },
+          }),
+        },
+        offset: offset,
+        limit: limit,
+        order: [["id", "DESC"]],
+      });
+
+      let totalPages = Math.ceil(count / limit);
+
+      const data = {
+        totalPages: totalPages,
+        totalRows: count,
+        products: rows,
+      };
+
+      return {
+        EM: "Get All products Success",
+        EC: 0,
+        DT: data,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        EM: "Something wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleSearchKeywordFunc({ keyword,page, limit }) {
+    try {
+      page = +page;
+      limit = +limit;
+      let offset = (page - 1) * limit;
+
+      if(!keyword || keyword === '') {
+        return {
+          EM: "Keyword empty",
+          EC: 0,
+          DT: [],
+        };
+      }
+
+      const { count, rows } = await db.Keyword.findAndCountAll({
         where: {
           name: {
             [Op.like]: `%${keyword}%`,
