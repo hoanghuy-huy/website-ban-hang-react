@@ -29,8 +29,12 @@ export const fetchAllProductHot = createAsyncThunk('products/fetchAllProductHot'
 
 export const fetchAllProductPagination = createAsyncThunk(
     'products/fetchAllProductPagination',
-    async ({ limit, page, categoryId, brandId  }) => {
-        const res = await httpRequest.get(`products/get-all-pagination?limit=${limit}&page=${page}${categoryId ? `&categoryId=${categoryId}` :''}${brandId ? `&brandId=${brandId}` :''}`);
+    async ({ limit, page, categoryId, brandId }) => {
+        const res = await httpRequest.get(
+            `products/get-all-pagination?limit=${limit}&page=${page}${categoryId ? `&categoryId=${categoryId}` : ''}${
+                brandId ? `&brandId=${brandId}` : ''
+            }`,
+        );
 
         return res ? res.DT : [];
     },
@@ -145,15 +149,14 @@ export const countProductApi = createAsyncThunk('products/countProductApi', asyn
     return res ? res.DT : [];
 });
 
-
 export const searchAllProductApi = createAsyncThunk(
     'products/searchAllProductApi',
-    async ({ keyword, type,limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
+    async ({ keyword, type, categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
         const res = await httpRequest.get(
-            `products/search?&type=${type}&page=${page}&limit=${limit}&keyword=${keyword}&sort=${
-                sort ? sort : ''
-            }&starNumber=${starNumber ? 1 : 0}&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${
-                brand ? brand : []
+            `products/search?&page=${page}&limit=${limit}&keyword=${keyword}&sort=${sort ? sort : ''}&starNumber=${
+                starNumber ? 1 : 0
+            }&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${brand ? brand : []}&categoryId=${
+                categoryId ? categoryId : ''
             }`,
         );
 
@@ -163,10 +166,8 @@ export const searchAllProductApi = createAsyncThunk(
 
 export const searchKeywordProductApi = createAsyncThunk(
     'products/searchKeywordProductApi',
-    async ({ keyword, page, limit}) => {
-        const res = await httpRequest.get(
-            `products/keyword?page=${page}&limit=${limit}&keyword=${keyword}`,
-        );
+    async ({ keyword, page, limit }) => {
+        const res = await httpRequest.get(`products/keyword?page=${page}&limit=${limit}&keyword=${keyword}`);
 
         return res ? res.DT : [];
     },
@@ -175,12 +176,12 @@ export const searchKeywordProductApi = createAsyncThunk(
 const initialState = {
     category: [],
     product: [],
-    countProduct:null,
+    countProduct: null,
     categoryId: null,
-    keyword:null,
+    keyword: null,
     categoryIdToSearch: null,
-    listProductSearch:[],   
-    listKeywordSearch:[],   
+    listProductSearch: [],
+    listKeywordSearch: [],
     categoryProduct: [],
     listProductHot: [],
     productDetail: [],
@@ -249,6 +250,9 @@ export const productSlice = createSlice({
         },
         saveKeywordSearch: (state, action) => {
             state.keyword = action.payload;
+        },
+        saveCategoryIdToSearch: (state, action) => {
+            state.categoryIdToSearch = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -453,7 +457,7 @@ export const productSlice = createSlice({
             .addCase(countProductApi.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = false;
-                state.countProduct = action.payload
+                state.countProduct = action.payload;
             })
             .addCase(countProductApi.rejected, (state, action) => {
                 state.loading = false;
@@ -467,7 +471,7 @@ export const productSlice = createSlice({
             .addCase(searchAllProductApi.fulfilled, (state, action) => {
                 // state.loading = false;
                 state.error = false;
-                state.listProductSearch = action.payload
+                state.listProductSearch = action.payload;
             })
             .addCase(searchAllProductApi.rejected, (state, action) => {
                 // state.loading = false;
@@ -481,12 +485,12 @@ export const productSlice = createSlice({
             .addCase(searchKeywordProductApi.fulfilled, (state, action) => {
                 // state.loading = false;
                 state.error = false;
-                state.listKeywordSearch = action.payload
+                state.listKeywordSearch = action.payload;
             })
             .addCase(searchKeywordProductApi.rejected, (state, action) => {
                 // state.loading = false;
                 state.error = true;
-            })
+            });
     },
 });
 export const {
@@ -496,7 +500,8 @@ export const {
     handleChangeStarNumberCheckBoxValue,
     handleFetchDataWithFilterPrice,
     handleChangeBrandValueToFilter,
-    saveKeywordSearch
+    saveKeywordSearch,
+    saveCategoryIdToSearch,
 } = productSlice.actions;
 
 export default productSlice.reducer;

@@ -9,7 +9,12 @@ import './SearchBox.scss';
 import { apiSearchUser } from '~/services/testService';
 import { useDebounce } from '~/hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveKeywordSearch, searchAllProductApi, searchKeywordProductApi } from '~/redux/features/productSlice/productSlice';
+import {
+    saveCategoryIdToSearch,
+    saveKeywordSearch,
+    searchAllProductApi,
+    searchKeywordProductApi,
+} from '~/redux/features/productSlice/productSlice';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -25,19 +30,19 @@ const SearchBox = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const valueDebounce = useDebounce(searchValue, 600);
-    const listKeywordSearch = useSelector((state) => state.products.listKeywordSearch)
+    const listKeywordSearch = useSelector((state) => state.products.listKeywordSearch);
     const refInput = useRef();
-    console.log(listKeywordSearch)
+    console.log(listKeywordSearch);
     const [loadingApi, setLoadingApi] = useState(false);
 
     const labels = [
-        'Bàn Ủi',
-        'Bình đung siêu tốc',
-        'Lò vi sống',
-        'Máy hút bụi',
-        'Máy lọc không khí',
-        'Nồi cơm điện',
-        'Quạt',
+        { name: 'Bàn Ủi', id: 1993 },
+        { name: 'Bình đung siêu tốc', id: 1931 },
+        { name: 'Nồi cơm điện', id: 1893 },
+        { name: 'Lò vi sống', id: 2022 },
+        { name: 'Máy hút bụi', id: 2009 },
+        { name: 'Máy lọc không khí', id: 2010 },
+        { name: 'Quạt', id: 2001 },
     ];
 
     const handleOnChangeResultValue = (searchValue) => {
@@ -102,10 +107,13 @@ const SearchBox = () => {
             if (data && data.class) {
                 let label = labels[data.class];
                 if (label) {
-                    await dispatch(searchAllProductApi({ keyword: label, page: 1, limit: 8 }));
-                    await dispatch(saveKeywordSearch(label));
+                    await dispatch(
+                        searchAllProductApi({ categoryId: label.id, keyword: label.name, page: 1, limit: 8 }),
+                    );
+                    await dispatch(saveKeywordSearch(label.name));
+                    await dispatch(saveCategoryIdToSearch(label.id));
                     navigate('/search');
-                    console.log(label)
+                    console.log(label);
                 }
             }
         } catch (error) {

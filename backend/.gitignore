@@ -1,5 +1,6 @@
 /node_modules
 myenv/
+venv/
 /vendor
 \.idea
 .idea/

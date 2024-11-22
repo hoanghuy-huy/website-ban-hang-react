@@ -26,6 +26,7 @@ const SearchPage = () => {
         starNumberCheckBoxValue,
         minPriceRedux,
         maxPriceRedux,
+        categoryIdToSearch,
     } = useSelector((state) => state.products);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(8);
@@ -48,15 +49,17 @@ const SearchPage = () => {
                 brand: listBrandToFilter,
             }),
         );
-    }, [
-        currentPage,
-        sortValue,
-        starNumberCheckBoxValue,
-        minPriceRedux,
-        maxPriceRedux,
-        brandValueToFilter,
-    ]);
-
+    }, [currentPage, sortValue, starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter]);
+    useEffect(() => {
+        dispatch(
+            searchAllProductApi({
+                keyword: keyword,
+                page: currentPage,
+                limit: limit,
+                categoryId: categoryIdToSearch,
+            }),
+        );
+    }, []);
     if (loading === true && error === false) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>

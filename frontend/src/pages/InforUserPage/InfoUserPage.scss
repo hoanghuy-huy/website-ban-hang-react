@@ -1,0 +1,24 @@
+.info-user-page {
+    background-color: #fff;
+    min-height: 80vh;
+    .information-account-user {
+        .info-vertical.col-1 {
+            width: 0.333333% !important;
+        }
+        .form-info {
+            .message {
+                position: absolute;
+                top: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 11px;
+            }
+            .error {
+                color: rgb(255, 66, 78);
+            }
+            .input-error {
+                border-color: rgb(255, 66, 78) !important;
+            }
+        }
+    }
+}

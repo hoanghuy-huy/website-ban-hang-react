@@ -58,6 +58,11 @@ class authService {
           EM: "Mật khẩu phải lớn hơn 3 kí tự",
           EC: 1,
         };
+      } else if (!/[a-zA-Z]/.test(rawData.password)) {
+        return {
+          EM: "Mật khẩu phải chứa ít nhất một ký tự",
+          EC: 1,
+        };
       }
       // hash password
       let hashPass = this.hashPassword(rawData.password);
@@ -65,9 +70,11 @@ class authService {
       let defaultGroupUser = await db.Group.findOne({
         where: { name: "customer" },
       });
-
+      console.log(rawData)
       // Create new user
       await db.User.create({
+        username: rawData.username,
+        phone: rawData.phone,
         email: rawData.email,
         password: hashPass,
         groupId: defaultGroupUser.id,

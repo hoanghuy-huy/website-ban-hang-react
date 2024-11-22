@@ -1,11 +1,21 @@
 .action-user {
     padding: 8px 16px;
     cursor: pointer;
+    div {
+        width: 100px;
+        display: inline-block; /* Hoặc flex nếu muốn */
+        white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
+        overflow: hidden; /* Ẩn phần văn bản vượt ra ngoài */
+        text-overflow: ellipsis; /* Hiển thị dấu ba chấm */
+    }
+
+    span {
+        display: block;
+    }
     &:hover {
         background-color: #f4f1f1;
         border-radius: 8px;
     }
-    
 }
 
 .account-menu {

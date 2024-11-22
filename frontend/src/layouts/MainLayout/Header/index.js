@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,10 +15,11 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import './Header.scss';
 import { Badge } from '@mui/material';
 import ImageClassifier from '~/components/ImageClassifier';
+import { getOneUserApi } from '~/redux/features/userSlice';
 const Header = () => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);
-    
+
     const handleShowLoginForm = () => {
         dispatch(showLoginForm('cart'));
     };

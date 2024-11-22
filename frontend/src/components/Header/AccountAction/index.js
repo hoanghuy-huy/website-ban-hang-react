@@ -10,7 +10,7 @@ import './AccountAction.scss';
 import { Link } from 'react-router-dom';
 const AccountActions = (props) => {
     const dispatch = useDispatch();
-    const auth = useSelector((state) => state.account.auth);
+    const auth = useSelector((state) => state.account.auth)
 
     return (
         <>

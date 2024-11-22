@@ -7,6 +7,7 @@ import { Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import './LayoutAccount.scss';
 import { ROLE_MANAGER } from '~/utils/constants';
+import PersonIcon from '@mui/icons-material/Person';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 const LayoutAccount = ({ children }) => {
     const role = useSelector((state) => state.account.account.userGroup);
@@ -71,6 +72,32 @@ const LayoutAccount = ({ children }) => {
                                             </>
                                         ) : (
                                             <>
+                                                <NavLink to={'/account/info'}>
+                                                    <li
+                                                        className="item-account gap-3"
+                                                        style={{
+                                                            height: 38,
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            paddingLeft: 15,
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <PersonIcon
+                                                                sx={{
+                                                                    height: 20,
+                                                                    width: 20,
+                                                                    color: 'rgb(155, 155, 155)',
+                                                                }}
+                                                                icon={faUser}
+                                                            />
+                                                        </div>
+                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>
+                                                            Thông tin người dùng
+                                                        </div>
+                                                    </li>
+                                                </NavLink>
                                                 <NavLink to={'/account/order'}>
                                                     <li
                                                         className="item-account gap-3"

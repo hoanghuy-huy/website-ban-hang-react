@@ -11,11 +11,25 @@ import { apiGetAllGroup } from '~/services/groupApiService';
 
 import './AccountAction.scss';
 import { ROLE_MANAGER } from '~/utils/constants';
+import { apiGetOneUser } from '~/services/userService';
 const AccountActions = (props) => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.account.auth);
     const role = useSelector((state) => state.account.account.userGroup);
+    const userId = useSelector((state) => state.account.account.userId);
+    const infoUser = useSelector((state) => state.user.infoUser);
+    const [dataUser, setDataUser] = useState();
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await apiGetOneUser(userId);
+            if (res && res.EC === 0) {
+                setDataUser(res.DT);
+            }
+        };
 
+        fetchData();
+        console.log(dataUser);
+    }, []);
     return (
         <>
             {auth ? (
@@ -64,7 +78,7 @@ const AccountActions = (props) => {
                             <div onClick={() => dispatch(showLoginForm())}>
                                 <FontAwesomeIcon className="icon user pe-1" icon={faUser} />
                                 <span title="account" className="d-none d-xxl-inline">
-                                    Xin Chào
+                                    {'Tài Khoản'}
                                 </span>
                             </div>
                         </div>

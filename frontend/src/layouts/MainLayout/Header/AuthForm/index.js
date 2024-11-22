@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { useState } from 'react';
 import Button from '~/components/Button/Button';
 import { faX } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { loginAccount, registerApi, showLoginForm } from '~/redux/features/accountSlice';
-import './AuthForm.scss';
 import { toast } from 'react-toastify';
+import RegisterForm from '../RegisterForm';
+import './AuthForm.scss';
 
 const AuthForm = () => {
     const REGISTER_FORM = 'register';
 
     const [valueLogin, setValueLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [form, setFrom] = useState(null);
+    const [form, setForm] = useState(null);
     const { showLogin, auth } = useSelector((state) => state.account);
     const dispatch = useDispatch();
 
@@ -24,11 +25,9 @@ const AuthForm = () => {
             toast.error('Vui lòng không để trống');
             return;
         }
-        const check = await dispatch(loginAccount({ valueLogin, password }));
-        if (check) {
-            setValueLogin(null);
-            setPassword(null);
-        }
+
+        await dispatch(loginAccount({ valueLogin, password }));
+       
     };
 
     const handleRegister = async () => {
@@ -37,18 +36,20 @@ const AuthForm = () => {
             return;
         }
         await dispatch(registerApi({ email: valueLogin, password: password }));
-
     };
+
     useEffect(() => {
         setValueLogin('');
         setPassword('');
-        setFrom(null)
+        setForm(null);
     }, []);
+
     useEffect(() => {
         setValueLogin('');
         setPassword('');
-        setFrom(null)
+        setForm(null);
     }, [showLogin]);
+
     return (
         <>
             {!auth && (
@@ -64,41 +65,42 @@ const AuthForm = () => {
                                         <p>Đăng nhập tài khoản của bạn</p>
                                     )}
                                 </div>
-                                <div className="input mb-3">
-                                    <input
-                                        placeholder="Nhập email của bạn"
-                                        value={valueLogin}
-                                        onChange={(e) => setValueLogin(e.target.value)}
-                                    />
-                                </div>
-                                <div className="input">
-                                    <input
-                                        type="password"
-                                        placeholder="Nhập password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <div className="btn-continue">
-                                    {form === REGISTER_FORM ? (
-                                        <Button success onClick={handleRegister}>
-                                            Đăng ký
-                                        </Button>
-                                    ) : (
-                                        <Button primary onClick={handleLogin}>
-                                            Đăng nhập
-                                        </Button>
-                                    )}
-                                </div>
+                                {form === REGISTER_FORM ? (
+                                    <RegisterForm  setForm={setForm}/>
+                                ) : (
+                                    <>
+                                        <div className="input mb-3">
+                                            <input
+                                                placeholder="Nhập email của bạn"
+                                                value={valueLogin}
+                                                onChange={(e) => setValueLogin(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="input">
+                                            <input
+                                                type="password"
+                                                placeholder="Nhập password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="btn-continue">
+                                            <Button primary onClick={handleLogin}>
+                                                Đăng nhập
+                                            </Button>
+                                        </div>
+                                    </>
+                                )}
+
                                 <div className="actions">
                                     {form !== REGISTER_FORM ? (
                                         <p>
                                             Bạn chưa có tài khoản ?{' '}
-                                            <span onClick={() => setFrom(REGISTER_FORM)}> Đăng kí</span>{' '}
+                                            <span onClick={() => setForm(REGISTER_FORM)}> Đăng kí</span>{' '}
                                         </p>
                                     ) : (
                                         <p>
-                                            Bạn đã có tài khoản ? <span onClick={() => setFrom(null)}> Đăng nhập</span>{' '}
+                                            Bạn đã có tài khoản ? <span onClick={() => setForm(null)}> Đăng nhập</span>{' '}
                                         </p>
                                     )}
                                 </div>

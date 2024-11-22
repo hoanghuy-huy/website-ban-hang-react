@@ -1,0 +1,64 @@
+.edit-phone-page {
+    .title {
+        font-size: 20px;
+        line-height: 32px;
+        font-weight: 300;
+        margin: 4px 0px 12px;
+    }
+    .content {
+        background-color: rgb(255, 255, 255);
+        padding: 30px 20px;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        border-radius: 8px;
+        .form {
+            width: 400px;
+            padding: 16px;
+            border: 1px solid rgb(235, 235, 240);
+            box-sizing: border-box;
+            border-radius: 4px;
+            .form-control {
+                display: flex;
+                flex-direction: column;
+                .input {
+                    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+                        -webkit-box-shadow 0.15s ease-in-out;
+                    height: 36px;
+                    width: 100%;
+                    border-radius: 4px;
+                    padding: 10px 12px;
+                    line-height: 20px;
+                    outline: none;
+                    flex: 1 1 0%;
+                    border: 1px solid rgb(196, 196, 207);
+                    margin-top: 2px;
+                }
+                .icon-left {
+                    position: absolute;
+                    left: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 24px;
+                }
+
+                input.with-icon-left {
+                    padding-left: 40px;
+                }
+
+                .hint-message {
+                    color: rgb(56, 56, 61);
+                    font-size: 11px;
+                    top: 40px;
+                }
+
+                .btn,button {
+                    margin-top: 2px;
+                    width: 100% !important;
+                    background-color: var(--primary-color) !important;
+                    color: white !important;
+                }
+            }
+        }
+    }
+}

@@ -225,6 +225,7 @@ class userApiService {
       if (user) {
         await user.update({
           username: data.username,
+          fullname: data.fullname,
           address: data.address,
           gender: +data.gender,
           groupId: +data.groupId,

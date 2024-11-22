@@ -29,6 +29,8 @@ import ProductAdminPage from '~/pages/ProductAdminPage/index.';
 import ReturnOrderPage from '~/pages/ReturnOrderPage';
 import SearchPage from '~/pages/SearchPage';
 import PageTest from '~/pages/PageTest';
+import InfoUserPage from '~/pages/InforUserPage';
+import EditPhonePage from '~/pages/EditPhonePage';
 
 
 //Public Routes
@@ -51,6 +53,8 @@ const privateRoutes = [
     // { path: routes.role, component: RoleUser, layout: AdminLayout },
     // { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
     // { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    { path: '/account/info/edit-phone', component: EditPhonePage, layout: LayoutAccount },
+    { path: '/account/info', component: InfoUserPage, layout: LayoutAccount },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },
     { path: '/account/order/order-detail/:orderId', component: OrderDetailPage, layout: LayoutAccount },
     { path: '/account/return-order', component: ReturnOrderPage, layout: LayoutAccount },
