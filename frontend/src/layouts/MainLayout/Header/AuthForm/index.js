@@ -53,7 +53,7 @@ const AuthForm = () => {
     return (
         <>
             {!auth && (
-                <Modal centered show={showLogin} animation={true} onHide={() => dispatch(showLoginForm())}>
+                <Modal centered show={showLogin} animation={true} >
                     <div className="container-modal-account d-flex">
                         <div className="modal-account-left">
                             <div className="modal-account-left__loginStyled">

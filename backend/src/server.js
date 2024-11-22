@@ -6,10 +6,10 @@ import configCors from "./config/configCors";
 import initApiRoutes from "./routes/index";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
-require("dotenv").config();
+  require("dotenv").config();
 
 const app = express();
+
 
 // config app
 app.use(bodyParser.json());
@@ -29,6 +29,8 @@ connectDB();
 app.use(cors({ origin: true }));
 
 let port = process.env.PORT || 5000;
+
+
 
 // init api routes
 initApiRoutes(app);

@@ -59,9 +59,14 @@ const AccountActions = (props) => {
                                                 </Link>
                                             </>
                                         ) : (
-                                            <Link to={'/account/order'}>
-                                                <div className="account-menu__item py-1">Đơn hàng của tôi</div>
-                                            </Link>
+                                            <>
+                                                <Link to={'/account/info'}>
+                                                    <div className="account-menu__item py-1">Thông tin tài khoản</div>
+                                                </Link>
+                                                <Link to={'/account/order'}>
+                                                    <div className="account-menu__item py-1">Đơn hàng của tôi</div>
+                                                </Link>
+                                            </>
                                         )}
                                         <div
                                             className="account-menu__item py-1"

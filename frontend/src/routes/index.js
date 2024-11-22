@@ -31,6 +31,8 @@ import SearchPage from '~/pages/SearchPage';
 import PageTest from '~/pages/PageTest';
 import InfoUserPage from '~/pages/InforUserPage';
 import EditPhonePage from '~/pages/EditPhonePage';
+import EditEmailPage from '~/pages/EditEmailPage';
+import EditPasswordPage from '~/pages/EditPasswordPage';
 
 
 //Public Routes
@@ -53,6 +55,8 @@ const privateRoutes = [
     // { path: routes.role, component: RoleUser, layout: AdminLayout },
     // { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
     // { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    { path: '/account/info/edit-password', component: EditPasswordPage, layout: LayoutAccount },
+    { path: '/account/info/edit-email', component: EditEmailPage, layout: LayoutAccount },
     { path: '/account/info/edit-phone', component: EditPhonePage, layout: LayoutAccount },
     { path: '/account/info', component: InfoUserPage, layout: LayoutAccount },
     { path: '/account/order', component: OrderPage, layout: LayoutAccount },

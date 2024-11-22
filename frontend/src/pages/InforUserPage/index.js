@@ -49,7 +49,12 @@ const InfoUserPage = () => {
     const fetchData = async () => {
         const res = await apiGetOneUser(userId);
         if (res && res.EC === 0) {
-            setDataUser(res.DT);
+            setDataUser({
+                id: res.DT.id,
+                fullname: res.DT.fullname,
+                gender: res.DT.gender,
+                username: res.DT.username,
+            });
         }
     };
     useEffect(() => {
@@ -307,7 +312,7 @@ const InfoUserPage = () => {
                                 </div>
 
                                 <div className="info-item__actions">
-                                    <Button outline small>
+                                    <Button outline small to={'/account/info/edit-phone'}>
                                         Cập nhật
                                     </Button>
                                 </div>
@@ -345,7 +350,7 @@ const InfoUserPage = () => {
                                 </div>
 
                                 <div className="info-item__actions">
-                                    <Button outline small>
+                                    <Button outline small to={'/account/info/edit-email'}>
                                         Cập nhật
                                     </Button>
                                 </div>
@@ -383,7 +388,7 @@ const InfoUserPage = () => {
                                 </div>
 
                                 <div className="info-item__actions">
-                                    <Button outline small>
+                                    <Button outline small to={'/account/info/edit-password'}>
                                         Cập nhật
                                     </Button>
                                 </div>

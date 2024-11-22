@@ -1,5 +1,6 @@
 import db from "../models/index";
 import bcrypt from "bcrypt";
+import { Op } from "sequelize";
 
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -220,12 +221,65 @@ class userApiService {
       let user = await db.User.findOne({
         where: { id: data.id },
       });
-      console.log(data);
 
       if (user) {
+        if (data.phone) {
+          const existingUserWithPhone = await db.User.findOne({
+            where: { phone: data.phone, id: { [Op.ne]: data.id } },
+          });
+
+          if (existingUserWithPhone) {
+            return {
+              EM: "Số điện thoại đã được sử dụng bởi người dùng khác.",
+              EC: 1,
+              DT: "",
+            };
+          }
+        }
+
+        if (data.email) {
+          const existingUserWithEmail = await db.User.findOne({
+            where: { email: data.email, id: { [Op.ne]: data.id } },
+          });
+
+          if (existingUserWithEmail) {
+            return {
+              EM: "Email đã được sử dụng bởi người dùng khác.",
+              EC: 1,
+              DT: "",
+            };
+          }
+        }
+
+        if (data.currentPassword) {
+          let check = this.comparePassword(data.currentPassword, user.password);
+          let hashPass = this.hashPassword(data.newPassword);
+
+          if (!check) {
+            return {
+              EM: "Mật không trùng khớp với mật khẩu cũ.",
+              EC: 1,
+              DT: "",
+            };
+          } else {
+            await user.update({
+              password: hashPass,
+            });
+
+            return {
+              EM: "Update pass Success",
+              EC: 0,
+              DT: user,
+            };
+          }
+        }
+
+        // Nếu không có trùng lặp, thực hiện cập nhật
         await user.update({
           username: data.username,
           fullname: data.fullname,
+          phone: data.phone,
+          email: data.email,
           address: data.address,
           gender: +data.gender,
           groupId: +data.groupId,
@@ -245,7 +299,7 @@ class userApiService {
     } catch (error) {
       console.log(error);
       return {
-        EM: " Something wrong in service",
+        EM: "Something wrong in service",
         EC: 2,
       };
     }
