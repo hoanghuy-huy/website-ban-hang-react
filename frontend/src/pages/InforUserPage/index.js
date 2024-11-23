@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 import { getOneUserApi } from '~/redux/features/userSlice';
 const InfoUserPage = () => {
-    const [dataUser, setDataUser] = useState([]);
+    const [dataUser, setDataUser] = useState();
     const infoUser = useSelector((state) => state.user.infoUser);
     const userId = useSelector((state) => state.account.account.userId);
     const [message, setMessage] = useState(false);
@@ -49,12 +49,7 @@ const InfoUserPage = () => {
     const fetchData = async () => {
         const res = await apiGetOneUser(userId);
         if (res && res.EC === 0) {
-            setDataUser({
-                id: res.DT.id,
-                fullname: res.DT.fullname,
-                gender: res.DT.gender,
-                username: res.DT.username,
-            });
+            setDataUser(res.DT);
         }
     };
     useEffect(() => {
@@ -230,7 +225,7 @@ const InfoUserPage = () => {
                                         value={true}
                                         type="radio"
                                         name="gender"
-                                        checked={dataUser.gender === true}
+                                        checked={dataUser?.gender === true}
                                     />
                                     <label className="form-check-label">Nam</label>
                                 </div>
@@ -241,7 +236,7 @@ const InfoUserPage = () => {
                                         value={false}
                                         type="radio"
                                         name="gender"
-                                        checked={dataUser.gender === false}
+                                        checked={dataUser?.gender === false}
                                     />
                                     <label className="form-check-label">Nữ</label>
                                 </div>

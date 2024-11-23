@@ -1,0 +1,52 @@
+.ImportProductPage {
+    .ImportProductPage-container {
+        .title {
+            font-size: 19px;
+            line-height: 21px;
+            font-weight: 300;
+            margin: 20px 0px 15px;
+        }
+        .content {
+            .selected-item {
+                padding: 10px 20px;
+                border-radius: 8px;
+            }
+            .row {
+                h4 {
+                    font-size: 20px;
+                }
+                margin: 0;
+                thead {
+                    border-color: rgba(255, 255, 255, 0.4) !important;
+                    font-size: 15px !important;
+                }
+                tbody {
+                    tr {
+                        td {
+                            .btn-action {
+                                button {
+                                    background-color: var(--primary-color) !important;
+                                    color: white !important;
+                                }
+                            }
+                        }
+                    }
+
+                    font-size: 13px;
+                    .info {
+                        h6 {
+                            overflow: hidden;
+                            font-size: 14px;
+                            font-weight: 500;
+                            margin-bottom: 5px;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            line-height: 18px;
+                            width: 200px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

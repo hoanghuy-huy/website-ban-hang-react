@@ -1,0 +1,93 @@
+$voucher-bg: #f9f9f9;
+$voucher-border-color: #ddd;
+$voucher-button-bg: #007bff;
+$voucher-button-hover-bg: #0056b3;
+$voucher-button-disabled-bg: #ccc;
+$voucher-button-disabled-color: #666;
+$voucher-discount-color: green;
+$voucher-condition-bg: #4caf50;
+$voucher-condition-color: white;
+$voucher-expiry-color: #666;
+
+.voucher {
+  border: 1px solid $voucher-border-color;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $voucher-bg;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 16px 0;
+  position: relative;
+
+  &.disabled {
+    opacity: 0.5; // Làm mờ voucher khi disabled
+    pointer-events: none; // Không cho phép tương tác
+  }
+
+  &.free-shipping {
+    background-color: #e8f5e9; // Nền cho voucher miễn phí vận chuyển
+  }
+
+  &-free-shipping {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background-color: #4caf50;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  &-content {
+    flex: 1;
+
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .voucher-discount {
+        font-size: 24px;
+        color: $voucher-discount-color;
+        font-weight: bold;
+      }
+
+      .voucher-condition {
+        background-color: $voucher-condition-bg;
+        color: $voucher-condition-color;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-right: 9px;
+      }
+    }
+
+    .voucher-expiry {
+      margin-top: 8px;
+      font-size: 12px;
+      color: $voucher-expiry-color;
+    }
+  }
+
+  &-button {
+    background-color: $voucher-button-bg;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $voucher-button-hover-bg;
+    }
+
+    &:disabled {
+      background-color: $voucher-button-disabled-bg;
+      color: $voucher-button-disabled-color;
+      cursor: not-allowed;
+    }
+  }
+}

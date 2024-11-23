@@ -30,12 +30,48 @@ import './CartPage.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import SnackbarComp from './Snackbar';
+import ModalVouCher from './ModalMouCher';
+import BackdropComp from '~/components/BackDropComp';
+import VoucherMini from './VoucherMini';
+
+const voucherList = [
+    {
+        discount: 'Giảm 15K',
+        condition: 'Cho đơn hàng từ 200K',
+        expiryDate: '24/11/2024',
+        disabled: false,
+        freeShipping: true,
+        discountValue: 15000,
+        conditionValue: 200000,
+    },
+    {
+        discount: 'Giảm 10%',
+        condition: 'Cho đơn hàng từ 1tr',
+        expiryDate: '30/11/2024',
+        disabled: true,
+        freeShipping: false,
+        discountValue: 0.1,
+        conditionValue: 1000000,
+    },
+    {
+        discount: 'Giảm 20K',
+        condition: 'Cho đơn hàng từ 300K',
+        expiryDate: '31/12/2024',
+        disabled: true,
+        freeShipping: false,
+        discountValue: 20000,
+        conditionValue: 300000,
+    },
+];
 const CartPage = () => {
     const { loading, error, cartList, showSnackBar } = useSelector((state) => state.cart);
     const { userId } = useSelector((state) => state.account.account);
     const [showModalError, setShowModalError] = useState(false);
+    const [showModalVoucher, SetShowModalVoucher] = useState(false);
+    const [voucherAfterFilter, setVoucherAfterFilter] = useState(voucherList);
+    const [appliedVoucher, setAppliedVoucher] = useState({});
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
-    
+    const [discountPrice, setDiscountPrice] = useState(0);
     const defaultValueAddress = {
         id: addressDefault ? addressDefault?.id : '',
         userId: userId,
@@ -87,13 +123,15 @@ const CartPage = () => {
         };
 
         fetchDataCity();
-        getAddressDefault(userId)
+        getAddressDefault(userId);
+        setAppliedVoucher(null);
+        console.log('re-rednder')
     }, []);
 
     const checkSelectedAll = () => {
         const checkAll = cartList
-        .filter((item) => item.Product.inventoryNumber > 0)
-        .every((item) => item?.selected === true);
+            .filter((item) => item.Product.inventoryNumber > 0)
+            .every((item) => item?.selected === true);
         return checkAll;
     };
 
@@ -102,10 +140,29 @@ const CartPage = () => {
             if (currentValue?.selected === true) {
                 return (total += currentValue?.quantity * currentValue?.Product?.price);
             }
+
             return total;
         }, 0);
-
         return totalPrice;
+    };
+
+    const handleCalculateFinalPrice = () => {
+        let tempPrice = handleCalculateTotalPrice();
+        let finalPrice = tempPrice;
+        if (appliedVoucher) {
+            if (appliedVoucher.discountValue > 0) {
+                if (Number.isInteger(appliedVoucher.discountValue)) {
+                    finalPrice = tempPrice - appliedVoucher.discountValue;
+                    setDiscountPrice(appliedVoucher.discountValue);
+                } else {
+                    const discountAmount = tempPrice * appliedVoucher.discountValue;
+                    setDiscountPrice(discountAmount);
+                    finalPrice = tempPrice - discountAmount;
+                }
+            }
+        }
+
+        return finalPrice; // Trả về giá cuối cùng
     };
 
     const quantityProductSelected = () => {
@@ -143,11 +200,10 @@ const CartPage = () => {
             toast.warn('Vui lòng nhập địa chỉ giao hàng');
             return;
         }
-        
+
         dispatch(handlePurchaseProduct(data));
         // let itemsToDelete = data.map((item) => item.id)
         // dispatch(deleteMultipleProductFormCartWithId({data : itemsToDelete, userId}))
-        
     };
 
     const handleValidInputAddress = () => {
@@ -187,9 +243,35 @@ const CartPage = () => {
         dispatch(handleHideModalAddress());
     };
 
+    const handleShowVoucher = () => {
+        let totalPrice = handleCalculateTotalPrice();
+        let updatedVouchers = voucherList.map((voucher) => {
+            if (totalPrice >= voucher.conditionValue) {
+                return {
+                    ...voucher,
+                    disabled: false,
+                };
+            } else {
+                return {
+                    ...voucher,
+                    disabled: true,
+                };
+            }
+        });
 
+        setVoucherAfterFilter(updatedVouchers);
+    };
+
+    useEffect(() => {
+        // handleShowVoucher();
+        // handleCalculateFinalPrice();
+    }, []);
     if (loading === true && error === false) {
-        return <div>loading...</div>;
+        return (
+            <div>
+                <BackdropComp />
+            </div>
+        );
     } else if (loading === false && error === true) {
         return <div>Something wrong with server!</div>;
     }
@@ -288,10 +370,28 @@ const CartPage = () => {
                                 </div>
 
                                 <div className="voucher-box">
-                                    <div className="voucher-box__header">
+                                    <div className="voucher-box__header d-flex justify-content-between">
                                         <div className="header__title"> Chọn voucher</div>
+                                        {appliedVoucher && (
+                                            <div
+                                                className="header__title-right"
+                                                onClick={() => SetShowModalVoucher(true)}
+                                            >
+                                                {' '}
+                                                Thay đổi
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="voucher-box__content">Chọn hoăc nhập mã khuyến mãi</div>
+                                    {appliedVoucher ? (
+                                        <VoucherMini
+                                            appliedVoucher={appliedVoucher}
+                                            setAppliedVoucher={setAppliedVoucher}
+                                        />
+                                    ) : (
+                                        <div className="voucher-box__content" onClick={() => SetShowModalVoucher(true)}>
+                                            Chọn mã khuyến mãi
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="buy-box">
                                     <ul className="buy-box__prices-items">
@@ -310,8 +410,14 @@ const CartPage = () => {
                                             <div className="price-total__prices-value">
                                                 {quantityProductSelected() === 0
                                                     ? 'Vui lòng chọn sản phẩm'
-                                                    : convertPrice(handleCalculateTotalPrice())}
+                                                    : convertPrice(handleCalculateFinalPrice())}
                                                 <br />
+                                                {appliedVoucher && discountPrice && (
+                                                    <div class="prices__value--saving">
+                                                        Tiết kiệm {discountPrice}
+                                                        <sup>₫</sup>
+                                                    </div>
+                                                )}
                                                 <span className="price-total__price-value-noted">
                                                     (Đã bao gồm VAT nếu có)
                                                 </span>
@@ -355,6 +461,15 @@ const CartPage = () => {
             />
 
             <SnackbarComp />
+            <ModalVouCher
+                setShow={SetShowModalVoucher}
+                show={showModalVoucher}
+                totalPrice={handleCalculateTotalPrice()}
+                voucherList={voucherList}
+                setAppliedVoucher={setAppliedVoucher}
+            />
+
+            {/* <BackdropComp loading={true}/> */}
         </>
     );
 };

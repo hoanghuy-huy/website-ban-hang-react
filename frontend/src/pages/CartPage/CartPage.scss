@@ -142,6 +142,7 @@
                         font-weight: normal;
                         margin: 0px;
                     }
+
                     .header__action {
                         color: var(--primary-color);
                         cursor: pointer;
@@ -204,6 +205,12 @@
                 margin-top: 16px;
 
                 padding: 20px 20px;
+                .header__title-right {
+                    color: var(--primary-color);
+                    font-weight: normal;
+                    margin: 0px;
+                    cursor: pointer;
+                }
                 .voucher-box__header {
                     margin-bottom: 12px;
                     .header__title {
@@ -267,6 +274,12 @@
                     .price-total__content {
                         text-align: right;
                         .price-total__prices-value {
+                           .prices__value--saving {
+                                color: rgb(0, 171, 86);
+                                font-size: 14px;
+                                line-height: 21px;
+                                min-width: max-content;
+                            }
                             color: rgb(254, 56, 52);
                             font-size: 15px;
                             font-weight: 400;

@@ -6,9 +6,11 @@ import { Link, NavLink } from 'react-router-dom';
 import { Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import './LayoutAccount.scss';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ROLE_MANAGER } from '~/utils/constants';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 const LayoutAccount = ({ children }) => {
     const role = useSelector((state) => state.account.account.userGroup);
 
@@ -145,6 +147,56 @@ const LayoutAccount = ({ children }) => {
                                                             />
                                                         </div>
                                                         <div style={{ color: 'rgb(74, 74, 74)' }}>Quản lý trả hàng</div>
+                                                    </li>
+                                                </NavLink>
+
+                                                <NavLink to={'/account/address'}>
+                                                    <li
+                                                        className="item-account gap-3"
+                                                        style={{
+                                                            height: 38,
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            paddingLeft: 15,
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <LocationOnIcon
+                                                                sx={{
+                                                                    height: 20,
+                                                                    width: 20,
+                                                                    color: 'rgb(155, 155, 155)',
+                                                                }}
+                                                                icon={faUser}
+                                                            />
+                                                        </div>
+                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>Số địa chỉ</div>
+                                                    </li>
+                                                </NavLink>
+
+                                                <NavLink to={'/import-product'}>
+                                                    <li
+                                                        className="item-account gap-3"
+                                                        style={{
+                                                            height: 38,
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            paddingLeft: 15,
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <AddCircleIcon
+                                                                sx={{
+                                                                    height: 20,
+                                                                    width: 20,
+                                                                    color: 'rgb(155, 155, 155)',
+                                                                }}
+                                                                icon={faUser}
+                                                            />
+                                                        </div>
+                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>Quản lý nhập hàng</div>
                                                     </li>
                                                 </NavLink>
                                             </>

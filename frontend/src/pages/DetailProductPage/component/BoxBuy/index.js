@@ -83,6 +83,7 @@ const BoxBuy = ({ item }) => {
     const handleBuyNowProduct = async (item) => {
         let productId = item.id;
         if (auth) {
+            console.log(addressDefault)
             if (!addressDefault) {
                 window.location.href = '/address';
                 return;

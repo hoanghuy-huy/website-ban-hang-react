@@ -8,7 +8,15 @@ import ProductPage from '~/pages/ProductPage';
 import DetailProductPage from '~/pages/DetailProductPage';
 
 //import layout
-import { LayoutAccount, LayoutCategoryProduct , LayoutCheckout, LayoutClientNoSidebar, LayoutNoHeader, LayoutSearchProduct, MainLayout } from '~/layouts';
+import {
+    LayoutAccount,
+    LayoutCategoryProduct,
+    LayoutCheckout,
+    LayoutClientNoSidebar,
+    LayoutNoHeader,
+    LayoutSearchProduct,
+    MainLayout,
+} from '~/layouts';
 
 //import config routes
 import routes from '~/config/routes';
@@ -26,6 +34,7 @@ import OrderPageAdmin from '~/pages/OrderPageAdmin';
 import AdminLayout from '~/layouts/AdminLayout';
 import DashBoardPage from '~/pages/DashBoardPage';
 import ProductAdminPage from '~/pages/ProductAdminPage/index.';
+import ImportProductPage from '~/pages/ImportProductPage';
 import ReturnOrderPage from '~/pages/ReturnOrderPage';
 import SearchPage from '~/pages/SearchPage';
 import PageTest from '~/pages/PageTest';
@@ -33,7 +42,7 @@ import InfoUserPage from '~/pages/InforUserPage';
 import EditPhonePage from '~/pages/EditPhonePage';
 import EditEmailPage from '~/pages/EditEmailPage';
 import EditPasswordPage from '~/pages/EditPasswordPage';
-
+import UserAddressPage from '~/pages/UserAddressPage';
 
 //Public Routes
 const publicRoutes = [
@@ -55,6 +64,8 @@ const privateRoutes = [
     // { path: routes.role, component: RoleUser, layout: AdminLayout },
     // { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
     // { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    { path: '/import-product', component: ImportProductPage, layout: LayoutAccount },
+    { path: '/account/address', component: UserAddressPage, layout: LayoutAccount },
     { path: '/account/info/edit-password', component: EditPasswordPage, layout: LayoutAccount },
     { path: '/account/info/edit-email', component: EditEmailPage, layout: LayoutAccount },
     { path: '/account/info/edit-phone', component: EditPhonePage, layout: LayoutAccount },
@@ -67,7 +78,6 @@ const privateRoutes = [
     { path: routes.paymentPage, component: PaymentPage, layout: LayoutCheckout },
     { path: routes.cartPage, component: CartPage, layout: LayoutClientNoSidebar },
 ];
-
 
 const adminRoutes = [
     { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },

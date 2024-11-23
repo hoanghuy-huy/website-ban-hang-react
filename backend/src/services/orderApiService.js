@@ -1,10 +1,25 @@
 import { Op } from "sequelize";
 import db from "../models/index";
-import emailService from "../services/emailService";
+import { sendEmailOrder } from "../services/emailService";
+import axios from "axios";
+const nodemailer = require("nodemailer");
+require("dotenv").config();
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true cho port 465
+  auth: {
+    user: "huynhhoanghuy221122@gmail.com", // Địa chỉ email của bạn
+    pass: "kmgd puxj mech fpmk", // Mật khẩu email của bạn
+  },
+});
+
 let createNewOrder = (rawData) => {
   return new Promise(async (resolve, reject) => {
     try {
       let { order, orderDetail, productList } = rawData;
+
       if (orderDetail && orderDetail.length < 1) {
         resolve({
           EM: "something wrong with data",
@@ -18,6 +33,7 @@ let createNewOrder = (rawData) => {
       let products = await db.Product.findAll({
         where: { id: productId },
       });
+      // console.log(products, order, orderDetail);
 
       const updateQuantities = products.map((product, index) => ({
         id: product.id,
@@ -60,6 +76,28 @@ let createNewOrder = (rawData) => {
           )
         );
 
+        // Gửi email thông báo
+        // const info = await transporter.sendMail({
+        //   from: '"Maddison Foo Koch 👻" huynhhoanghuy221122@gmail.com', // sender address
+        //   to: "huysieuzip@gmail.com", // list of receivers
+        //   subject: "Hello ✔", // Subject line
+        //   text: "Hello world?", // plain text body
+        //   html: "<b>Hello world?</b>", // html body
+        // });
+        // console.log(info);
+        // let productLists = productList.map((item) => {
+        //   return {
+        //     ...item,
+        //     productName: products.filter((product) => {
+        //       if (product.id === item.id) {
+        //         return product.name;
+        //       }
+        //     }),
+        //   };
+        // });
+        // console.log(productLists, productList);
+  
+
         resolve({
           EM: "ok! create order successfully",
           DT: dataOrder,
@@ -79,6 +117,154 @@ let createNewOrder = (rawData) => {
   });
 };
 
+// let createNewOrder = (rawData) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       let { order, orderDetail, productList } = rawData;
+
+//       // Kiểm tra dữ liệu đơn hàng
+//       if (!orderDetail || orderDetail.length < 1) {
+//         return resolve({
+//           EM: "Something wrong with data",
+//           DT: "",
+//           EC: 1,
+//         });
+//       }
+
+//       // Lấy danh sách ID sản phẩm và số lượng
+//       let productId = productList.map((item) => item.productId);
+//       let productQuantity = productList.map((item) => item.quantity);
+
+//       // Tìm các sản phẩm trong cơ sở dữ liệu
+//       let products = await db.Product.findAll({
+//         where: { id: productId },
+//       });
+
+//       // Cập nhật số lượng tồn kho
+//       const updateQuantities = products.map((product, index) => ({
+//         id: product.id,
+//         newInventory: product.inventoryNumber - productQuantity[index],
+//       }));
+
+//       // Tạo đơn hàng mới
+//       const dataOrder = await db.Order.create(order);
+
+//       if (dataOrder) {
+//         // Tạo chi tiết đơn hàng
+//         const buildDataOrderDetail = orderDetail.map((item) => ({
+//           orderId: dataOrder.id,
+//           totalPrice: item.quantity * item.price,
+//           ...item,
+//         }));
+
+//         const dataOrderDetail = await db.OrderDetail.bulkCreate(
+//           buildDataOrderDetail
+//         );
+
+//         // Kiểm tra nếu dữ liệu chi tiết đơn hàng không được tạo thành công
+//         if (!dataOrderDetail) {
+//           await db.Order.destroy({ where: { id: dataOrder.id } });
+//           return resolve({
+//             EM: "Something wrong with data order detail",
+//             DT: "",
+//             EC: 1,
+//           });
+//         }
+
+//         // Cập nhật số lượng sản phẩm trong kho
+//         await Promise.all(
+//           updateQuantities.map(({ id, newInventory }) =>
+//             db.Product.update(
+//               { inventoryNumber: newInventory },
+//               { where: { id } }
+//             )
+//           )
+//         );
+
+//         // Tạo nội dung email
+//         const emailContent = generateEmailContent(dataOrder, orderDetail);
+
+//         // Gửi email thông báo
+//         const email = await sendEmailOrder(
+//           "huynhhoanghuy221122@gmail.com",
+//           emailContent.subject,
+//           emailContent.text,
+//           emailContent.html
+//         );
+
+//         console.log(email)
+//         if (email) {
+//           return resolve({
+//             EM: "Ok! Create order successfully",
+//             DT: [],
+//             EC: 0,
+//           });
+//         }
+//       }
+
+//       resolve({
+//         EM: "Something wrong with data order",
+//         DT: "",
+//         EC: 1,
+//       });
+//     } catch (error) {
+//       console.log(error);
+//       reject({
+//         EM: "An e rror occurred while creating the order",
+//         EC: 500,
+//       });
+//     }
+//   });
+// };
+
+// Hàm tạo nội dung email
+const generateEmailContent = (dataOrder, orderDetail) => {
+  const orderDetailsList = orderDetail
+    .map(
+      (item) => `
+    <li>
+      Tên sản phẩm: ${item.productName} - Số lượng: ${item.quantity} - Giá: ${item.price} VND
+    </li>
+  `
+    )
+    .join("");
+
+  return {
+    subject: "Đặt hàng thành công",
+    text: `
+      Cảm ơn bạn đã đặt hàng!
+      Mã đơn hàng của bạn là: ${dataOrder.id}
+      Ngày đặt hàng: ${new Date().toLocaleDateString("vi-VN")}
+      Chi tiết sản phẩm:
+      ${orderDetail
+        .map(
+          (item) =>
+            `- Tên sản phẩm: ${item.productName} - Số lượng: ${item.quantity} - Giá: ${item.price} VND`
+        )
+        .join("\n")}
+      Tổng tiền: ${dataOrder.totalPrice} VND
+      Chúng tôi sẽ gửi thông tin giao hàng đến bạn trong thời gian sớm nhất.
+      Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi qua email này.
+    `,
+    html: `
+      <div style="font-family: Arial, sans-serif;">
+        <h1>Cảm ơn bạn đã đặt hàng!</h1>
+        <p><strong>Mã đơn hàng:</strong> ${dataOrder.id}</p>
+        <p><strong>Ngày đặt hàng:</strong> ${new Date().toLocaleDateString(
+          "vi-VN"
+        )}</p>
+        <h3>Chi tiết sản phẩm:</h3>
+        <ul>
+          ${orderDetailsList}
+        </ul>
+        <p><strong>Tổng tiền:</strong> ${dataOrder.totalPrice} VND</p>
+        <p>Chúng tôi sẽ gửi thông tin giao hàng đến bạn trong thời gian sớm nhất.</p>
+        <p>Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi qua email này.</p>
+        <p>Trân trọng,<br>Đội ngũ hỗ trợ khách hàng<br>Công ty của bạn</p>
+      </div>
+    `,
+  };
+};
 let handleGetAllOrderWithUserIdPagination = ({
   limit,
   page,
@@ -583,7 +769,7 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
             status: 1,
           });
         });
-        
+
         orderDetail.map(async (order) => {
           await db.Product.update(
             {
@@ -595,7 +781,7 @@ let handleCustomerConfirmFunc = ({ orderId }) => {
               where: { id: order.productId },
             }
           );
-        })
+        });
         await Promise.all(updatePromises);
       }
 
@@ -705,8 +891,12 @@ let handleCustomerReturnOrderFunc = ({
       );
       await db.Product.update(
         {
-          inventoryNumber: db.sequelize.literal(`inventoryNumber + ${productQuantity}`),
-          quantitySold: db.sequelize.literal(`quantitySold - ${productQuantity}`),
+          inventoryNumber: db.sequelize.literal(
+            `inventoryNumber + ${productQuantity}`
+          ),
+          quantitySold: db.sequelize.literal(
+            `quantitySold - ${productQuantity}`
+          ),
         },
         { where: { id: productId } }
       );
@@ -993,11 +1183,14 @@ let handleCustomerReviewProductFunc = (data) => {
         attributes: ["starNumber"],
       });
 
-      let totalStars = ratings.reduce((acc, rating) => acc + rating.starNumber, 0);
+      let totalStars = ratings.reduce(
+        (acc, rating) => acc + rating.starNumber,
+        0
+      );
       let totalCount = ratings.length;
 
       totalStars += data.starNumber;
-      totalCount += 1; 
+      totalCount += 1;
 
       const averageRating = totalStars / totalCount;
       const roundedAverageRating = Math.round(averageRating);

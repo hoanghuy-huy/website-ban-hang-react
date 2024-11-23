@@ -1,0 +1,65 @@
+$voucher-mini-bg-color: #e7f1ff;
+$voucher-mini-border-color: #a3c1ff;
+$voucher-mini-button-color: #007bff;
+$voucher-mini-button-hover-color: #0056b3;
+$voucher-mini-text-color: #333;
+
+.voucher-mini {
+    display: flex;
+    align-items: center;
+    background-color: $voucher-mini-bg-color;
+    border: 1px solid $voucher-mini-border-color;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    &-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
+
+    &-mini-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    &-mini-discount {
+        font-weight: bold;
+        font-size: 18px;
+        color: $voucher-mini-text-color;
+    }
+
+    &-mini-amount {
+        font-size: 14px;
+        color: $voucher-mini-text-color;
+        margin-top: 2px;
+    }
+
+    &-button {
+        background-color: $voucher-mini-button-color;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: $voucher-mini-button-hover-color;
+        }
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+}

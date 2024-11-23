@@ -16,6 +16,7 @@ import './PaymentPage.scss';
 import { createNewOrderApi } from '~/redux/features/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const PaymentPage = () => {
     const navigate = useNavigate();
@@ -42,7 +43,6 @@ const PaymentPage = () => {
     const [methodPayment, setMethodPayment] = useState(cash);
     const [sdkReady, setSdkReady] = useState(false);
     const dispatch = useDispatch();
-    console.log(itemsToOrder);
     const handleOnChangeInput = (value, item) => {
         setMethodDelivery(item);
     };
@@ -133,13 +133,38 @@ const PaymentPage = () => {
         const productList = itemsToOrder.map((product) => {
             return {
                 productId: product.productId,
+                productName: product.Product.name,
+                price: product.Product.price,
                 quantity: product.quantity,
             };
         });
+        const buildDataToSendEmail = {
+            productList: productList,
+            totalPrice: totalPriceToOrder(),
+            methodPayment: methodPayment,
+            methodDelivery: methodDelivery.name,
+            recipientName: order.recipientName,
+            address: order.address,
+            phone: order.phone,
+            userId: userId,
+            deliveryMethodFee: order.deliveryMethodFee,
+        };
+        console.log(buildDataToSendEmail);
+        await dispatch(
+            createNewOrderApi({
+                order,
+                orderDetail,
+                cartId,
+                userId: userId,
+                productList: productList,
+                buildDataToSendEmail,
+            }),
+        );
 
-        await dispatch(createNewOrderApi({ order, orderDetail, cartId, userId: userId, productList: productList }));
-
-        navigate('/payment/success');
+        await axios.post('http://localhost:3000/api/v1/sendEmail', {
+            dataToSendEmail: buildDataToSendEmail,
+            userId:userId
+        });
     };
 
     return (

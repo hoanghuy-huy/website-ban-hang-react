@@ -6,7 +6,14 @@ import { deleteMultipleProductFormCartWithId, fetchAllCart } from '../cartSlice'
 export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', async (data, thunkAPI) => {
     const res = await httpRequest.post(`order/create`, data);
     if (res && res.EC === 0) {
-        await thunkAPI.dispatch(deleteMultipleProductFormCartWithId({ data: data.cartId, userId: data.userId }));
+        await thunkAPI.dispatch(
+            deleteMultipleProductFormCartWithId({
+                data: data.cartId,
+                userId: data.userId,
+                buildDataToSendEmail: data.buildDataToSendEmail,
+            }),
+        );
+        window.location.href = '/payment/success';
     } else {
         toast.error('Xảy ra lỗi vui lòng thử lại');
     }
@@ -175,7 +182,6 @@ export const getMonthlyProductSoldApi = createAsyncThunk('order/getMonthlyProduc
     return res ? res.DT : {};
 });
 
-
 export const customerReviewProductApi = createAsyncThunk('order/customerReviewProductApi', async (data) => {
     const res = await httpRequest.post(`order/customer-review-product`, data);
 
@@ -186,9 +192,9 @@ export const orderSlice = createSlice({
     initialState: {
         loading: false,
         error: false,
-        totalRevenueMonthly:null,
-        totalProductsReturnMonthly:null,
-        totalProductsSoldMonthly:null,
+        totalRevenueMonthly: null,
+        totalProductsReturnMonthly: null,
+        totalProductsSoldMonthly: null,
         totalPrice: null,
         totalOrderSold: null,
         totalOrderReturn: null,
@@ -481,7 +487,7 @@ export const orderSlice = createSlice({
             .addCase(customerReviewProductApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            })
+            });
     },
 });
 
