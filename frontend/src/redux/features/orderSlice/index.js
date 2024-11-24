@@ -187,6 +187,12 @@ export const customerReviewProductApi = createAsyncThunk('order/customerReviewPr
 
     return res ? res.DT : {};
 });
+
+export const getListOrderToReview = createAsyncThunk('order/getListOrderToReview', async ({ userId }) => {
+    const res = await httpRequest.get(`order/get-list-order-to-review?userId=${userId}`);
+
+    return res ? res.DT : {};
+});
 export const orderSlice = createSlice({
     name: 'order',
     initialState: {
@@ -195,6 +201,7 @@ export const orderSlice = createSlice({
         totalRevenueMonthly: null,
         totalProductsReturnMonthly: null,
         totalProductsSoldMonthly: null,
+        listOrderToReview: [],
         totalPrice: null,
         totalOrderSold: null,
         totalOrderReturn: null,
@@ -485,6 +492,20 @@ export const orderSlice = createSlice({
                 state.error = false;
             })
             .addCase(customerReviewProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(getListOrderToReview.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getListOrderToReview.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listOrderToReview = action.payload;
+            })
+            .addCase(getListOrderToReview.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             });

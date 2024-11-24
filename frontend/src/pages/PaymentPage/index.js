@@ -17,8 +17,45 @@ import { createNewOrderApi } from '~/redux/features/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
+import VoucherMini from '../CartPage/VoucherMini';
+import ModalVouCher from '../CartPage/ModalMouCher';
+import { handleSelectedVoucher } from '~/redux/features/voucherSlice';
+import BackdropComp from '~/components/BackDropComp';
+// const voucherList = [
+//     {
+//         id: 1,
+//         discount: 'Giảm 15K',
+//         condition: 'Cho đơn hàng từ 200K',
+//         expiryDate: '24/11/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 15000,
+//         conditionValue: 200000,
+//     },
+//     {
+//         id: 2,
+//         discount: 'Giảm 10%',
+//         condition: 'Cho đơn hàng từ 1tr',
+//         expiryDate: '30/11/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 0.1,
+//         conditionValue: 1000000,
+//     },
+//     {
+//         id: 3,
+//         discount: 'Giảm 20K',
+//         condition: 'Cho đơn hàng từ 300K',
+//         expiryDate: '31/12/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 20000,
+//         conditionValue: 300000,
+//     },
+// ];
 const PaymentPage = () => {
+    const { vouchers } = useSelector((state) => state.voucher.voucherList);
+    const loading = useSelector((state) => state.order.loading);
     const navigate = useNavigate();
     const listMethodDelivery = [
         {
@@ -34,7 +71,10 @@ const PaymentPage = () => {
             feeDelivery: 20000,
         },
     ];
+    const dispatch = useDispatch();
 
+    const [showModalVoucher, SetShowModalVoucher] = useState(false);
+    const [voucherAfterFilter, setVoucherAfterFilter] = useState(vouchers);
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
     const cash = 'cash';
     const { userId } = useSelector((state) => state.account.account);
@@ -42,7 +82,10 @@ const PaymentPage = () => {
     const [methodDelivery, setMethodDelivery] = useState(listMethodDelivery[0]);
     const [methodPayment, setMethodPayment] = useState(cash);
     const [sdkReady, setSdkReady] = useState(false);
-    const dispatch = useDispatch();
+    const appliedVoucher = useSelector((state) => state.voucher.appliedVoucher);
+
+    let discountAmount;
+
     const handleOnChangeInput = (value, item) => {
         setMethodDelivery(item);
     };
@@ -60,6 +103,23 @@ const PaymentPage = () => {
             return (total += currentValue.Product.price * currentValue.quantity);
         }, 0);
 
+        let tempPrice = totalPrice;
+        let finalPrice = tempPrice;
+
+        if (appliedVoucher && appliedVoucher.disabled === false) {
+            if (appliedVoucher.discountValue > 0) {
+                if (Number.isInteger(appliedVoucher.discountValue)) {
+                    finalPrice = tempPrice - appliedVoucher.discountValue;
+                    discountAmount = appliedVoucher.discountValue;
+                } else {
+                    discountAmount = tempPrice * appliedVoucher.discountValue;
+                    finalPrice = tempPrice - discountAmount;
+                }
+            }
+            finalPrice += methodDelivery.feeDelivery;
+
+            return finalPrice;
+        }
         totalPrice += methodDelivery.feeDelivery;
 
         return totalPrice;
@@ -109,7 +169,7 @@ const PaymentPage = () => {
         order.status = false;
         order.quantityItem = itemsToOrder.length;
         order.totalPrice = totalPriceToOrder();
-        order.totalDiscount = 0;
+        order.totalDiscount = discountAmount;
         order.orderPaymentStatus = methodPayment === cash ? false : true;
         order.orderStatusDelivery = false;
         order.paymentMethod = methodPayment;
@@ -163,10 +223,63 @@ const PaymentPage = () => {
 
         await axios.post('http://localhost:3000/api/v1/sendEmail', {
             dataToSendEmail: buildDataToSendEmail,
-            userId:userId
+            userId: userId,
         });
     };
 
+    // note
+
+    const handleShowVoucher = () => {
+        let totalPrice = totalPriceItem();
+        let updatedVouchers = vouchers.map((voucher) => {
+            if (totalPrice >= voucher.conditionValue) {
+                return {
+                    ...voucher,
+                    disabled: false,
+                };
+            } else {
+                return {
+                    ...voucher,
+                    disabled: true,
+                };
+            }
+        });
+
+        setVoucherAfterFilter(updatedVouchers);
+        if (appliedVoucher) {
+            let _data = _.cloneDeep(updatedVouchers);
+            let foundVoucher = _data.find((item) => item.id === appliedVoucher.id);
+            if (foundVoucher) {
+                dispatch(handleSelectedVoucher(foundVoucher));
+            }
+        }
+    };
+
+    // const handleCalculateFinalPrice = () => {
+    //     let tempPrice = totalPriceItem();
+    //     let finalPrice = tempPrice;
+    //     if (appliedVoucher && appliedVoucher.disabled === false) {
+    //         if (appliedVoucher.discountValue > 0) {
+    //             if (Number.isInteger(appliedVoucher.discountValue)) {
+    //                 finalPrice = tempPrice - appliedVoucher.discountValue;
+    //                 discountAmount = appliedVoucher.discountValue;
+    //             } else {
+    //                 discountAmount = tempPrice * appliedVoucher.discountValue;
+    //                 finalPrice = tempPrice - discountAmount;
+    //             }
+    //         }
+    //     }
+    //     return finalPrice; // Trả về giá cuối cùng
+    // };
+    useEffect(() => {
+        handleShowVoucher();
+        // handleCalculateFinalPrice();
+    }, [totalPriceToOrder()]);
+
+    //
+    if (loading) {
+        <BackdropComp loading={loading} />;
+    }
     return (
         <div className="PaymentPage">
             <div className="PaymentPage-container">
@@ -317,6 +430,25 @@ const PaymentPage = () => {
                         )}
                     </div>
 
+                    <div className="voucher-box">
+                        <div className="voucher-box__header d-flex justify-content-between">
+                            <div className="header__title"> Chọn voucher</div>
+                            {appliedVoucher && (
+                                <div className="header__title-right" onClick={() => SetShowModalVoucher(true)}>
+                                    {' '}
+                                    Thay đổi
+                                </div>
+                            )}
+                        </div>
+                        {appliedVoucher ? (
+                            <VoucherMini appliedVoucher={appliedVoucher} />
+                        ) : (
+                            <div className="voucher-box__content" onClick={() => SetShowModalVoucher(true)}>
+                                Chọn mã khuyến mãi
+                            </div>
+                        )}
+                    </div>
+
                     <div className="buy-box">
                         <ul className="buy-box__prices-items">
                             <li className="buy-box__prices-item">
@@ -335,6 +467,16 @@ const PaymentPage = () => {
                                     <sup>₫</sup>
                                 </div>
                             </li>
+                            {discountAmount && (
+                                <li className="save__prices-item">
+                                    <div className="prices-item_text">Giảm giá</div>
+                                    <div className="prices-item_value">
+                                        {' '}
+                                        - {convertPrice(discountAmount)}
+                                        <sup>₫</sup>
+                                    </div>
+                                </li>
+                            )}
                         </ul>
                         <div className="price-total d-flex justify-content-between">
                             <span className="price-total__price-text">Tổng tiền</span>
@@ -375,6 +517,12 @@ const PaymentPage = () => {
                     </div>
                 </div>
             </div>
+            <ModalVouCher
+                setShow={SetShowModalVoucher}
+                show={showModalVoucher}
+                totalPrice={totalPriceItem()}
+                voucherList={voucherAfterFilter}
+            />
         </div>
     );
 };

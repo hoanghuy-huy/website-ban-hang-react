@@ -10,6 +10,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ROLE_MANAGER } from '~/utils/constants';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
+import ReviewsIcon from '@mui/icons-material/Reviews';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 const LayoutAccount = ({ children }) => {
     const role = useSelector((state) => state.account.account.userGroup);
@@ -196,7 +197,36 @@ const LayoutAccount = ({ children }) => {
                                                                 icon={faUser}
                                                             />
                                                         </div>
-                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>Quản lý nhập hàng</div>
+                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>
+                                                            Quản lý nhập hàng
+                                                        </div>
+                                                    </li>
+                                                </NavLink>
+
+                                                <NavLink to={'/account/review-product'}>
+                                                    <li
+                                                        className="item-account gap-3"
+                                                        style={{
+                                                            height: 38,
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            paddingLeft: 15,
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <ReviewsIcon
+                                                                sx={{
+                                                                    height: 20,
+                                                                    width: 20,
+                                                                    color: 'rgb(155, 155, 155)',
+                                                                }}
+                                                                icon={faUser}
+                                                            />
+                                                        </div>
+                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>
+                                                            Đánh giá sản phẩm
+                                                        </div>
                                                     </li>
                                                 </NavLink>
                                             </>

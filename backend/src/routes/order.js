@@ -3,6 +3,10 @@ import orderController from "../controllers/orderController";
 
 const router = express.Router();
 
+
+router.get('/get-list-order-to-review', orderController.getListOrderToReview)
+
+
 router.get('/get-monthly-return', orderController.getMonthlyReturn)
 router.get('/get-monthly-sold', orderController.getMonthlySold)
 router.get('/get-monthly-revenue', orderController.getMonthlyRevenue)

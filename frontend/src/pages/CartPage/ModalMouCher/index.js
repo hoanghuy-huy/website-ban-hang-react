@@ -2,10 +2,15 @@ import React from 'react';
 import './ModalVouCher.scss';
 import { Modal } from 'react-bootstrap';
 import Voucher from './Voucher';
+import { useDispatch } from 'react-redux';
+import { handleSelectedVoucher } from '~/redux/features/voucherSlice';
 
 const ModalVouCher = ({ show, setShow, totalPrice, voucherList, setAppliedVoucher }) => {
+    const dispatch = useDispatch()
+
     const handleApply = (voucher) => {
-        setAppliedVoucher(voucher);
+        // setAppliedVoucher(voucher);
+        dispatch(handleSelectedVoucher(voucher))
         setShow(false);
     };
 

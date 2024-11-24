@@ -1,0 +1,68 @@
+.ReviewPage {
+    .ReviewPage-container {
+        .title {
+            display: flex;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 32px;
+            color: rgb(56, 56, 61);
+        }
+        .list-review-container {
+            .review-item {
+                width: 310px;
+                height: 160px;
+                margin-right: 17px;
+                box-shadow: rgba(40, 40, 43, 0.1) 0px 4px 8px;
+                background-color: rgb(255, 255, 255);
+                border-radius: 10px;
+                padding: 16px 16px 32px;
+                position: relative;
+                height: 144px;
+                z-index: 1;
+                white-space: normal;
+                margin-bottom: 12px;
+                .product-info {
+                    display: flex;
+                    align-items: center;
+                    .img-container {
+                        width: 44px;
+                        height: 44px;
+                        flex-shrink: 0;
+                        margin: 0px 12px 0px 0px;
+                        img {
+                            max-width: 100%;
+                        }
+                    }
+                    .name-product {
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 20px;
+                        display: -webkit-box;
+                        color: rgb(56, 56, 61);
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        margin: 0px 0px 4px;
+                    }
+                }
+                .rating {
+                    margin-top: 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    svg {
+                        width: 40px !important;
+                        height: 40px !important;
+                    }
+                }
+            }
+            .no-review {
+                height: 100px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}

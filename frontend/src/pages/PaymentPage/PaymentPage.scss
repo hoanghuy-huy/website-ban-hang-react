@@ -227,7 +227,37 @@
                     }
                 }
             }
+            .voucher-box {
+                background-color: var(--white);
+                border-radius: 4px;
+                margin-top: 16px;
 
+                padding: 20px 20px;
+                .header__title-right {
+                    color: var(--primary-color);
+                    font-weight: normal;
+                    margin: 0px;
+                    cursor: pointer;
+                }
+                .voucher-box__header {
+                    margin-bottom: 12px;
+                    .header__title {
+                        color: rgb(40, 40, 40);
+                        margin: 0px;
+                        text-transform: capitalize;
+                        font-weight: 500;
+                    }
+                }
+                .voucher-box__content {
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    color: rgb(11, 116, 229);
+                    font-size: 13px;
+                    line-height: 20px;
+                    cursor: pointer;
+                }
+            }
             .buy-box {
                 margin-top: 16px;
                 border-radius: 4px;
@@ -254,6 +284,22 @@
                         }
                         .prices-item_value {
                             color: rgb(39, 39, 42);
+                        }
+                    }
+                    .save__prices-item {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        -webkit-box-pack: justify;
+                        justify-content: space-between;
+                        margin-bottom: 8px;
+                        line-height: 21px;
+                        .prices-item_text {
+                            color: rgb(0, 171, 86);
+
+                            display: inline-block;
+                        }
+                        .prices-item_value {
+                            color: rgb(0, 171, 86);
                         }
                     }
                 }

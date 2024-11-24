@@ -43,6 +43,7 @@ import EditPhonePage from '~/pages/EditPhonePage';
 import EditEmailPage from '~/pages/EditEmailPage';
 import EditPasswordPage from '~/pages/EditPasswordPage';
 import UserAddressPage from '~/pages/UserAddressPage';
+import ReviewPage from '~/pages/ReviewPage';
 
 //Public Routes
 const publicRoutes = [
@@ -64,6 +65,7 @@ const privateRoutes = [
     // { path: routes.role, component: RoleUser, layout: AdminLayout },
     // { path: routes.groupRole, component: GroupRole, layout: AdminLayout },
     // { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },
+    { path: '/account/review-product', component: ReviewPage, layout: LayoutAccount },
     { path: '/import-product', component: ImportProductPage, layout: LayoutAccount },
     { path: '/account/address', component: UserAddressPage, layout: LayoutAccount },
     { path: '/account/info/edit-password', component: EditPasswordPage, layout: LayoutAccount },

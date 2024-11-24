@@ -1,5 +1,6 @@
 import React from 'react';
 import './Voucher.scss';
+import { convertDate } from '~/utils/convert';
 
 const Voucher = ({ discount, condition, expiryDate, onApply, disabled, freeShipping }) => {
     return (
@@ -10,13 +11,17 @@ const Voucher = ({ discount, condition, expiryDate, onApply, disabled, freeShipp
                     <div className="voucher-discount">{discount}</div>
                     <div className="voucher-condition">{condition}</div>
                 </div>
-                <div className="voucher-expiry">HSD: {expiryDate}</div>
+                <div className="voucher-expiry">HSD: {convertDate(expiryDate)}</div>
             </div>
 
             {disabled ? (
-                <button className="voucher-button" disabled>Không áp dụng</button>
+                <button className="voucher-button" disabled>
+                    Không áp dụng
+                </button>
             ) : (
-                <button className="voucher-button" onClick={onApply}>Áp dụng</button>
+                <button className="voucher-button" onClick={onApply}>
+                    Áp dụng
+                </button>
             )}
         </div>
     );

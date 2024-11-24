@@ -54,11 +54,11 @@ const OrderDetailPage = () => {
         dispatch(getOneOrderApi(orderId));
     }, []);
     
-    const handleShowModalReviewProduct = async (item) => {
-        await setDataModal(item);
-        await setShowModal(true)
-        console.log(item)
-    }
+    // const handleShowModalReviewProduct = async (item) => {
+    //     await setDataModal(item);
+    //     await setShowModal(true)
+    //     console.log(item)
+    // }
     return (
         <div className="AccountOrderDetail">
             <div className="heading">
@@ -109,8 +109,8 @@ const OrderDetailPage = () => {
                         <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Giảm giá</th>
-                        <th>Tạm tính</th>
-                        <th>Hành động</th>
+                        <th colSpan={2}>Tạm tính</th>
+                        {/* <th>Hành động</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -133,53 +133,53 @@ const OrderDetailPage = () => {
                                     <td className="price">{convertPrice(item?.price)} ₫</td>
                                     <td className="quantity">{item?.quantity}</td>
                                     <td className="discount-amount">{item?.discount} ₫</td>
-                                    <td className="total">
+                                    <td className="total" colSpan={2}>
                                         {convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫
                                     </td>
-                                    <td className='d-flex flex-column justify-content-center align-item-center'>
-                                        {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && item.statusReview === null && (
-                                            <div className="review-btn">
-                                                <Button
-                                                    size="small"
-                                                    outline
-                                                    className="info-btn"
-                                                    onClick={() => handleShowModalReviewProduct(item)}
-                                                >
-                                                    Đánh giá
-                                                </Button>
-                                            </div>
-                                        )}
-                                         {item.statusReview && (
-                                            <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
-                                                <span className="d-block">Đã đánh giá</span>
-                                            </div>
-                                        )}
-                                        {orderItem.orderStatus === 1 &&
-                                            orderItem.statusReturnProduct === null &&
-                                            item.returnItem === null && (
-                                                <div className="return-btn mt-2">
+                                        {/* <td className='d-flex flex-column justify-content-center align-item-center'>
+                                            {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && item.statusReview === null && (
+                                                <div className="review-btn">
                                                     <Button
                                                         size="small"
                                                         outline
                                                         className="info-btn"
-                                                        onClick={() =>
-                                                            handleCustomerReturnOrder(
-                                                                orderItem.id,
-                                                                item?.productId,
-                                                                item?.quantity,
-                                                            )
-                                                        }
+                                                        onClick={() => handleShowModalReviewProduct(item)}
                                                     >
-                                                        Trả hàng
+                                                        Đánh giá
                                                     </Button>
                                                 </div>
                                             )}
-                                        {item.returnItem && (
-                                            <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
-                                                <span className="d-block">Đã trả hàng</span>
-                                            </div>
-                                        )}
-                                    </td>
+                                            {item.statusReview && (
+                                                <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
+                                                    <span className="d-block">Đã đánh giá</span>
+                                                </div>
+                                            )}
+                                            {orderItem.orderStatus === 1 &&
+                                                orderItem.statusReturnProduct === null &&
+                                                item.returnItem === null && (
+                                                    <div className="return-btn mt-2">
+                                                        <Button
+                                                            size="small"
+                                                            outline
+                                                            className="info-btn"
+                                                            onClick={() =>
+                                                                handleCustomerReturnOrder(
+                                                                    orderItem.id,
+                                                                    item?.productId,
+                                                                    item?.quantity,
+                                                                )
+                                                            }
+                                                        >
+                                                            Trả hàng
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            {item.returnItem && (
+                                                <div className="d-flex justify-content-center align-items-center ps-4 pt-2">
+                                                    <span className="d-block">Đã trả hàng</span>
+                                                </div>
+                                            )}
+                                        </td> */}
                                 </tr>
                             );
                         })}

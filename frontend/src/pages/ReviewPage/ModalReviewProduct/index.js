@@ -1,18 +1,16 @@
 import { Rating } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import './ModalReviewProduct.scss';
 import Image from '~/components/Image';
 import { useDispatch } from 'react-redux';
-import { customerReviewProductApi, getListOrderToReview, getOneOrderApi } from '~/redux/features/orderSlice';
-function ModalReviewProduct({ data, show, setShow, userId, star }) {
-    const [stars, setStars] = useState(star);
+import { customerReviewProductApi, getOneOrderApi } from '~/redux/features/orderSlice';
+function ModalReviewProduct({ data, show, setShow, userId }) {
+    const [stars, setStars] = useState(1);
     const [contentReview, setContentReview] = useState('');
     const dispatch = useDispatch();
-    const handleClose = () => {
-        setShow(false);
-    };
+    const handleClose = () => setShow(false);
 
     const handleCustomerReviewProduct = async () => {
         const buildData = {
@@ -25,16 +23,8 @@ function ModalReviewProduct({ data, show, setShow, userId, star }) {
 
         await dispatch(customerReviewProductApi(buildData));
         await dispatch(getOneOrderApi(data.orderId));
-
-        await dispatch(getListOrderToReview({ userId: userId }));
-        setShow(false);
+        setShow(false)
     };
-
-    useEffect(() => {
-        setStars(+star);
-        console.log(star);
-    }, [star]);
-
     return (
         <>
             <Modal show={show} onHide={handleClose} animation={false}>

@@ -96,7 +96,6 @@ let createNewOrder = (rawData) => {
         //   };
         // });
         // console.log(productLists, productList);
-  
 
         resolve({
           EM: "ok! create order successfully",
@@ -1228,7 +1227,46 @@ let handleCustomerReviewProductFunc = (data) => {
   });
 };
 
+let handleGetListOrderToReview = ({ userId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let orders = await db.Order.findAll({
+        attributes: ["id"], 
+        where: { userId: userId },
+      });
+
+      const orderIds = orders.map((order) => order.id); 
+
+      let orderDetails = await db.OrderDetail.findAll({
+        where: {
+          orderId: {
+            [Op.in]: orderIds, 
+          },
+          status: true,        
+          statusReview: null,  
+        },
+        include: [
+          {
+            model: db.Product,  
+            attributes: ['id', 'name', 'thumbnailUrl'], 
+          },
+        ],
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: orderDetails,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
+  handleGetListOrderToReview,
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,
   handleGetOneOrder,

@@ -33,43 +33,49 @@ import SnackbarComp from './Snackbar';
 import ModalVouCher from './ModalMouCher';
 import BackdropComp from '~/components/BackDropComp';
 import VoucherMini from './VoucherMini';
+import { getAllVoucher, handleSelectedVoucher } from '~/redux/features/voucherSlice';
 
-const voucherList = [
-    {
-        discount: 'Giảm 15K',
-        condition: 'Cho đơn hàng từ 200K',
-        expiryDate: '24/11/2024',
-        disabled: false,
-        freeShipping: true,
-        discountValue: 15000,
-        conditionValue: 200000,
-    },
-    {
-        discount: 'Giảm 10%',
-        condition: 'Cho đơn hàng từ 1tr',
-        expiryDate: '30/11/2024',
-        disabled: true,
-        freeShipping: false,
-        discountValue: 0.1,
-        conditionValue: 1000000,
-    },
-    {
-        discount: 'Giảm 20K',
-        condition: 'Cho đơn hàng từ 300K',
-        expiryDate: '31/12/2024',
-        disabled: true,
-        freeShipping: false,
-        discountValue: 20000,
-        conditionValue: 300000,
-    },
-];
+// const voucherList = [
+//     {
+//         id: 1,
+//         discount: 'Giảm 15K',
+//         condition: 'Cho đơn hàng từ 200K',
+//         expiryDate: '24/11/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 15000,
+//         conditionValue: 200000,
+//     },
+//     {
+//         id: 2,
+//         discount: 'Giảm 10%',
+//         condition: 'Cho đơn hàng từ 1tr',
+//         expiryDate: '30/11/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 0.1,
+//         conditionValue: 1000000,
+//     },
+//     {
+//         id: 3,
+//         discount: 'Giảm 20K',
+//         condition: 'Cho đơn hàng từ 300K',
+//         expiryDate: '31/12/2024',
+//         disabled: true,
+//         freeShipping: false,
+//         discountValue: 20000,
+//         conditionValue: 300000,
+//     },
+// ];
 const CartPage = () => {
     const { loading, error, cartList, showSnackBar } = useSelector((state) => state.cart);
+    const appliedVoucher = useSelector((state) => state.voucher.appliedVoucher);
+    const { vouchers } = useSelector((state) => state.voucher.voucherList);
     const { userId } = useSelector((state) => state.account.account);
     const [showModalError, setShowModalError] = useState(false);
     const [showModalVoucher, SetShowModalVoucher] = useState(false);
-    const [voucherAfterFilter, setVoucherAfterFilter] = useState(voucherList);
-    const [appliedVoucher, setAppliedVoucher] = useState({});
+    const [voucherAfterFilter, setVoucherAfterFilter] = useState(vouchers);
+    // const [appliedVoucher, setAppliedVoucher] = useState({});
     const { addressDefault, changeAddress } = useSelector((state) => state.address);
     const [discountPrice, setDiscountPrice] = useState(0);
     const defaultValueAddress = {
@@ -124,8 +130,8 @@ const CartPage = () => {
 
         fetchDataCity();
         getAddressDefault(userId);
-        setAppliedVoucher(null);
-        console.log('re-rednder')
+        // setAppliedVoucher(null);
+        dispatch(getAllVoucher({ page: 1, limit: 10 }));
     }, []);
 
     const checkSelectedAll = () => {
@@ -146,22 +152,21 @@ const CartPage = () => {
         return totalPrice;
     };
 
+    let discountAmount;
     const handleCalculateFinalPrice = () => {
         let tempPrice = handleCalculateTotalPrice();
         let finalPrice = tempPrice;
-        if (appliedVoucher) {
+        if (appliedVoucher && appliedVoucher.disabled === false) {
             if (appliedVoucher.discountValue > 0) {
                 if (Number.isInteger(appliedVoucher.discountValue)) {
                     finalPrice = tempPrice - appliedVoucher.discountValue;
-                    setDiscountPrice(appliedVoucher.discountValue);
+                    discountAmount = appliedVoucher.discountValue;
                 } else {
-                    const discountAmount = tempPrice * appliedVoucher.discountValue;
-                    setDiscountPrice(discountAmount);
+                    discountAmount = tempPrice * appliedVoucher.discountValue;
                     finalPrice = tempPrice - discountAmount;
                 }
             }
         }
-
         return finalPrice; // Trả về giá cuối cùng
     };
 
@@ -245,7 +250,7 @@ const CartPage = () => {
 
     const handleShowVoucher = () => {
         let totalPrice = handleCalculateTotalPrice();
-        let updatedVouchers = voucherList.map((voucher) => {
+        let updatedVouchers = vouchers.map((voucher) => {
             if (totalPrice >= voucher.conditionValue) {
                 return {
                     ...voucher,
@@ -260,16 +265,26 @@ const CartPage = () => {
         });
 
         setVoucherAfterFilter(updatedVouchers);
+        if (appliedVoucher) {
+            let _data = _.cloneDeep(updatedVouchers);
+            let foundVoucher = _data.find((item) => item.id === appliedVoucher.id);
+            if (foundVoucher) {
+                // setAppliedVoucher(foundVoucher);
+
+                dispatch(handleSelectedVoucher(foundVoucher));
+                console.log(appliedVoucher);
+            }
+        }
     };
 
     useEffect(() => {
-        // handleShowVoucher();
-        // handleCalculateFinalPrice();
-    }, []);
+        handleShowVoucher();
+        handleCalculateFinalPrice();
+    }, [handleCalculateTotalPrice()]);
     if (loading === true && error === false) {
         return (
             <div>
-                <BackdropComp />
+                <BackdropComp loading={loading} />
             </div>
         );
     } else if (loading === false && error === true) {
@@ -385,7 +400,7 @@ const CartPage = () => {
                                     {appliedVoucher ? (
                                         <VoucherMini
                                             appliedVoucher={appliedVoucher}
-                                            setAppliedVoucher={setAppliedVoucher}
+                                            // setAppliedVoucher={dispatch(handleSelectedVoucher(foundVoucher))}
                                         />
                                     ) : (
                                         <div className="voucher-box__content" onClick={() => SetShowModalVoucher(true)}>
@@ -393,6 +408,7 @@ const CartPage = () => {
                                         </div>
                                     )}
                                 </div>
+
                                 <div className="buy-box">
                                     <ul className="buy-box__prices-items">
                                         <li className="buy-box__prices-item">
@@ -412,9 +428,9 @@ const CartPage = () => {
                                                     ? 'Vui lòng chọn sản phẩm'
                                                     : convertPrice(handleCalculateFinalPrice())}
                                                 <br />
-                                                {appliedVoucher && discountPrice && (
+                                                {appliedVoucher && discountAmount && (
                                                     <div class="prices__value--saving">
-                                                        Tiết kiệm {discountPrice}
+                                                        Tiết kiệm {convertPrice(discountAmount)}
                                                         <sup>₫</sup>
                                                     </div>
                                                 )}
@@ -465,8 +481,8 @@ const CartPage = () => {
                 setShow={SetShowModalVoucher}
                 show={showModalVoucher}
                 totalPrice={handleCalculateTotalPrice()}
-                voucherList={voucherList}
-                setAppliedVoucher={setAppliedVoucher}
+                voucherList={voucherAfterFilter}
+                // setAppliedVoucher={dispatch(handleSelectedVoucher(foundVoucher))}
             />
 
             {/* <BackdropComp loading={true}/> */}
