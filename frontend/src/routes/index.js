@@ -44,6 +44,7 @@ import EditEmailPage from '~/pages/EditEmailPage';
 import EditPasswordPage from '~/pages/EditPasswordPage';
 import UserAddressPage from '~/pages/UserAddressPage';
 import ReviewPage from '~/pages/ReviewPage';
+import ReturnOrderPageAdmin from '~/pages/ReturnOrderPageAdmin';
 
 //Public Routes
 const publicRoutes = [
@@ -82,6 +83,7 @@ const privateRoutes = [
 ];
 
 const adminRoutes = [
+    { path: '/admin/return-order', component: ReturnOrderPageAdmin, layout: AdminLayout },
     { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
     { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },
     { path: '/admin/order', component: OrderPageAdmin, layout: AdminLayout },

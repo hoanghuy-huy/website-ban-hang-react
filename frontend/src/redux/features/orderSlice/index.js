@@ -137,14 +137,17 @@ export const customerConfirmOrderApi = createAsyncThunk(
 
 export const customerReturnOrderApi = createAsyncThunk(
     'order/customerReturnOrderApi',
-    async ({ orderId, userId, productId, productQuantity }) => {
+    async ({ orderId, userId, productId, productQuantity, quantityReturn, contentReturn, orderDetailId }) => {
         const res = await httpRequest.post(`order/customer-return-order`, {
             orderId: orderId,
             productId: productId,
             productQuantity: productQuantity,
+            quantityReturn: quantityReturn,
+            contentReturn: contentReturn,
+            orderDetailId: orderDetailId,
         });
         if (res && res.EC === 0) {
-            toast.success('Đã trả sản phẩm này');
+            toast.success('Đã gửi yêu cần trả hàng');
         } else {
             toast.error('Xảy ra lỗi vui lòng thử lại');
         }
@@ -191,8 +194,39 @@ export const customerReviewProductApi = createAsyncThunk('order/customerReviewPr
 export const getListOrderToReview = createAsyncThunk('order/getListOrderToReview', async ({ userId }) => {
     const res = await httpRequest.get(`order/get-list-order-to-review?userId=${userId}`);
 
-    return res ? res.DT : {};
+    return res ? res.DT : [];
 });
+
+export const getListOrderToReturn = createAsyncThunk('order/getListOrderToReturn', async ({ userId, statusReturn }) => {
+    const res = await httpRequest.get(
+        `order/get-list-order-to-return?userId=${userId}${statusReturn ? `&statusReturn=${statusReturn}` : ''}`,
+    );
+
+    return res ? res.DT : [];
+});
+
+export const getListOrderToReturnAdmin = createAsyncThunk(
+    'order/getListOrderToReturnAdmin',
+    async ({  statusReturn }) => {
+        const res = await httpRequest.get(
+            `order/get-list-order-return-to-confirm-admin?${
+                statusReturn ? `&statusReturn=${statusReturn}` : '&statusReturn=0'
+            }`,
+        );
+
+        return res ? res.DT : [];
+    },
+);
+
+export const approveReturnedOrderByAdmin = createAsyncThunk(
+    'order/approveReturnedOrderByAdmin',
+    async ({ orderDetailId }) => {
+        const res = await httpRequest.post(`order/confirm-order-return-admin`, { orderDetailId });
+
+        return res ? res.DT : [];
+    },
+);
+
 export const orderSlice = createSlice({
     name: 'order',
     initialState: {
@@ -202,6 +236,8 @@ export const orderSlice = createSlice({
         totalProductsReturnMonthly: null,
         totalProductsSoldMonthly: null,
         listOrderToReview: [],
+        listOrderToReturn: [],
+        listOrderToReturnAdmin: [],
         totalPrice: null,
         totalOrderSold: null,
         totalOrderReturn: null,
@@ -506,6 +542,47 @@ export const orderSlice = createSlice({
                 state.listOrderToReview = action.payload;
             })
             .addCase(getListOrderToReview.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(getListOrderToReturn.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getListOrderToReturn.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listOrderToReturn = action.payload;
+            })
+            .addCase(getListOrderToReturn.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(getListOrderToReturnAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getListOrderToReturnAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listOrderToReturnAdmin = action.payload;
+            })
+            .addCase(getListOrderToReturnAdmin.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+
+            .addCase(approveReturnedOrderByAdmin.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(approveReturnedOrderByAdmin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+            })
+            .addCase(approveReturnedOrderByAdmin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
             });

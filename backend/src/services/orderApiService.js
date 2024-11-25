@@ -866,13 +866,16 @@ let handleDeleteFunc = (query, productList) => {
 };
 
 let handleCustomerReturnOrderFunc = ({
+  orderDetailId,
   orderId,
   productId,
   productQuantity,
+  quantityReturn,
+  contentReturn,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!orderId) {
+      if (!orderDetailId) {
         reject({
           EM: "missing value id order",
           EC: 1,
@@ -881,24 +884,28 @@ let handleCustomerReturnOrderFunc = ({
       }
 
       await db.OrderDetail.update(
-        { returnItem: 1 },
+        {
+          returnItem: +quantityReturn,
+          contentReturn: contentReturn,
+          statusReturn: 0,
+        },
         {
           where: {
-            [Op.and]: [{ orderId: orderId }, { productId: productId }],
+            id: +orderDetailId,
           },
         }
       );
-      await db.Product.update(
-        {
-          inventoryNumber: db.sequelize.literal(
-            `inventoryNumber + ${productQuantity}`
-          ),
-          quantitySold: db.sequelize.literal(
-            `quantitySold - ${productQuantity}`
-          ),
-        },
-        { where: { id: productId } }
-      );
+      // await db.Product.update(
+      //   {
+      //     inventoryNumber: db.sequelize.literal(
+      //       `inventoryNumber + ${productQuantity}`
+      //     ),
+      //     quantitySold: db.sequelize.literal(
+      //       `quantitySold - ${productQuantity}`
+      //     ),
+      //   },
+      //   { where: { id: productId } }
+      // );
 
       resolve({
         EM: "Ok update success",
@@ -1231,24 +1238,24 @@ let handleGetListOrderToReview = ({ userId }) => {
   return new Promise(async (resolve, reject) => {
     try {
       let orders = await db.Order.findAll({
-        attributes: ["id"], 
+        attributes: ["id"],
         where: { userId: userId },
       });
 
-      const orderIds = orders.map((order) => order.id); 
+      const orderIds = orders.map((order) => order.id);
 
       let orderDetails = await db.OrderDetail.findAll({
         where: {
           orderId: {
-            [Op.in]: orderIds, 
+            [Op.in]: orderIds,
           },
-          status: true,        
-          statusReview: null,  
+          status: true,
+          statusReview: null,
         },
         include: [
           {
-            model: db.Product,  
-            attributes: ['id', 'name', 'thumbnailUrl'], 
+            model: db.Product,
+            attributes: ["id", "name", "thumbnailUrl"],
           },
         ],
       });
@@ -1265,7 +1272,128 @@ let handleGetListOrderToReview = ({ userId }) => {
   });
 };
 
+let handleGetListOrderToReturn = ({ userId, statusReturn }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let orders = await db.Order.findAll({
+        attributes: ["id"],
+        where: { userId: userId },
+      });
+
+      const orderIds = orders.map((order) => order.id);
+
+      let orderDetails = await db.OrderDetail.findAll({
+        where: {
+          orderId: {
+            [Op.in]: orderIds,
+          },
+          status: true,
+          statusReturn: statusReturn ? statusReturn : null,
+        },
+        include: [
+          {
+            model: db.Product,
+            attributes: ["id", "name", "thumbnailUrl"],
+          },
+        ],
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: orderDetails,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleGetListOrderToReturnAdmin = ({ statusReturn }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let orderDetails = await db.OrderDetail.findAll({
+        where: {
+          status: true,
+          statusReturn: statusReturn ? statusReturn : null,
+        },
+        include: [
+          {
+            model: db.Product,
+            attributes: ["id", "name", "thumbnailUrl"],
+          },
+        ],
+      });
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: orderDetails,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
+let handleConfirmOrderReturnAdmin = async ({ orderDetailId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const orderDetail = await db.OrderDetail.findOne({
+        where: { id: +orderDetailId },
+      });
+
+      if (!orderDetail) {
+        return reject({
+          EM: "Order detail not found",
+          EC: 1,
+        });
+      }
+
+      const currentQuantity = orderDetail.quantity;
+      const currentPrice = orderDetail.totalPrice / currentQuantity;
+
+      await db.OrderDetail.update(
+        {
+          statusReturn: 1,
+          quantity: currentQuantity - orderDetail.returnItem,
+          totalPrice: currentPrice * (currentQuantity - orderDetail.returnItem),
+        },
+        {
+          where: {
+            id: +orderDetailId,
+          },
+        }
+      );
+
+      await db.Product.update(
+        {
+          inventoryNumber: db.sequelize.literal(
+            `inventoryNumber + ${orderDetail.returnItem}`
+          ),
+          quantitySold: db.sequelize.literal(`quantitySold - ${orderDetail.returnItem}`),
+        },
+        { where: { id: orderDetail.productId } }
+      );
+
+      resolve({
+        EM: "Ok",
+        EC: 0,
+        DT: orderDetail,
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
+  handleConfirmOrderReturnAdmin,
+  handleGetListOrderToReturnAdmin,
+  handleGetListOrderToReturn,
   handleGetListOrderToReview,
   createNewOrder,
   handleGetAllOrderWithUserIdPagination,

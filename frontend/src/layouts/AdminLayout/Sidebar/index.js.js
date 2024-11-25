@@ -9,6 +9,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import routes from '~/config/routes';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import LinkIcon from '@mui/icons-material/Link';
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 const Sidebar = () => {
     const [activeTab, setActiveTab] = useState(null);
     const [isToggleSubmenu, setToggleSubmenu] = useState(false);
@@ -113,6 +114,17 @@ const Sidebar = () => {
                                 <ShoppingCartOutlinedIcon />
                             </span>
                             <span className="text">Đơn hàng</span>
+                        </Button>
+                    </NavLink>
+                </li>
+
+                <li>
+                    <NavLink to={'/admin/return-order'}>
+                        <Button className="w-100">
+                            <span className="icon">
+                                <AssignmentReturnIcon />
+                            </span>
+                            <span className="text">Quản lý trả hàng</span>
                         </Button>
                     </NavLink>
                 </li>

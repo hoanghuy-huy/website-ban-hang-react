@@ -25,12 +25,18 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       returnItem: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.INTEGER,
+      },
+      contentReturn: {
+        type: Sequelize.STRING,
       },
       status: {
         type: Sequelize.BOOLEAN,
       },
       statusReview: {
+        type: Sequelize.BOOLEAN,
+      },
+      statusReturn: {
         type: Sequelize.BOOLEAN,
       },
       totalPrice: {

@@ -4,6 +4,10 @@ import orderController from "../controllers/orderController";
 const router = express.Router();
 
 
+router.post('/confirm-order-return-admin', orderController.confirmOrderReturnAdmin)
+router.get('/get-list-order-return-to-confirm-admin', orderController.getListOrderToReturnAdmin)
+
+router.get('/get-list-order-to-return', orderController.getListOrderToReturn)
 router.get('/get-list-order-to-review', orderController.getListOrderToReview)
 
 

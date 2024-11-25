@@ -411,9 +411,68 @@ const getListOrderToReview = async (req, res) => {
   }
 };
 
+const getListOrderToReturn = async (req, res) => {
+  try {
+    let data = await orderApiService.handleGetListOrderToReturn(req.query);
 
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+const getListOrderToReturnAdmin = async (req, res) => {
+  try {
+    let data = await orderApiService.handleGetListOrderToReturnAdmin(req.query);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
+
+
+const confirmOrderReturnAdmin = async (req, res) => {
+  try {
+    let data = await orderApiService.handleConfirmOrderReturnAdmin(req.body);
+
+    return res.status(200).json({
+      EM: data.EM,
+      EC: data.EC,
+      DT: data.DT,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      EM: "Error form server",
+      EC: -1,
+      DT: "",
+    });
+  }
+};
 
 module.exports = {
+  confirmOrderReturnAdmin,
+  getListOrderToReturnAdmin,
+  getListOrderToReturn,
   getListOrderToReview,
   createFunc,
   getAllOrderWithUserIdPagination,

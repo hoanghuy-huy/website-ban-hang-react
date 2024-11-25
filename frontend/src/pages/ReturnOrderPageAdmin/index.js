@@ -3,56 +3,55 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import Button from '~/components/Button/Button';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import DoDisturbAltOutlinedIcon from '@mui/icons-material/DoDisturbAltOutlined';
-import './ReturnOrderPage.scss';
+import './ReturnOrderPageAdmin.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { convertPrice } from '~/utils/convert';
 import { Link } from 'react-router-dom';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
-import { getListOrderToReturn } from '~/redux/features/orderSlice';
-import ModalReturnProduct from './ModalReturnProduct';
-const ReturnOrderPage = () => {
+import { approveReturnedOrderByAdmin, getListOrderToReturnAdmin } from '~/redux/features/orderSlice';
+
+const ReturnOrderPageAdmin = () => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [action, setAction] = useState(null);
-    const listOrderToReturn = useSelector((state) => state.order.listOrderToReturn);
+    const listOrderToReturnAdmin = useSelector((state) => state.order.listOrderToReturnAdmin);
     const { userId } = useSelector((state) => state.account.account);
     useEffect(() => {
-        dispatch(getListOrderToReturn({ userId }));
-        setAction(null);
+        dispatch(getListOrderToReturnAdmin({ userId }));
+        setAction('0');
     }, []);
 
     useEffect(() => {
-        dispatch(getListOrderToReturn({ userId, statusReturn: action }));
+        dispatch(getListOrderToReturnAdmin({ statusReturn: action }));
     }, [dispatch, userId, action]);
 
     const handleFetchData = (value) => {
         setAction(value);
     };
 
+    const handleAdminConfirmReturnOrder = async (orderDetailId) => {
+        await dispatch(approveReturnedOrderByAdmin({ orderDetailId: orderDetailId }));
+        await dispatch(getListOrderToReturnAdmin({ statusReturn: action }));
+    };
+    console.log(listOrderToReturnAdmin)
     return (
-        <div className="ReturnOrderPage w-100">
-            <div className="ReturnOrderPage-container">
+        <div className="ReturnOrderPageAdmin">
+            <div className="ReturnOrderPageAdmin-container">
                 <div className="heading mb-4">
                     <h5 className="title">Quản lý trả hàng</h5>
                 </div>
-                <div className="content">
-                    <div className="StyledTab mb-4 ">
+                <div className="content w-100">
+                    <div className="StyledTab mb-4">
                         <div
-                            className={action === null ? 'StyledTab-item active col-4' : 'StyledTab-item col-4'}
-                            onClick={() => handleFetchData(null)}
-                        >
-                            Tất cả đơn hàng
-                        </div>
-                        <div
-                            className={action === '0' ? 'StyledTab-item active col-4' : 'StyledTab-item col-4'}
+                            className={action === '0' ? 'StyledTab-item active col-6' : 'StyledTab-item col-6'}
                             onClick={() => handleFetchData('0')}
                         >
                             Đang đợi duyệt
                         </div>
 
                         <div
-                            className={action === '1' ? 'StyledTab-item active col-4' : 'StyledTab-item col-4'}
+                            className={action === '1' ? 'StyledTab-item active col-6' : 'StyledTab-item col-6'}
                             onClick={() => handleFetchData('1')}
                         >
                             Trả hàng thành công
@@ -60,8 +59,8 @@ const ReturnOrderPage = () => {
                     </div>
                     <div className="StyledOrder">
                         <div className="StyledOrder-container">
-                            {listOrderToReturn && listOrderToReturn.length > 0 ? (
-                                listOrderToReturn.map((item) => {
+                            {listOrderToReturnAdmin && listOrderToReturnAdmin.length > 0 ? (
+                                listOrderToReturnAdmin.map((item) => {
                                     return (
                                         <>
                                             <div className="OrderItem">
@@ -76,7 +75,7 @@ const ReturnOrderPage = () => {
 
                                                         {item.statusReturn === false && (
                                                             <>
-                                                                <CheckOutlinedIcon />
+                                                                <HourglassEmptyOutlinedIcon />
                                                                 Đang đợi duyệt
                                                             </>
                                                         )}
@@ -84,7 +83,7 @@ const ReturnOrderPage = () => {
                                                         {item.statusReturn === true && (
                                                             <>
                                                                 <CheckOutlinedIcon />
-                                                                Yêu cầu trả hàng thành công
+                                                                Đã duyệt
                                                             </>
                                                         )}
                                                     </div>
@@ -95,11 +94,7 @@ const ReturnOrderPage = () => {
                                                         <div className="product-info">
                                                             <div className="img">
                                                                 <img src={item?.Product?.thumbnailUrl} />
-                                                                {action === null ? (
-                                                                    <div className="quantity">x{item.quantity}</div>
-                                                                ) : (
-                                                                    <div className="quantity">x{item.returnItem}</div>
-                                                                )}
+                                                                <div className="quantity">x{item?.returnItem}</div>
                                                             </div>
                                                             <div className="name">{item?.Product?.name}</div>
                                                         </div>
@@ -113,27 +108,29 @@ const ReturnOrderPage = () => {
                                                             <span>Tổng tiền: </span>
                                                             {convertPrice(item?.totalPrice)} ₫
                                                         </div> */}
-                                                        {item.status === true && item.statusReturn == null && (
+                                                        <div className="reason-return-order">
+                                                            Lý do :{' '}
+                                                            {item && item.contentReturn
+                                                                ? item.contentReturn
+                                                                : 'không có lý do'}
+                                                        </div>
+                                                        {item.status === true && item.statusReturn == 0 && (
                                                             <div className="actions mt-2 mx-2 d-flex gap-2">
                                                                 <Button
                                                                     size="small"
                                                                     outline
-                                                                    onClick={() => setShowModal(true)}
+                                                                    color="success"
+                                                                    onClick={() =>
+                                                                        handleAdminConfirmReturnOrder(item.id)
+                                                                    }
                                                                 >
-                                                                    Trả hàng
+                                                                    Duyệt
                                                                 </Button>
                                                             </div>
                                                         )}
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <ModalReturnProduct
-                                                data={item}
-                                                show={showModal}
-                                                setShow={setShowModal}
-                                                userId={userId}
-                                            />
                                         </>
                                     );
                                 })
@@ -153,4 +150,4 @@ const ReturnOrderPage = () => {
     );
 };
 
-export default ReturnOrderPage;
+export default ReturnOrderPageAdmin;
