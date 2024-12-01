@@ -71,10 +71,43 @@ class authController {
 
   async sendEmailFunc(req, res) {
     try {
-
       const data = await authService.handleSendEmailFunc(req.body);
       return res.status(200).json({
-        EM: "Logout Success", // error message
+        EM: "ok", // error message
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async sendOTPFunc(req, res) {
+    try {
+      const data = await authService.handleSendOTPFunc(req.body);
+      return res.status(200).json({
+        EM: "ok", // error message
+        EC: 0,
+        DT: data,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        EM: "Error form server",
+        EC: -1,
+        DT: "",
+      });
+    }
+  }
+
+  async verifyOTPFunc(req, res) {
+    try {
+      const data = await authService.handleVerifyOTPFunc(req.body);
+      return res.status(200).json({
+        EM: "ok", // error message
         EC: 0,
         DT: data,
       });

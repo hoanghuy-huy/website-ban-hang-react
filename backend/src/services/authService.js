@@ -3,11 +3,22 @@ import bcrypt from "bcrypt";
 import { Op } from "sequelize";
 import groupRoleService from "./groupRoleService";
 import { createToken } from "../middleware/jwtUser";
+const crypto = require("crypto");
+const validator = require("validator");
 const nodemailer = require("nodemailer");
-
+let otpStore = {};
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
-
+// Tạo transporter cho Nodemailer
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true cho port 465
+  auth: {
+    user: "huynhhoanghuy221122@gmail.com", // Địa chỉ email của bạn
+    pass: "kmgd puxj mech fpmk", // Mật khẩu email của bạn
+  },
+});
 class authService {
   async checkEmailExist(emailUser) {
     const user = await db.User.findOne({
@@ -47,16 +58,24 @@ class authService {
     try {
       //Check email and phone already exists
       let isEmailExist = await this.checkEmailExist(rawData.email);
+      let isPhoneExits = await this.checkPhoneExist(rawData.phone);
 
       if (isEmailExist)
         return {
-          EM: "Tài khoản này đã tồn tại rồi",
+          EM: "Email này đã tồn tại rồi",
           EC: 1,
         };
 
-      if (rawData.password && rawData.password.length < 4) {
+      if (isPhoneExits) {
         return {
-          EM: "Mật khẩu phải lớn hơn 3 kí tự",
+          EM: "Số điện thoại này đã tồn tại rồi",
+          EC: 1,
+        };
+      }
+
+      if (rawData.password && rawData.password.length < 9) {
+        return {
+          EM: "Mật khẩu phải lớn hơn 8 kí tự",
           EC: 1,
         };
       } else if (!/[a-zA-Z]/.test(rawData.password)) {
@@ -78,7 +97,7 @@ class authService {
         phone: rawData.phone,
         email: rawData.email,
         password: hashPass,
-        groupId: defaultGroupUser.id,
+        groupId: 2,
       });
 
       return {
@@ -119,7 +138,7 @@ class authService {
             username: user.username,
             groupWithRoleUser: roles,
             groupId: user.groupId || 2,
-            userGroup: group.name || 'customer',
+            userGroup: group.name || "customer",
           };
 
           let token = createToken(payload);
@@ -164,21 +183,11 @@ class authService {
       const { dataToSendEmail } = rawData;
 
       const user = await db.User.findOne({
-        where : { id: rawData.userId },
+        where: { id: rawData.userId },
       });
 
-      let email = user.email
-      // Tạo transporter cho Nodemailer
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true cho port 465
-        auth: {
-          user: "huynhhoanghuy221122@gmail.com", // Địa chỉ email của bạn
-          pass: "kmgd puxj mech fpmk", // Mật khẩu email của bạn
-        },
-      });
-      console.log(dataToSendEmail);
+      let email = user.email;
+
       const productDetails = dataToSendEmail.productList
         .map(
           (item) => `
@@ -271,6 +280,88 @@ class authService {
       };
     } catch (error) {
       console.log("Error sending email:", error);
+      return {
+        EM: "Something went wrong in service",
+        EC: 2,
+      };
+    }
+  }
+
+  async handleSendOTPFunc(data) {
+    try {
+      const { email } = data;
+      const isEmailExist = await this.checkEmailExist(email);
+      if (!!isEmailExist) {
+        return {
+          EM: "Địa chỉ email đã tồn tại",
+          EC: 1,
+        };
+      }
+      // Kiểm tra tính hợp lệ của email
+      if (!validator.isEmail(email)) {
+        return {
+          EM: "Địa chỉ email không hợp lệ",
+          EC: 1,
+        };
+      }
+
+      // Tạo OTP
+      const otp = crypto.randomInt(100000, 999999).toString();
+      otpStore[email] = otp; // Lưu OTP theo email
+      console.log(otpStore[email]);
+
+      // Gửi email
+      const mailOptions = {
+        from: "huynhhoanghuy221122@gmail.com",
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP code is ${otp}. It is valid for 5 minutes.`,
+      };
+
+      // Gửi email và xử lý lỗi
+      await transporter.sendMail(mailOptions);
+
+      return {
+        EM: "Đã gửi OTP đến email của bạn",
+        EC: 0,
+      };
+    } catch (error) {
+      // Xử lý lỗi gửi email
+      if (error.response) {
+        console.log("Error response:", error.response);
+        return {
+          EM: "Không thể gửi email. Vui lòng kiểm tra địa chỉ email.",
+          EC: 2,
+        };
+      }
+      console.log("Error sending email:", error);
+      return {
+        EM: "Đã xảy ra lỗi trong dịch vụ",
+        EC: 3,
+      };
+    }
+  }
+
+  async handleVerifyOTPFunc(data) {
+    try {
+      const { email, otp } = data;
+      console.log(otpStore[email], otp);
+      if (otpStore[email] && +otpStore[email] === +otp) {
+        delete otpStore[email];
+        return {
+          EM: "Xác thực OTP thành công",
+          EC: 0,
+          DT: "",
+        };
+      }
+
+      return {
+        EM: "Bạn đã nhập sai OTP",
+        EC: 1,
+        DT: "",
+      };
+    } catch (error) {
+      console.log("Error verifying OTP:", error);
       return {
         EM: "Something went wrong in service",
         EC: 2,

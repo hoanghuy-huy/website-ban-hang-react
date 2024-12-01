@@ -13,6 +13,18 @@ export const getOneUserApi = createAsyncThunk('user/getOneUserApi', async (id) =
 
     return res ? res.DT : [];
 });
+
+export const sendOTPApi = createAsyncThunk('user/sendOTPApi', async ({ email }) => {
+    const res = await httpRequest.post(`send-otp`, { email });
+
+    return res ? res.DT : [];
+});
+
+export const verifyOTPApi = createAsyncThunk('user/verifyOTPApi', async ({ email, otp }) => {
+    const res = await httpRequest.post(`verify-otp`, { email, otp });
+
+    return res ? res.DT : [];
+});
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -48,6 +60,32 @@ export const userSlice = createSlice({
                 state.infoUser = action.payload;
             })
             .addCase(getOneUserApi.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+
+            .addCase(sendOTPApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(sendOTPApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(sendOTPApi.rejected, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+
+            .addCase(verifyOTPApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(verifyOTPApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
+            .addCase(verifyOTPApi.rejected, (state, action) => {
                 state.loading = true;
                 state.error = false;
             });
