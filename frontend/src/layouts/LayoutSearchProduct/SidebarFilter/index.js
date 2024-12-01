@@ -55,14 +55,14 @@ const SidebarFilter = () => {
 
     const handleChangeMinPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
-            if (value > 10000000) return;
+            if (value > 900000000) return;
             setMinPrice(value);
         }
     };
 
     const handleChangeMaxPrice = (value) => {
         if (!isNaN(value) && !value.includes(' ') && !value.startsWith(0)) {
-            if (value > 10000000) return;
+            if (value > 900000000) return;
             setMaxPrice(value);
         }
     };
@@ -70,7 +70,7 @@ const SidebarFilter = () => {
         if (+minPrice < 0 || +maxPrice <= 0 || +minPrice >= +maxPrice) {
             setErrorInputPrice(true);
             setErrorExceedInputPrice(false);
-        } else if (minPrice > 10000000 || maxPrice > 10000000) {
+        } else if (minPrice > 900000000 || maxPrice > 900000000) {
             setErrorExceedInputPrice(true);
         } else {
             dispatch(handleFetchDataWithFilterPrice({ minPrice, maxPrice }));
@@ -179,7 +179,7 @@ const SidebarFilter = () => {
                         )}
                         {errorInputExceedPrice && (
                             <div className="price-range-input-filter__error">
-                                Vui lòng điền khoảng giá trong khoảng 10 triệu VND
+                                Vui lòng điền khoảng giá trong khoảng 900 triệu VND
                             </div>
                         )}
                         <Button

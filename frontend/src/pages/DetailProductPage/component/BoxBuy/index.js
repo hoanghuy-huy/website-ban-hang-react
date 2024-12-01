@@ -19,7 +19,7 @@ const BoxBuy = ({ item }) => {
     const dispatch = useDispatch();
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [messageSnackbar, setMessageSnackbar] = useState('');
-    const cartItem = cartList.find((product) => product.productId === item.id);
+    const cartItem = cartList?.find((product) => product?.productId === item?.id);
     const { addressDefault } = useSelector((state) => state.address);
     const handlePrice = (type, _quantity) => {
         if (_quantity < 1) {
@@ -93,7 +93,7 @@ const BoxBuy = ({ item }) => {
             arr.push(obj)
             dispatch(handlePurchaseProduct(arr));
         } else {
-            dispatch(showLoginForm());
+            dispatch(showLoginForm());   
         }
     };
 

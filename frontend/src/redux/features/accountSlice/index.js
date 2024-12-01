@@ -69,6 +69,7 @@ export const accountSlice = createSlice({
             state.auth = false;
             state.account = {};
             localStorage.clear();
+            state.someOtherState = {};
             window.location.reload(true);
         },
     },

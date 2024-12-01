@@ -280,7 +280,7 @@ const InfoUserPage = () => {
                             <div className="info-item d-flex justify-content-between  align-items-center mt-3">
                                 <div className="info-item__content d-flex align-items-center">
                                     <LocalPhoneOutlinedIcon className="me-1" />
-                                    <div>
+                                    <div className='info-phone'>
                                         <span
                                             style={{
                                                 fontSize: '14px',
@@ -318,7 +318,7 @@ const InfoUserPage = () => {
                             <div className="info-item d-flex justify-content-between  align-items-center mt-3">
                                 <div className="info-item__content d-flex align-items-center">
                                     <EmailOutlinedIcon className="me-1" />
-                                    <div>
+                                    <div className='info-email'>
                                         <span
                                             style={{
                                                 fontSize: '14px',

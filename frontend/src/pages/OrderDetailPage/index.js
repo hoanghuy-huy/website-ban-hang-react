@@ -15,8 +15,8 @@ const OrderDetailPage = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [dataModal,setDataModal] = useState({})
-    const [showModal,setShowModal] = useState(false)
+    const [dataModal, setDataModal] = useState({});
+    const [showModal, setShowModal] = useState(false);
 
     let totalPriceForEachProduct = (price, quantity) => {
         return price * quantity;
@@ -53,12 +53,13 @@ const OrderDetailPage = () => {
     useEffect(() => {
         dispatch(getOneOrderApi(orderId));
     }, []);
-    
+
     // const handleShowModalReviewProduct = async (item) => {
     //     await setDataModal(item);
     //     await setShowModal(true)
     //     console.log(item)
     // }
+    console.log(OrderDetails);
     return (
         <div className="AccountOrderDetail">
             <div className="heading">
@@ -132,11 +133,11 @@ const OrderDetailPage = () => {
 
                                     <td className="price">{convertPrice(item?.price)} ₫</td>
                                     <td className="quantity">{item?.quantity}</td>
-                                    <td className="discount-amount">{item?.discount} ₫</td>
+                                    <td className="discount-amount">{convertPrice(item?.discount)} ₫</td>
                                     <td className="total" colSpan={2}>
                                         {convertPrice(totalPriceForEachProduct(item?.price, item?.quantity))} ₫
                                     </td>
-                                        {/* <td className='d-flex flex-column justify-content-center align-item-center'>
+                                    {/* <td className='d-flex flex-column justify-content-center align-item-center'>
                                             {orderItem.orderStatus === 1 && orderItem.statusReturnProduct === null && item.statusReview === null && (
                                                 <div className="review-btn">
                                                     <Button
@@ -198,12 +199,14 @@ const OrderDetailPage = () => {
                         </td>
                         <td>{convertPrice(orderItem?.deliveryMethodFee)}₫</td>
                     </tr>
-                    {/* <tr>
-                        <td colspan="5">
-                            <span>Khuyến mãi vận chuyển</span>
-                        </td>
-                        <td>-15.000 ₫</td>
-                    </tr> */}
+                    {orderItem && orderItem?.totalDiscount > 0 && (
+                        <tr>
+                            <td colspan="5">
+                                <span>Được giảm giá</span>
+                            </td>
+                            <td>-{convertPrice(orderItem?.totalDiscount)}</td>
+                        </tr>
+                    )}
                     <tr>
                         <td colspan="5">
                             <span>Tổng cộng</span>
@@ -233,7 +236,7 @@ const OrderDetailPage = () => {
                 </tfoot>
             </table>
 
-            <ModalReviewProduct userId={userId} show={showModal} setShow={setShowModal} data={dataModal}/>
+            <ModalReviewProduct userId={userId} show={showModal} setShow={setShowModal} data={dataModal} />
         </div>
     );
 };

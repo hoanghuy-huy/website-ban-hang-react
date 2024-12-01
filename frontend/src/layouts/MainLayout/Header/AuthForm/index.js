@@ -60,7 +60,7 @@ const AuthForm = () => {
                                 <div className="heading">
                                     <h4>Xin chào,</h4>
                                     {form === REGISTER_FORM ? (
-                                        <p>Đăng kí tài khoản của bạn</p>
+                                        <p>Đăng ký tài khoản của bạn</p>
                                     ) : (
                                         <p>Đăng nhập tài khoản của bạn</p>
                                     )}

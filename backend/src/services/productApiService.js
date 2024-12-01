@@ -560,12 +560,12 @@ class productApiService {
     starNumber,
     price,
     brand,
-    categoryId
+    categoryId,
   }) {
     try {
       page = +page;
       limit = +limit;
-      let offset = (page - 1) * limit; 
+      let offset = (page - 1) * limit;
       // let product;
       // let convertPriceToObject = price ? price.split(",") : "";
       // let convertBrandToObject = brand ? brand.split(",") : "";
@@ -630,12 +630,14 @@ class productApiService {
 
       const { count, rows } = await db.Product.findAndCountAll({
         where: {
-          ...(categoryId ? { categoryId } : {}), 
-          ...(categoryId ? {} : { 
-            name: {
-              [Op.like]: `%${keyword}%`,
-            },
-          }),
+          ...(categoryId ? { categoryId } : {}),
+          ...(categoryId
+            ? {}
+            : {
+                name: {
+                  [Op.like]: `%${keyword}%`,
+                },
+              }),
         },
         offset: offset,
         limit: limit,
@@ -664,13 +666,13 @@ class productApiService {
     }
   }
 
-  async handleSearchKeywordFunc({ keyword,page, limit }) {
+  async handleSearchKeywordFunc({ keyword, page, limit }) {
     try {
       page = +page;
       limit = +limit;
       let offset = (page - 1) * limit;
 
-      if(!keyword || keyword === '') {
+      if (!keyword || keyword === "") {
         return {
           EM: "Keyword empty",
           EC: 0,
@@ -710,6 +712,59 @@ class productApiService {
       };
     }
   }
+
+  async handleSearchImageFunc({ idsProduct, page = 1, limit = 10 }) {
+    try {
+        const idsArray = idsProduct.split(",").map((id) => parseInt(id, 10));
+
+
+        const offset = (page - 1) * limit;
+
+        const products = await db.Product.findAll({
+            where: {
+                id: idsArray,
+            },
+            limit: limit, 
+            offset: offset, 
+        });
+
+        const totalProducts = await db.Product.count({
+            where: {
+                id: idsArray,
+            },
+        });
+
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        if (products.length > 0) {
+            return {
+                EM: "Get All products Success",
+                EC: 0,
+                DT: {
+                    products,
+                    pagination: {
+                        totalProducts,
+                        totalPages,
+                        currentPage: page,
+                        limit: limit,
+                    },
+                },
+            };
+        } else {
+            return {
+                EM: "No products found",
+                EC: 1,
+                DT: [],
+            };
+        }
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return {
+            EM: "Something went wrong in service",
+            EC: 2,
+        };
+    }
+}
 }
 
 module.exports = new productApiService();

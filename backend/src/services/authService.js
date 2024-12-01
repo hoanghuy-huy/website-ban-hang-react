@@ -118,8 +118,8 @@ class authService {
             email: user.email,
             username: user.username,
             groupWithRoleUser: roles,
-            groupId: user.groupId,
-            userGroup: group.name,
+            groupId: user.groupId || 2,
+            userGroup: group.name || 'customer',
           };
 
           let token = createToken(payload);
@@ -161,12 +161,13 @@ class authService {
 
   async handleSendEmailFunc(rawData) {
     try {
-      const { email, dataToSendEmail } = rawData;
+      const { dataToSendEmail } = rawData;
 
       const user = await db.User.findOne({
-        where: { id: rawData.userId },
+        where : { id: rawData.userId },
       });
 
+      let email = user.email
       // Tạo transporter cho Nodemailer
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -198,6 +199,9 @@ class authService {
           <p><strong>Tổng giá:</strong> ${
             dataToSendEmail.totalPrice || 0
           } VND</p>
+          <p><strong>Được giảm:</strong> ${
+            dataToSendEmail.totalDiscount || 0
+          } VND</p>
           <p><strong>Phương thức thanh toán:</strong> ${
             dataToSendEmail.methodPayment || "Chưa xác định"
           }</p>
@@ -213,6 +217,7 @@ class authService {
           <p><strong>Số điện thoại:</strong> ${
             dataToSendEmail.phone || "Chưa xác định"
           }</p>
+          
           <p>Chúng tôi sẽ gửi thông tin giao hàng đến bạn trong thời gian sớm nhất.</p>
           <p>Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi qua email này.</p>
           <p>Trân trọng,<br>Đội ngũ hỗ trợ khách hàng<br>Công ty của bạn</p>

@@ -250,19 +250,21 @@ const CartPage = () => {
 
     const handleShowVoucher = () => {
         let totalPrice = handleCalculateTotalPrice();
-        let updatedVouchers = vouchers.map((voucher) => {
-            if (totalPrice >= voucher.conditionValue) {
-                return {
-                    ...voucher,
-                    disabled: false,
-                };
-            } else {
-                return {
-                    ...voucher,
-                    disabled: true,
-                };
-            }
-        });
+        let updatedVouchers =
+            vouchers &&
+            vouchers?.map((voucher) => {
+                if (totalPrice >= voucher.conditionValue) {
+                    return {
+                        ...voucher,
+                        disabled: false,
+                    };
+                } else {
+                    return {
+                        ...voucher,
+                        disabled: true,
+                    };
+                }
+            });
 
         setVoucherAfterFilter(updatedVouchers);
         if (appliedVoucher) {

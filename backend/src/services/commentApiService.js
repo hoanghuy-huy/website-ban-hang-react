@@ -21,7 +21,7 @@ let handleGetAllFunc = ({ limit, page, productId, starNumber }) => {
           limit: limit,
           include: [
             {
-              model: db.CommentImage,
+              model: db.User,
             },
           ],
           order: [["id", "DESC"]],
@@ -49,7 +49,7 @@ let handleGetAllFunc = ({ limit, page, productId, starNumber }) => {
         limit: limit,
         include: [
           {
-            model: db.CommentImage,
+            model: db.User,
           },
         ],
         order: [["id", "DESC"]],

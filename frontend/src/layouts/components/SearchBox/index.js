@@ -14,6 +14,7 @@ import {
     saveKeywordSearch,
     searchAllProductApi,
     searchKeywordProductApi,
+    searchProductImage,
 } from '~/redux/features/productSlice/productSlice';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -96,25 +97,32 @@ const SearchBox = () => {
 
     const uploadFile = async (file) => {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('image', file);
         setLoadingApi(true);
+        const idArray = [];
         try {
-            const response = await fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                body: formData,
+            const response = await axios.post('http://127.0.0.1:5000/api/compare_image', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
-            const data = await response.json();
-            if (data && data.class) {
-                let label = labels[data.class];
-                if (label) {
-                    await dispatch(
-                        searchAllProductApi({ categoryId: label.id, keyword: label.name, page: 1, limit: 8 }),
-                    );
-                    await dispatch(saveKeywordSearch(label.name));
-                    await dispatch(saveCategoryIdToSearch(label.id));
-                    navigate('/search');
-                    console.log(label);
-                }
+
+            const data = response.data;
+
+            if (data && Array.isArray(data)) {
+                data.forEach((item) => {
+                    if (item.id) {
+                        idArray.push(parseInt(item.id, 10));
+                    }
+                });
+
+                // Bây giờ bạn có thể sử dụng idArray ở đây
+                console.log('IDs from API:', idArray);
+
+                // Nếu bạn cần dispatch các hành động khác:
+                // Bạn có thể lấy label từ idArray và thực hiện các hành động tiếp theo
+
+                await dispatch(searchProductImage({ idsProduct: idArray }));
+
+                navigate('/search');
             }
         } catch (error) {
             console.error('Error uploading file:', error);

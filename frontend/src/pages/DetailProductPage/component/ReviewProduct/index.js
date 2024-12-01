@@ -14,7 +14,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PaginationComponent from '~/components/Pagination';
 import { useState } from 'react';
 const ReviewProduct = ({ product }) => {
-
     const dispatch = useDispatch();
     const { commentList, averageRating } = useSelector((state) => state.comment);
     const [starNumber, setStarNumber] = useState(null);
@@ -29,11 +28,11 @@ const ReviewProduct = ({ product }) => {
     }, [currentPage, limit]);
 
     useEffect(() => {
-        setCurrentPage(1)
+        setCurrentPage(1);
         dispatch(getAllComment({ productId: product.id, page: currentPage, limit: limit, starNumber: starNumber }));
     }, [starNumber]);
     const { totalPages, comments } = commentList;
-console.log(product)
+    console.log(product);
     return (
         <div className="ReviewProduct">
             <div className="ReviewProductContainer">
@@ -147,7 +146,11 @@ console.log(product)
                                         </div>
 
                                         <div className="product-rating__main">
-                                            <div className="product-rating__author-name">username </div>
+                                            <div className="product-rating__author-name">
+                                                {item.User.username
+                                                    ? item.User.username
+                                                    : 'Khách hàng chưa đặt tên'}{' '}
+                                            </div>
                                             <div className="product-rating__rating">
                                                 <Rating value={item.starNumber} readOnly sx={{ fontSize: 14 }} />
                                                 {item.starNumber === 1 && (

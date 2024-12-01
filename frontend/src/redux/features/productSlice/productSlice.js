@@ -151,9 +151,9 @@ export const countProductApi = createAsyncThunk('products/countProductApi', asyn
 
 export const searchAllProductApi = createAsyncThunk(
     'products/searchAllProductApi',
-    async ({ keyword, type, categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
+    async ({  type, categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
         const res = await httpRequest.get(
-            `products/search?&page=${page}&limit=${limit}&keyword=${keyword}&sort=${sort ? sort : ''}&starNumber=${
+            `products/search?&page=${page}&limit=${limit}&sort=${sort ? sort : ''}&starNumber=${
                 starNumber ? 1 : 0
             }&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${brand ? brand : []}&categoryId=${
                 categoryId ? categoryId : ''
@@ -168,6 +168,15 @@ export const searchKeywordProductApi = createAsyncThunk(
     'products/searchKeywordProductApi',
     async ({ keyword, page, limit }) => {
         const res = await httpRequest.get(`products/keyword?page=${page}&limit=${limit}&keyword=${keyword}`);
+
+        return res ? res.DT : [];
+    },
+);
+
+export const searchProductImage = createAsyncThunk(
+    'products/searchProductImage',
+    async ({ idsProduct }) => {
+        const res = await httpRequest.get(`products/search-image?idsProduct=${[idsProduct]}`);
 
         return res ? res.DT : [];
     },
@@ -490,7 +499,22 @@ export const productSlice = createSlice({
             .addCase(searchKeywordProductApi.rejected, (state, action) => {
                 // state.loading = false;
                 state.error = true;
-            });
+            })
+
+
+            .addCase(searchProductImage.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(searchProductImage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.listProductSearch = action.payload;
+            })
+            .addCase(searchProductImage.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
     },
 });
 export const {

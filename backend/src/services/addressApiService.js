@@ -11,17 +11,19 @@ let createNewAddress = (rawData) => {
           EC: 1,
         });
       }
-      let { phone, defaultAddress,typeAddress, ...others } = rawData;
+      let { phone, defaultAddress, typeAddress, ...others } = rawData;
       typeAddress = typeAddress ? typeAddress : "home";
 
-      let allAddress = await db.Address.findAll();
+      let allAddress = await db.Address.findAll({
+        where: { userId: rawData.userId },
+      });
 
-      if (allAddress && defaultAddress) {
-        allAddress.map(async (item) => {
-          await item.update({
-            defaultAddress: false,
-          });
-        });
+      if (allAddress.length > 0 && defaultAddress) {
+        await Promise.all(
+          allAddress.map(async (item) => {
+            await item.update({ defaultAddress: false });
+          })
+        );
       }
 
       let data = await db.Address.create({
@@ -43,7 +45,7 @@ let createNewAddress = (rawData) => {
   });
 };
 
-let handleDeleteFunc = ({id}) => {
+let handleDeleteFunc = ({ id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!id) {
@@ -87,19 +89,17 @@ let editAddress = (rawData) => {
       let allAddress = await db.Address.findAll({
         where: {
           id: {
-              [Op.ne]: id
-          }
-      }
+            [Op.ne]: id,
+          },
+        },
       });
 
-
-      console.log(allAddress)
-      if (allAddress && defaultAddress) {
-        allAddress.map(async (item) => {
-          await item.update({
-            defaultAddress: false,
-          });
-        });
+      if (allAddress.length > 0 && defaultAddress) {
+        await Promise.all(
+          allAddress.map(async (item) => {
+            await item.update({ defaultAddress: false });
+          })
+        );
       }
 
       let address = await db.Address.findOne({
@@ -114,7 +114,7 @@ let editAddress = (rawData) => {
         });
       }
 
-      let data = await address.update({
+      let updatedAddress = await address.update({
         typeAddress,
         defaultAddress,
         ...others,
@@ -122,7 +122,7 @@ let editAddress = (rawData) => {
 
       resolve({
         EM: "ok! update address successfully",
-        DT: data,
+        DT: updatedAddress,
         EC: 0,
       });
     } catch (error) {
@@ -155,22 +155,22 @@ let handleGetAll = (userId) => {
 let handleGetAddressDefault = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let data = await db.Address.findOne({
+      let addressDefault = await db.Address.findOne({
         where: {
           [Op.and]: [{ userId: userId }, { defaultAddress: 1 }],
         },
       });
 
-      if (!data) {
+      if (!addressDefault) {
         resolve({
           EM: "address is empty",
-          DT: data,
+          DT: '',
           EC: 0,
         });
       }
       resolve({
         EM: "ok",
-        DT: data,
+        DT: addressDefault,
         EC: 0,
       });
     } catch (error) {

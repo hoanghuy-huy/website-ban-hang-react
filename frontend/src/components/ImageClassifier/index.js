@@ -1,50 +1,41 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { Backdrop, Chip, CircularProgress, Grid, Stack } from '@mui/material';
 import axios from 'axios';
 
 const ImageClassifier = () => {
     const [loading, setLoading] = useState(false);
-    const [confidence, setConfidence] = useState(null);
-    const [predictedClass, setPredictedClass] = useState(null);
+    const [results, setResults] = useState([]);
     const [file, setFile] = useState(null);
-    const labels = [
-        'Bàn Ủi',
-        'Bình đung siêu tốc',
-        'Lò vi sống',
-        'Máy hút bụi',
-        'Máy lọc không khí',
-        'Nồi cơm điện',
-        'Quạt',
-    ];
+
     const handleImageChange = (files) => {
         if (files.length > 0) {
             setFile(files[0]); // Lưu file để sử dụng khi gửi
-            setPredictedClass(null); // Reset dự đoán
-            setConfidence(null); // Reset độ tin cậy
+            setResults([]); // Reset kết quả
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) return; // Nếu không có file, không làm gì cả
-
+    
         setLoading(true); // Bắt đầu trạng thái loading
         const formData = new FormData();
-        formData.append('file', file);
-
+        formData.append('image', file); // Đảm bảo key là 'image'
+    
         try {
-            const response = await axios.post('http://127.0.0.1:5000/predict', formData, {
+            const response = await axios.post('http://127.0.0.1:5000/api/compare_image', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            setPredictedClass(response.data.class); // Cập nhật lớp dự đoán
-            setConfidence(response.data.confidence); // Cập nhật độ tin cậy
+            setResults(response.data); // Cập nhật kết quả
         } catch (error) {
             console.error('Error uploading file:', error);
         } finally {
             setLoading(false); // Kết thúc trạng thái loading
         }
     };
+
+    console.log(results)
 
     return (
         <Fragment>
@@ -57,7 +48,7 @@ const ImageClassifier = () => {
                 marginTop="12%"
             >
                 <Grid item>
-                    <h1 style={{ textAlign: 'center', marginBottom: '1.5em' }}>MobileNetV3 Image Classifier</h1>
+                    <h1 style={{ textAlign: 'center', marginBottom: '1.5em' }}>Image Search API</h1>
                     <form onSubmit={handleSubmit}>
                         <DropzoneArea
                             acceptedFiles={['image/*']}
@@ -68,25 +59,18 @@ const ImageClassifier = () => {
                             showAlerts={['error']}
                         />
                         <button type="submit" disabled={!file}>
-                            Predict
+                            Search
                         </button>
                     </form>
-                    <Stack style={{ marginTop: '2em', width: '12rem' }} direction="row" spacing={1}>
-                        <Chip
-                            label={predictedClass === null ? 'Prediction:' : `Prediction: ${predictedClass}`}
-                            style={{ justifyContent: 'left' }}
-                            variant="outlined"
-                        />
-                        <Chip
-                            label={confidence === null ? 'Confidence:' : `Confidence: ${confidence}%`}
-                            style={{ justifyContent: 'left' }}
-                            variant="outlined"
-                        />{' '}
-                        <Chip
-                            label={labels[predictedClass] === null ? 'Labels:' : `Labels: ${labels[predictedClass]}`}
-                            style={{ justifyContent: 'left' }}
-                            variant="outlined"
-                        />
+                    <Stack style={{ marginTop: '2em', width: '20rem' }} spacing={1}>
+                        {results.map((result, index) => (
+                            <Chip
+                                key={index}
+                                label={`ID: ${result.id}, Distance: ${result.distance}`}
+                                style={{ justifyContent: 'left' }}
+                                variant="outlined"
+                            />
+                        ))}
                     </Stack>
                 </Grid>
             </Grid>

@@ -39,7 +39,6 @@ const SearchPage = () => {
     useEffect(() => {
         dispatch(
             searchAllProductApi({
-                keyword: keyword,
                 page: currentPage,
                 limit: limit,
                 sort: sortValue,
@@ -51,14 +50,13 @@ const SearchPage = () => {
         );
     }, [currentPage, sortValue, starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter]);
     useEffect(() => {
-        dispatch(
-            searchAllProductApi({
-                keyword: keyword,
-                page: currentPage,
-                limit: limit,
-                categoryId: categoryIdToSearch,
-            }),
-        );
+        // dispatch(
+        //     searchAllProductApi({
+        //         page: currentPage,
+        //         limit: limit,
+        //         categoryId: categoryIdToSearch,
+        //     }),
+        // );
     }, []);
     if (loading === true && error === false) {
         return (
@@ -81,7 +79,7 @@ const SearchPage = () => {
 
     return (
         <div className="product-container">
-            <div className="title card shadow p-3">Kết quả tìm kiếm của "{keyword ? keyword : 'chưa có'}"</div>
+            {/* <div className="title card shadow p-3">Kết quả tìm kiếm của "{keyword ? keyword : 'chưa có'}"</div> */}
 
             {listProductSearch?.products?.length > 0 ? (
                 <div className="container-cart-item d-flex">

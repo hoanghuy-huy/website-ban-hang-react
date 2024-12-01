@@ -29,7 +29,7 @@ const ModalVouCher = ({ show, setShow, totalPrice, voucherList, setAppliedVouche
                             <div className="group-header__condition">Áp dụng tối đa: 1</div>
                         </div>
                         <div className="coupon-list">
-                            {voucherList.map((voucher, index) => (
+                            {voucherList && voucherList.length > 0 && voucherList.map((voucher, index) => (
                                 <Voucher
                                     key={index} 
                                     discount={voucher.discount}

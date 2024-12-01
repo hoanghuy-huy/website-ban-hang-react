@@ -22,11 +22,15 @@
         }
         .img-product {
             width: 100%;
+            height: auto; /* Đảm bảo chiều cao tự động để duy trì tỷ lệ */
             overflow: hidden;
             animation: all 0.3s ease-in-out;
-
+        
             img {
-                object-fit: contain;
+                width: 100%; /* Đặt chiều rộng ảnh 100% */
+                height: 100%; /* Đặt chiều cao ảnh 100% */
+                object-fit: cover; /* Dùng cover để lấp đầy không gian mà không bị biến dạng */
+                object-position: center; /* Căn giữa ảnh trong khung */
             }
         }
 

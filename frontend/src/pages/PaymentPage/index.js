@@ -14,12 +14,12 @@ import * as paymentService from '~/services/paymentService';
 import _ from 'lodash';
 import './PaymentPage.scss';
 import { createNewOrderApi } from '~/redux/features/orderSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import VoucherMini from '../CartPage/VoucherMini';
 import ModalVouCher from '../CartPage/ModalMouCher';
-import { handleSelectedVoucher } from '~/redux/features/voucherSlice';
+import { getAllVoucher, handleSelectedVoucher } from '~/redux/features/voucherSlice';
 import BackdropComp from '~/components/BackDropComp';
 // const voucherList = [
 //     {
@@ -159,9 +159,19 @@ const PaymentPage = () => {
         } else {
             setSdkReady(true);
         }
+
+        dispatch(getAllVoucher({ page: 1, limit: 10 }));
     }, []);
 
     const handleOnClickOrderProduct = async () => {
+        if (!addressDefault) {
+            toast.info('Chưa có địa chỉ');
+            return;
+        }
+        if(itemsToOrder.length < 0) {
+            toast.error('Có lỗi xảy ra vui lòng thử lại')
+            return;
+        }
         let order = {};
         let orderDetail = {};
 
@@ -209,7 +219,6 @@ const PaymentPage = () => {
             userId: userId,
             deliveryMethodFee: order.deliveryMethodFee,
         };
-        console.log(buildDataToSendEmail);
         await dispatch(
             createNewOrderApi({
                 order,
@@ -231,19 +240,21 @@ const PaymentPage = () => {
 
     const handleShowVoucher = () => {
         let totalPrice = totalPriceItem();
-        let updatedVouchers = vouchers.map((voucher) => {
-            if (totalPrice >= voucher.conditionValue) {
-                return {
-                    ...voucher,
-                    disabled: false,
-                };
-            } else {
-                return {
-                    ...voucher,
-                    disabled: true,
-                };
-            }
-        });
+        let updatedVouchers =
+            vouchers &&
+            vouchers?.map((voucher) => {
+                if (totalPrice >= voucher.conditionValue) {
+                    return {
+                        ...voucher,
+                        disabled: false,
+                    };
+                } else {
+                    return {
+                        ...voucher,
+                        disabled: true,
+                    };
+                }
+            });
 
         setVoucherAfterFilter(updatedVouchers);
         if (appliedVoucher) {
@@ -315,33 +326,37 @@ const PaymentPage = () => {
                                     <div className="original-fee">{convertPrice(methodDelivery.feeDelivery)} ₫</div>
                                 </div>
                                 <div className="product-item__package-item-list">
-                                    {itemsToOrder.map((item) => {
-                                        return (
-                                            <div className="product-item__package-item gap-4">
-                                                <div className="thumbnail-img">
-                                                    <img src={item?.Product?.thumbnailUrl} />
-                                                </div>
-                                                <div className="item-info">
-                                                    <div className="item-info__first-line">
-                                                        <span className="item-info__product-name">
-                                                            {item.Product.name}
-                                                        </span>
+                                    {itemsToOrder &&
+                                        itemsToOrder.length > 0 &&
+                                        itemsToOrder.map((item) => {
+                                            return (
+                                                <div className="product-item__package-item gap-4">
+                                                    <div className="thumbnail-img">
+                                                        <img src={item?.Product?.thumbnailUrl} />
                                                     </div>
-                                                    <div className="item-info__second-line">
-                                                        <div className="item-info__quantity">SL: x{item?.quantity}</div>
-                                                        <div>
-                                                            <div className="item-info__price item-info__price-sale">
-                                                                <span className="item-info__original-price">
-                                                                    {convertPrice(item?.Product.originalPrice)} ₫
-                                                                </span>
-                                                                <span>{convertPrice(item?.Product?.price)} ₫</span>
+                                                    <div className="item-info">
+                                                        <div className="item-info__first-line">
+                                                            <span className="item-info__product-name">
+                                                                {item.Product.name}
+                                                            </span>
+                                                        </div>
+                                                        <div className="item-info__second-line">
+                                                            <div className="item-info__quantity">
+                                                                SL: x{item?.quantity}
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-info__price item-info__price-sale">
+                                                                    <span className="item-info__original-price">
+                                                                        {convertPrice(item?.Product.originalPrice)} ₫
+                                                                    </span>
+                                                                    <span>{convertPrice(item?.Product?.price)} ₫</span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
+                                            );
+                                        })}
                                 </div>
                             </div>
                         </div>
@@ -393,13 +408,12 @@ const PaymentPage = () => {
                         <div className="DeliveryAddress-box__header">
                             <div className="header__title"> Giao tới</div>
 
-                            {/* {addressDefault ? (
+                            {!addressDefault && (
                                 <div className="header__action">
-                                    <Link to={'/address'}>Thay Đổi</Link>
+                                    {' '}
+                                    <Link to={'/address'}>Nhập</Link>
                                 </div>
-                            ) : (
-                                <div className="header__action"> Nhập</div>
-                            )} */}
+                            )}
                         </div>
 
                         {addressDefault ? (
