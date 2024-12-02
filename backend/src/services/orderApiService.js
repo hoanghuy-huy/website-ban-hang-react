@@ -926,7 +926,7 @@ let handleTotalOrderSold = () => {
         "quantity",
         {
           where: {
-            [Op.and]: [{ returnItem: null }, { status: 1 }],
+            [Op.and]: [{ status: 1 }],
           },
         }
       );
@@ -946,11 +946,14 @@ let handleTotalOrderSold = () => {
 let handleTotalOrderReturn = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let quantityProductDeliveryReturn = await db.OrderDetail.sum("quantity", {
-        where: {
-          [Op.and]: [{ returnItem: 1 }, { status: 1 }],
-        },
-      });
+      let quantityProductDeliveryReturn = await db.OrderDetail.sum(
+        "returnItem",
+        {
+          where: {
+            [Op.and]: [{ statusReturn: 1 }, { status: 1 }],
+          },
+        }
+      );
       resolve({
         EM: "Ok",
         EC: 0,
@@ -1011,7 +1014,7 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
         },
       });
 
-      let totalProductReturn = await db.OrderDetail.sum("quantity", {
+      let totalProductReturn = await db.OrderDetail.sum("returnItem", {
         where: {
           [Op.and]: [
             !!dateAgo &&
@@ -1028,7 +1031,7 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
               targetDate.getFullYear()
             ),
             { status: 1 },
-            { returnItem: 1 },
+            { statusReturn: 1 },
           ],
         },
       });
@@ -1053,7 +1056,6 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
               db.sequelize.fn("YEAR", db.sequelize.col("updatedAt")),
               targetDate.getFullYear()
             ),
-            { returnItem: null },
             { status: 1 },
           ],
         },
@@ -1373,7 +1375,9 @@ let handleConfirmOrderReturnAdmin = async ({ orderDetailId }) => {
           inventoryNumber: db.sequelize.literal(
             `inventoryNumber + ${orderDetail.returnItem}`
           ),
-          quantitySold: db.sequelize.literal(`quantitySold - ${orderDetail.returnItem}`),
+          quantitySold: db.sequelize.literal(
+            `quantitySold - ${orderDetail.returnItem}`
+          ),
         },
         { where: { id: orderDetail.productId } }
       );

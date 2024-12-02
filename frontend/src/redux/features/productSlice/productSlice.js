@@ -151,14 +151,8 @@ export const countProductApi = createAsyncThunk('products/countProductApi', asyn
 
 export const searchAllProductApi = createAsyncThunk(
     'products/searchAllProductApi',
-    async ({  type, categoryId, limit, page, sort, starNumber, minPrice, maxPrice, brand }) => {
-        const res = await httpRequest.get(
-            `products/search?&page=${page}&limit=${limit}&sort=${sort ? sort : ''}&starNumber=${
-                starNumber ? 1 : 0
-            }&price=${[minPrice ? minPrice : 0, maxPrice ? maxPrice : 0]}&brand=${brand ? brand : []}&categoryId=${
-                categoryId ? categoryId : ''
-            }`,
-        );
+    async ({ keyword, limit, page }) => {
+        const res = await httpRequest.get(`products/search?&page=${page}&limit=${limit}&keyword=${keyword}`);
 
         return res ? res.DT : [];
     },
@@ -173,14 +167,11 @@ export const searchKeywordProductApi = createAsyncThunk(
     },
 );
 
-export const searchProductImage = createAsyncThunk(
-    'products/searchProductImage',
-    async ({ idsProduct }) => {
-        const res = await httpRequest.get(`products/search-image?idsProduct=${[idsProduct]}`);
+export const searchProductImage = createAsyncThunk('products/searchProductImage', async ({ idsProduct }) => {
+    const res = await httpRequest.get(`products/search-image?idsProduct=${[idsProduct]}`);
 
-        return res ? res.DT : [];
-    },
-);
+    return res ? res.DT : [];
+});
 
 const initialState = {
     category: [],
@@ -501,7 +492,6 @@ export const productSlice = createSlice({
                 state.error = true;
             })
 
-
             .addCase(searchProductImage.pending, (state, action) => {
                 state.loading = true;
                 state.error = false;
@@ -514,7 +504,7 @@ export const productSlice = createSlice({
             .addCase(searchProductImage.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            })
+            });
     },
 });
 export const {

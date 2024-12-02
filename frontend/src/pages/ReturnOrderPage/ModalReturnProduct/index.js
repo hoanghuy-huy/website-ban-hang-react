@@ -4,16 +4,23 @@ import Modal from 'react-bootstrap/Modal';
 import './ModalReturnProduct.scss';
 import Image from '~/components/Image';
 import { useDispatch } from 'react-redux';
-import { customerReturnOrderApi, customerReviewProductApi, getListOrderToReturn, getOneOrderApi } from '~/redux/features/orderSlice';
+import {
+    customerReturnOrderApi,
+    customerReviewProductApi,
+    getListOrderToReturn,
+    getOneOrderApi,
+} from '~/redux/features/orderSlice';
 import { toast } from 'react-toastify';
 
-function ModalReturnProduct({ userId,data, show, setShow }) {
+function ModalReturnProduct({ userId, data, show, setShow }) {
     const [contentReturn, setContentReturn] = useState('');
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
 
     const handleClose = () => {
         setShow(false);
+        setContentReturn('');
+        setQuantity(1);
     };
 
     const handleIncrease = () => {
@@ -29,7 +36,7 @@ function ModalReturnProduct({ userId,data, show, setShow }) {
     };
 
     const handleCustomerRequestReturnOrder = async () => {
-       await dispatch(
+        await dispatch(
             customerReturnOrderApi({
                 orderDetailId: data.id,
                 quantityReturn: quantity,
@@ -39,7 +46,7 @@ function ModalReturnProduct({ userId,data, show, setShow }) {
 
         await dispatch(getListOrderToReturn({ userId }));
 
-        setShow(false)
+        setShow(false);
     };
 
     return (

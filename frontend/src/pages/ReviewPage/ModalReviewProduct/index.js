@@ -6,11 +6,17 @@ import './ModalReviewProduct.scss';
 import Image from '~/components/Image';
 import { useDispatch } from 'react-redux';
 import { customerReviewProductApi, getOneOrderApi } from '~/redux/features/orderSlice';
+
 function ModalReviewProduct({ data, show, setShow, userId }) {
     const [stars, setStars] = useState(1);
     const [contentReview, setContentReview] = useState('');
     const dispatch = useDispatch();
-    const handleClose = () => setShow(false);
+
+    const handleClose = () => {
+        setShow(false);
+        setStars(1); 
+        setContentReview(''); 
+    };
 
     const handleCustomerReviewProduct = async () => {
         const buildData = {
@@ -23,50 +29,49 @@ function ModalReviewProduct({ data, show, setShow, userId }) {
 
         await dispatch(customerReviewProductApi(buildData));
         await dispatch(getOneOrderApi(data.orderId));
-        setShow(false)
+        handleClose(); // Close modal after submission
     };
+
     return (
-        <>
-            <Modal show={show} onHide={handleClose} animation={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        <div className="header-review-product">
-                            <Image src={data?.Product?.thumbnailUrl} />
-                            <div className="product-wrap">
-                                <div className="name">
-                                    {data?.Product?.name ? data?.Product?.name : 'Tên sản phẩm'}{' '}
-                                </div>
-                                <div className="stars">
-                                    <Rating
-                                        name="simple-controlled size-large"
-                                        value={stars}
-                                        onChange={(event, newValue) => {
-                                            setStars(newValue);
-                                        }}
-                                    />
-                                </div>
+        <Modal show={show} onHide={handleClose} animation={false}>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    <div className="header-review-product">
+                        <Image src={data?.Product?.thumbnailUrl} />
+                        <div className="product-wrap">
+                            <div className="name">
+                                {data?.Product?.name || 'Tên sản phẩm'} 
+                            </div>
+                            <div className="stars">
+                                <Rating
+                                    name="simple-controlled"
+                                    value={stars}
+                                    onChange={(event, newValue) => {
+                                        setStars(newValue);
+                                    }}
+                                />
                             </div>
                         </div>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="body-review-product">
-                        <div className="title">Đánh giá sản phẩm</div>
-                        <textarea
-                            className="input-review"
-                            onChange={(e) => setContentReview(e.target.value)}
-                            value={contentReview}
-                            placeholder="Viết đánh giá"
-                        />
                     </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" className="w-100" onClick={handleCustomerReviewProduct}>
-                        Gửi đánh giá
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="body-review-product">
+                    <div className="title">Đánh giá sản phẩm</div>
+                    <textarea
+                        className="input-review"
+                        onChange={(e) => setContentReview(e.target.value)}
+                        value={contentReview}
+                        placeholder="Viết đánh giá"
+                    />
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" className="w-100" onClick={handleCustomerReviewProduct}>
+                    Gửi đánh giá
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 }
 

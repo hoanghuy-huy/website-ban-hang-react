@@ -15,6 +15,7 @@ const ReturnOrderPage = () => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [action, setAction] = useState(null);
+    const [data, setData] = useState('');
     const listOrderToReturn = useSelector((state) => state.order.listOrderToReturn);
     const { userId } = useSelector((state) => state.account.account);
     useEffect(() => {
@@ -28,6 +29,11 @@ const ReturnOrderPage = () => {
 
     const handleFetchData = (value) => {
         setAction(value);
+    };
+
+    const handleReturnOrder = (item) => {
+        setData(item);
+        setShowModal(true);
     };
 
     return (
@@ -118,7 +124,7 @@ const ReturnOrderPage = () => {
                                                                 <Button
                                                                     size="small"
                                                                     outline
-                                                                    onClick={() => setShowModal(true)}
+                                                                    onClick={() => handleReturnOrder(item)}
                                                                 >
                                                                     Trả hàng
                                                                 </Button>
@@ -127,13 +133,6 @@ const ReturnOrderPage = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <ModalReturnProduct
-                                                data={item}
-                                                show={showModal}
-                                                setShow={setShowModal}
-                                                userId={userId}
-                                            />
                                         </>
                                     );
                                 })
@@ -149,6 +148,8 @@ const ReturnOrderPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ModalReturnProduct data={data} show={showModal} setShow={setShowModal} userId={userId} />
         </div>
     );
 };

@@ -8,18 +8,18 @@ const ReviewPage = () => {
     const dispatch = useDispatch();
     const listOrderToReview = useSelector((state) => state.order.listOrderToReview);
     const [showModal, setShowModal] = useState(false);
+    const [data, setData] = useState('');
     const { userId } = useSelector((state) => state.account.account);
     // const [star, setStar] = useState(0)
     const starRefs = useRef({});
     const handleSetValueStar = async (star, item) => {
         // await setStar(star)
         starRefs.current[item.id] = star;
+        setData(item);
         await setShowModal(true);
-   
     };
     useEffect(() => {
         dispatch(getListOrderToReview({ userId: userId }));
- 
     }, []);
 
     return (
@@ -50,15 +50,6 @@ const ReviewPage = () => {
                                             />
                                         </div>
                                     </div>
-
-                                    <ModalReviewProduct
-                                        userId={userId}
-                                        show={showModal}
-                                        setShow={setShowModal}
-                                        data={order}
-                                        id={order.id}
-                                        star={starRefs.current[order.id] || 0}
-                                    />
                                 </>
                             ))
                         ) : (
@@ -67,6 +58,15 @@ const ReviewPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ModalReviewProduct
+                userId={userId}
+                show={showModal}
+                setShow={setShowModal}
+                data={data}
+                id={data.id}
+                star={starRefs.current[data.id] || 0}
+            />
         </>
     );
 };

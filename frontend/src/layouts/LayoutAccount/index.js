@@ -176,32 +176,7 @@ const LayoutAccount = ({ children }) => {
                                                     </li>
                                                 </NavLink>
 
-                                                <NavLink to={'/import-product'}>
-                                                    <li
-                                                        className="item-account gap-3"
-                                                        style={{
-                                                            height: 38,
-                                                            width: '100%',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            paddingLeft: 15,
-                                                        }}
-                                                    >
-                                                        <div>
-                                                            <AddCircleIcon
-                                                                sx={{
-                                                                    height: 20,
-                                                                    width: 20,
-                                                                    color: 'rgb(155, 155, 155)',
-                                                                }}
-                                                                icon={faUser}
-                                                            />
-                                                        </div>
-                                                        <div style={{ color: 'rgb(74, 74, 74)' }}>
-                                                            Quản lý nhập hàng
-                                                        </div>
-                                                    </li>
-                                                </NavLink>
+                                         
 
                                                 <NavLink to={'/account/review-product'}>
                                                     <li
