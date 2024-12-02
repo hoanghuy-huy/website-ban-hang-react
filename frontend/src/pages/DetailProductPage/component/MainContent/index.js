@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Sidebar from '../Sidebar';
@@ -15,6 +15,8 @@ import Image from '~/components/Image';
 import { convertPrice } from '~/utils/convert';
 import { Rating } from '@mui/material';
 import ReviewProduct from '../ReviewProduct';
+import { getAttributeProductApi } from '~/redux/features/productSlice/productSlice';
+import ComparisonProductBox from '../ComparisonProduct';
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const dispatch = useDispatch();
     const { ProductImages } = item && item.ProductImages ? item : '';
@@ -22,11 +24,17 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
         (state) => state.detailProduct,
     );
 
+    const productAttribute = useSelector((state) => state.products.productAttribute);
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product?.id === item?.id);
 
         return check;
     };
+
+    useEffect(() => {
+        dispatch(getAttributeProductApi({ productId: item?.id }));
+        console.log(productAttribute);
+    }, []);
 
     if (!item) {
         return <div>error from server.</div>;
@@ -75,8 +83,8 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                             </div>
                             <div className="title-styled">{item?.name}</div>
                             <div className="rating-styled">
-                                <div className='starNumber'>
-                                    <p>{item?.starsNumber}{' '}</p>
+                                <div className="starNumber">
+                                    <p>{item?.starsNumber} </p>
                                     <Rating
                                         name="read-only"
                                         value={item?.starsNumber}
@@ -124,60 +132,27 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
 
                     <SimilarProductBox productList={productList} handleFetchData={handleFetchData} />
 
-                    {detailProduct && (
+                    {productAttribute && (
                         <div className="detail-info-of-product">
                             <div className="title ms-2 py-3">Thông tin chi tiết</div>
                             <div className="detail-info-of-product__item-contain">
-                                <div className="item">
-                                    <span className="left">Thương hiệu</span>
-                                    <span className="right">{detailProduct?.brand ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Xuất xứ thương hiệu</span>
-                                    <span className="right">{detailProduct?.brandCountry ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Dung tích</span>
-                                    <span className="right">{detailProduct?.capacity ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Chất liệu</span>
-                                    <span className="right">{detailProduct?.material ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Công suất</span>
-                                    <span className="right">{detailProduct?.power ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Xuất xứ (Made in)</span>
-                                    <span className="right">{detailProduct?.origin ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Trọng lượng sản phẩm</span>
-                                    <span className="right">{detailProduct?.productWeight ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Chế độ an toàn</span>
-                                    <span className="right">{detailProduct?.safeMode ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Chế độ hẹn giờ</span>
-                                    <span className="right">{detailProduct?.timer ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Sản phẩm có được bảo hành không?</span>
-                                    <span className="right">{detailProduct?.isWarrantyApplied ?? '--'}</span>
-                                </div>
-                                <div className="item">
-                                    <span className="left">Thời gian bảo hành</span>
-                                    <span className="right">{detailProduct?.warrantyTimePeriod ?? '--'}</span>
-                                </div>
+                                {productAttribute &&
+                                    productAttribute.length > 0 &&
+                                    productAttribute.map((attr) => {
+                                        return (
+                                            <div className="item">
+                                                <span className="left">{attr.name}</span>
+                                                <span className="right">{attr.value ?? '--'}</span>
+                                            </div>
+                                        );
+                                    })}
                             </div>
                         </div>
                     )}
                 </div>
             </div>
 
+            <ComparisonProductBox />
             {/* Review Product Box */}
             <ReviewProduct product={item} />
 

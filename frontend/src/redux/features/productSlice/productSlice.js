@@ -173,6 +173,12 @@ export const searchProductImage = createAsyncThunk('products/searchProductImage'
     return res ? res.DT : [];
 });
 
+export const getAttributeProductApi = createAsyncThunk('products/getAttributeProductApi', async ({ productId }) => {
+    const res = await httpRequest.get(`products/get-attribute-by-product-id?productId=${productId}`);
+
+    return res ? res.DT : [];
+});
+
 const initialState = {
     category: [],
     product: [],
@@ -185,6 +191,7 @@ const initialState = {
     categoryProduct: [],
     listProductHot: [],
     productDetail: [],
+    productAttribute:[],
     listProductPagination: [],
     listProductPaginationWithCategory: [],
     actionFetchProductHome: { type: 'fetch all product' },
@@ -504,7 +511,22 @@ export const productSlice = createSlice({
             .addCase(searchProductImage.rejected, (state, action) => {
                 state.loading = false;
                 state.error = true;
-            });
+            })
+
+
+            .addCase(getAttributeProductApi.pending, (state, action) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getAttributeProductApi.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = false;
+                state.productAttribute = action.payload;
+            })
+            .addCase(getAttributeProductApi.rejected, (state, action) => {
+                state.loading = false;
+                state.error = true;
+            })
     },
 });
 export const {

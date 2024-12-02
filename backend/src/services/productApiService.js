@@ -715,56 +715,92 @@ class productApiService {
 
   async handleSearchImageFunc({ idsProduct, page = 1, limit = 10 }) {
     try {
-        const idsArray = idsProduct.split(",").map((id) => parseInt(id, 10));
+      const idsArray = idsProduct.split(",").map((id) => parseInt(id, 10));
 
+      const offset = (page - 1) * limit;
 
-        const offset = (page - 1) * limit;
+      const products = await db.Product.findAll({
+        where: {
+          id: idsArray,
+        },
+        limit: limit,
+        offset: offset,
+      });
 
-        const products = await db.Product.findAll({
-            where: {
-                id: idsArray,
-            },
-            limit: limit, 
-            offset: offset, 
-        });
+      const totalProducts = await db.Product.count({
+        where: {
+          id: idsArray,
+        },
+      });
 
-        const totalProducts = await db.Product.count({
-            where: {
-                id: idsArray,
-            },
-        });
+      const totalPages = Math.ceil(totalProducts / limit);
 
-        const totalPages = Math.ceil(totalProducts / limit);
-
-        if (products.length > 0) {
-            return {
-                EM: "Get All products Success",
-                EC: 0,
-                DT: {
-                    products,
-                    pagination: {
-                        totalProducts,
-                        totalPages,
-                        currentPage: page,
-                        limit: limit,
-                    },
-                },
-            };
-        } else {
-            return {
-                EM: "No products found",
-                EC: 1,
-                DT: [],
-            };
-        }
-    } catch (error) {
-        console.error("Error fetching products:", error);
+      if (products.length > 0) {
         return {
-            EM: "Something went wrong in service",
-            EC: 2,
+          EM: "Get All products Success",
+          EC: 0,
+          DT: {
+            products,
+            pagination: {
+              totalProducts,
+              totalPages,
+              currentPage: page,
+              limit: limit,
+            },
+          },
         };
+      } else {
+        return {
+          EM: "No products found",
+          EC: 1,
+          DT: [],
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return {
+        EM: "Something went wrong in service",
+        EC: 2,
+      };
     }
-}
+  }
+
+  async handleGetAttributeByProductId({ productId }) {
+    try {
+      if (!productId) {
+        return {
+          EM: "Missing product ID",
+          EC: 2,
+          DT: [],
+        };
+      }
+  
+      let productAttribute = await db.Attribute.findAll({
+        where: { productId: productId },
+      });
+  
+      // Kiểm tra xem mảng có rỗng không
+      if (productAttribute.length === 0) {
+        return {
+          EM: "No attributes found for the product",
+          EC: 2,
+          DT: [],
+        };
+      }
+  
+      return {
+        EM: "OK",
+        EC: 0,
+        DT: productAttribute,
+      };
+    } catch (error) {
+      console.error("Error fetching product attributes:", error);
+      return {
+        EM: "Something went wrong in service",
+        EC: 2,
+      };
+    }
+  }
 }
 
 module.exports = new productApiService();

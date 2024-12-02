@@ -3,7 +3,8 @@ import productController from "../controllers/productController";
 
 const router = express.Router();
 
-// keyword
+router.get("/products/get-attribute-by-product-id", productController.getAttributeByProductId);
+
 router.get("/products/search-image", productController.searchImageFunc);
 
 router.get("/products/keyword", productController.searchKeywordFunc);
