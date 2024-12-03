@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '~/components/Button/Button';
 import './ComparisonProduct.scss';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -11,13 +11,16 @@ import ModalAddProductToCompare from '../MainContent/ModalAddProductToCompare';
 import { addProductToCart } from '~/redux/features/cartSlice';
 import { toast } from 'react-toastify';
 import { showLoginForm } from '~/redux/features/accountSlice';
+import _ from 'lodash';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 function ComparisonProductBox({ defaultProductAttribute, defaultItem }) {
     const dispatch = useDispatch();
     const { listProductToCompare } = useSelector((state) => state.detailProduct);
     const auth = useSelector((state) => state.account.auth);
     const cartList = useSelector((state) => state.cart.cartList);
     const userId = useSelector((state) => state.account.account.userId);
-
+    console.log(listProductToCompare);
     const handleAddItemToCart = (item) => {
         const cartItem = cartList?.find((product) => product?.productId === item?.id);
 
@@ -40,7 +43,32 @@ function ComparisonProductBox({ defaultProductAttribute, defaultItem }) {
             dispatch(showLoginForm());
         }
     };
-    const selectedCodes = ['is_warranty_applied', 'warranty_time_period', 'warranty_form'];
+    const [listCode, setListCode] = useState([]);
+    const [visibleCount, setVisibleCount] = useState(5);
+    const handleShowMore = () => {
+        setVisibleCount(listCode.length); // Tăng số lượng hiển thị lên 5
+    };
+
+    const handleShowLess = () => {
+        setVisibleCount(5); // Đặt lại số lượng về 5
+    };
+
+    const handleSelectedCode = () => {
+        let _data = _.cloneDeep(listProductToCompare[0] || []);
+        if (_data && _data.attr && _data.attr.length > 0) {
+            let _listCode = _data.attr.map((attr) => {
+                return {
+                    code: attr.code,
+                };
+            });
+            setListCode(_listCode);
+        }
+    };
+    useEffect(() => {
+        handleSelectedCode();
+        console.log('re-render');
+    }, []);
+
     return (
         <div className="product-comparison ms-3 col-12">
             <div className="title">So sánh sản phẩm tương tự</div>
@@ -92,16 +120,14 @@ function ComparisonProductBox({ defaultProductAttribute, defaultItem }) {
                                         </div>
                                         {product &&
                                             product?.attr?.length > 0 &&
-                                            selectedCodes.map((code) => {
-                                                const attr = product.attr.find((attr) => attr.code === code);
+                                            listCode.slice(0, visibleCount).map((code) => {
+                                                const attr = product.attr.find((attr) => attr.code === code.code);
                                                 return (
                                                     <div className="item-attribute" key={code}>
                                                         <div className="product-attr-name">
                                                             <div className="attr-name">{attr ? attr.name : ''}</div>
                                                         </div>
-                                                        <div className="d-flex flex-row align-items-center gap-2">
-                                                            {attr ? attr.value ?? '' : ''}
-                                                        </div>
+                                                        {attr ? <div className="attr-value">{attr.value}</div> : ''}
                                                     </div>
                                                 );
                                             })}
@@ -119,6 +145,21 @@ function ComparisonProductBox({ defaultProductAttribute, defaultItem }) {
                                     <AddCircleOutlineIcon />
                                 </div>
                             </div>
+                        </div>
+                    )}
+                </div>
+                <div className="w-100 d-flex justify-content-center">
+                    {visibleCount < listCode.length && (
+                        <div class="btn-view-more  is-desktop" onClick={() => handleShowMore()}>
+                            <div class="text">Xem thêm</div>
+                            <ArrowDropDownOutlinedIcon />
+                        </div>
+                    )}
+                    {visibleCount > 5 && (
+                        <div class="btn-view-more  is-desktop" onClick={() => handleShowLess()}>
+                            <div class="text">Ẩn bớt</div>
+
+                            <ArrowDropUpOutlinedIcon />
                         </div>
                     )}
                 </div>

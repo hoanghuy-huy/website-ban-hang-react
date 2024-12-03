@@ -36,19 +36,7 @@ const SearchPage = () => {
     const dispatch = useDispatch();
     const listBrandToFilter = brandValueToFilter.map((item) => item?.brandName);
     ScrollToTop();
-    useEffect(() => {
-        dispatch(
-            searchAllProductApi({
-                page: currentPage,
-                limit: limit,
-                sort: sortValue,
-                starNumber: starNumberCheckBoxValue,
-                minPrice: minPriceRedux,
-                maxPrice: maxPriceRedux,
-                brand: listBrandToFilter,
-            }),
-        );
-    }, [currentPage, sortValue, starNumberCheckBoxValue, minPriceRedux, maxPriceRedux, brandValueToFilter]);
+
     useEffect(() => {
         // dispatch(
         //     searchAllProductApi({

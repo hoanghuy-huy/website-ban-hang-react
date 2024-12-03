@@ -63,6 +63,9 @@ export const detailProductSlice = createSlice({
             state.listProductToCompare.push(action.payload);
         },
         handleDeleteItemCompare: (state, action) => {
+            if (state.listProductToCompare.length === 1) {
+                return;
+            }
             const updateListProductCompare = current(state.listProductToCompare).filter(
                 (item) => item.id !== action.payload.id,
             );

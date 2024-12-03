@@ -1,5 +1,6 @@
 .product-comparison-table {
     padding-bottom: 30px;
+
     .col-3 {
         padding: 0;
     }
@@ -9,6 +10,7 @@
         position: relative;
         border-top: 1px solid rgb(235, 235, 240);
         border-bottom: 1px solid rgb(235, 235, 240);
+
         .delete-icon {
             position: absolute;
             top: 10px;
@@ -31,11 +33,13 @@
                 .product-image {
                     display: flex;
                     justify-content: center;
+
                     img {
                         height: 100px; // Đặt kích thước phù hợp
                         width: 100px; // Đặt kích thước phù hợp
                     }
                 }
+
                 .product-text {
                     .product-name {
                         color: rgb(39, 39, 42);
@@ -67,30 +71,37 @@
                 padding: 12px 0 12px 8px;
                 border: 1px solid rgb(235, 235, 240);
                 flex-direction: column;
-                min-height: 72px;
+                height: 72px;
                 justify-content: center;
+
                 .product-attr-name {
-                    .attr-value,
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 150%;
+                    word-break: break-word;
+                    color: #27272a;
+
                     .attr-name {
                         min-height: 21px;
                         font-size: 14px;
                         font-weight: 600;
                         line-height: 150%;
-
-                        display: -webkit-box;
-                        -webkit-box-orient: vertical;
-                        overflow: hidden;
-                        -webkit-line-clamp: 1;
-                        margin-bottom: 2px;
                     }
+                }
 
-                    .attr-value {
-                        font-size: 14px;
-                        font-weight: 400;
-                        line-height: 150%;
-                        word-break: break-word;
-                        color: #27272a;
-                    }
+                .attr-value {
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 150%;
+                    word-break: break-word;
+                    color: #27272a;
+
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    -webkit-line-clamp: 3; // Giới hạn hiển thị ba dòng
+                    text-overflow: ellipsis; // Hiển thị dấu ba chấm
+                    white-space: normal; // Cho phép gãy dòng
                 }
             }
         }
@@ -103,9 +114,32 @@
         justify-content: center;
         cursor: pointer;
         align-items: center;
+
         svg {
             font-size: 20px !important;
             color: var(--primary-color);
+        }
+    }
+    .btn-view-more {
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 5.5px 12px;
+        width: fit-content;
+        margin: auto;
+        border-radius: 4px;
+        background: transparent;
+        margin-top: 10px;
+
+        .text,
+        svg {
+            color: var(--primary-color) !important;
+        }
+
+        &.is-desktop:hover {
+            background: rgba(10, 104, 255, 0.12);
         }
     }
 }
