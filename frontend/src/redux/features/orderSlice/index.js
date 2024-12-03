@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import httpRequest from '~/utils/httpRequest';
 import { deleteMultipleProductFormCartWithId, fetchAllCart } from '../cartSlice';
+import validator from 'validator';
+import axios from 'axios';
 
 export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', async (data, thunkAPI) => {
     const res = await httpRequest.post(`order/create`, data);
@@ -13,6 +15,7 @@ export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', asy
                 buildDataToSendEmail: data.buildDataToSendEmail,
             }),
         );
+
         window.location.href = '/payment/success';
     } else {
         toast.error('Xảy ra lỗi vui lòng thử lại');
@@ -207,7 +210,7 @@ export const getListOrderToReturn = createAsyncThunk('order/getListOrderToReturn
 
 export const getListOrderToReturnAdmin = createAsyncThunk(
     'order/getListOrderToReturnAdmin',
-    async ({  statusReturn }) => {
+    async ({ statusReturn }) => {
         const res = await httpRequest.get(
             `order/get-list-order-return-to-confirm-admin?${
                 statusReturn ? `&statusReturn=${statusReturn}` : '&statusReturn=0'

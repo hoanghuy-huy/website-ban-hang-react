@@ -14,7 +14,6 @@ export const fetchProductWithCategory = createAsyncThunk('products/fetchProductW
     return res ? res.DT : [];
 });
 
-
 export const fetchProductPaginationWithCategoryId = createAsyncThunk(
     'products/fetchProductPaginationWithCategoryId',
     async ({ categoryId, limit, page }) => {
@@ -28,6 +27,7 @@ export const fetchProductPaginationWithCategoryId = createAsyncThunk(
 
 const initialState = {
     listProductToCompare: [],
+    listProductToCompareV2: [],
     listProductPaginationWithCategory: [],
     product: [],
     categoryProduct: [],
@@ -75,9 +75,9 @@ export const detailProductSlice = createSlice({
                 state.showFormCompare = true;
                 return;
             }
-            if(state.listProductToCompare.length >= 4) {
-                toast.error('Danh sách sản phẩm đầy vui lòng xóa bớt')
-                return
+            if (state.listProductToCompare.length >= 4) {
+                toast.error('Danh sách sản phẩm đầy vui lòng xóa bớt');
+                return;
             }
             state.listProductToCompare.push(action.payload);
         },
@@ -90,6 +90,29 @@ export const detailProductSlice = createSlice({
         },
         handleShowModalAddProductToCompare: (state, action) => {
             state.showModalAddProductToCompare = !state.showModalAddProductToCompare;
+        },
+        handleAddItemCompareDefault: (state, action) => {
+            state.listProductToCompare[0] = action.payload;
+            if (state.listProductToCompare.length > 1) {
+                const firstItemCatId = state.listProductToCompare[0].categoryId;
+                const secondItemCatId = state.listProductToCompare[1].categoryId;
+                if (firstItemCatId !== secondItemCatId) {
+                    state.listProductToCompare = [state.listProductToCompare[0]];
+                }
+            }
+        },
+        handleAddProductToCompareV2: (state, action) => {
+            const checkExist = state.listProductToCompareV2.some((item) => item.id === action.payload.id);
+            if (checkExist) {
+                toast.error('Sản phẩm đã có trong danh sách so sánh');
+                state.showFormCompare = true;
+                return;
+            }
+            if (state.listProductToCompareV2.length >= 3) {
+                toast.error('Danh sách sản phẩm đầy vui lòng xóa bớt');
+                return;
+            }
+            state.listProductToCompareV2.push(action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -104,7 +127,7 @@ export const detailProductSlice = createSlice({
                 state.loading = false;
                 state.error = false;
                 state.product = action.payload;
-                state.categoryId = action.payload.product.categoryId
+                state.categoryId = action.payload.product.categoryId;
             })
             .addCase(fetchOneProduct.rejected, (state, action) => {
                 state.loading = false;
@@ -148,6 +171,8 @@ export const {
     handleShrinkFormCompare,
     handleDeleteAllItemCompare,
     handleShowModalAddProductToCompare,
+    handleAddItemCompareDefault,
+    handleAddProductToCompareV2,
 } = detailProductSlice.actions;
 
 export default detailProductSlice.reducer;

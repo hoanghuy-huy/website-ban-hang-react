@@ -1,4 +1,5 @@
 .product-comparison-table {
+    padding-bottom: 30px;
     .col-3 {
         padding: 0;
     }
@@ -60,11 +61,37 @@
         }
 
         .product-comparison-table__item-attributes {
-            .item-atribute {
+            .item-attribute {
                 display: flex;
                 color: rgb(39, 39, 42);
                 padding: 12px 0 12px 8px;
                 border: 1px solid rgb(235, 235, 240);
+                flex-direction: column;
+                min-height: 72px;
+                justify-content: center;
+                .product-attr-name {
+                    .attr-value,
+                    .attr-name {
+                        min-height: 21px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        line-height: 150%;
+
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        -webkit-line-clamp: 1;
+                        margin-bottom: 2px;
+                    }
+
+                    .attr-value {
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 150%;
+                        word-break: break-word;
+                        color: #27272a;
+                    }
+                }
             }
         }
     }

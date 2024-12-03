@@ -49,7 +49,7 @@ const BoxBuy = ({ item }) => {
             return;
         }
 
-        if (_quantity > item?.inventoryNumber) {
+        if (_quantity >= item?.inventoryNumber) {
             setShowSnackbar(true);
             setMessageSnackbar(`Số lượng trong kho chỉ còn ${item?.inventoryNumber} sản phẩm`);
             return;
@@ -68,13 +68,21 @@ const BoxBuy = ({ item }) => {
     const handleAddItemToCart = (item) => {
         let productId = item.id;
         if (auth) {
-            if (cartItem?.quantity >= 10) {
+            if (cartItem && cartItem?.quantity >= 10) {
                 setMessageSnackbar(
                     `Bạn không thể thêm trên 10 sản phẩm và trong giỏ hàng của bạn đang có ${cartItem.quantity}`,
                 );
                 setShowSnackbar(true);
                 return;
             }
+
+            if (cartItem && cartItem.quantity >= item?.inventoryNumber) {
+                setMessageSnackbar(`Số lượng trong kho chỉ còn ${item?.inventoryNumber} sản phẩm`);
+                setShowSnackbar(true);
+
+                return;
+            }
+
             dispatch(addProductToCart({ productId, userId, quantity }));
         } else {
             dispatch(showLoginForm());
@@ -83,17 +91,17 @@ const BoxBuy = ({ item }) => {
     const handleBuyNowProduct = async (item) => {
         let productId = item.id;
         if (auth) {
-            console.log(addressDefault)
+            console.log(addressDefault);
             if (!addressDefault) {
                 window.location.href = '/address';
                 return;
             }
-            let arr = []
-            let obj = { productId, userId, quantity, Product: item } 
-            arr.push(obj)
+            let arr = [];
+            let obj = { productId, userId, quantity, Product: item };
+            arr.push(obj);
             dispatch(handlePurchaseProduct(arr));
         } else {
-            dispatch(showLoginForm());   
+            dispatch(showLoginForm());
         }
     };
 

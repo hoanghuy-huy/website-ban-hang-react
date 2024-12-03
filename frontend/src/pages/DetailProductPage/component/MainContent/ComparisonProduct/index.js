@@ -18,11 +18,11 @@ const ComparisonProduct = () => {
     return (
         <div className="stick-compare">
             <ul className="list-compare d-flex position-absolute">
-                {listProductToCompare.map((item) => {
+                {listProductToCompare.map((item, index) => {
                     return (
                         <li className="list-compare__add-item">
                             <div
-                                className="icon-clear position-absolute top-0 end-0"
+                                className={'icon-clear position-absolute top-0 end-0'}
                                 onClick={() => dispatch(handleDeleteItemCompare(item))}
                             >
                                 <FontAwesomeIcon icon={faX} />
@@ -38,7 +38,10 @@ const ComparisonProduct = () => {
                 })}
 
                 {Array.from({ length: totalItems - listProductToCompare.length }).map((_, index) => (
-                    <li className="list-compare__add-item" onClick={() => dispatch(handleShowModalAddProductToCompare())}>
+                    <li
+                        className="list-compare__add-item"
+                        onClick={() => dispatch(handleShowModalAddProductToCompare())}
+                    >
                         <div className="icon-add">
                             <FontAwesomeIcon icon={faPlus} />
                         </div>

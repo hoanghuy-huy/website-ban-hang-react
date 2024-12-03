@@ -20,19 +20,19 @@ const ReviewProduct = ({ product }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(5);
     useEffect(() => {
-        dispatch(getAverageRatingApi({ productId: product.id }));
-        dispatch(getAllComment({ productId: product.id, page: 1, limit: 5 }));
+        dispatch(getAverageRatingApi({ productId: product?.id }));
+        dispatch(getAllComment({ productId: product?.id, page: 1, limit: 5 }));
     }, []);
     useEffect(() => {
-        dispatch(getAllComment({ productId: product.id, page: currentPage, limit: limit, starNumber: starNumber }));
+        dispatch(getAllComment({ productId: product?.id, page: currentPage, limit: limit, starNumber: starNumber }));
     }, [currentPage, limit]);
 
     useEffect(() => {
         setCurrentPage(1);
-        dispatch(getAllComment({ productId: product.id, page: currentPage, limit: limit, starNumber: starNumber }));
+        dispatch(getAllComment({ productId: product?.id, page: currentPage, limit: limit, starNumber: starNumber }));
     }, [starNumber]);
     const { totalPages, comments } = commentList;
-    console.log(product);
+  
     return (
         <div className="ReviewProduct">
             <div className="ReviewProductContainer">
@@ -41,14 +41,14 @@ const ReviewProduct = ({ product }) => {
                 </div>
                 <div className="product-rating-overview d-flex justify-content-center">
                     <div className="product-rating-overview__briefing">
-                        {product.starsNumber > 0 ? (
+                        {product?.starsNumber > 0 ? (
                             <>
                                 <div className="product-rating-overview__score-wrapper">
-                                    <span class="product-rating-overview__rating-score">{product.starsNumber}</span>
+                                    <span class="product-rating-overview__rating-score">{product?.starsNumber}</span>
                                     <span class="product-rating-overview__rating-score-out-of"> trên 5 </span>
                                 </div>
                                 <div className="product-rating-overview__stars">
-                                    <Rating value={product.starsNumber} readOnly sx={{ fontSize: 20 }} />
+                                    <Rating value={product?.starsNumber} readOnly sx={{ fontSize: 20 }} />
                                 </div>
                             </>
                         ) : (
@@ -62,7 +62,7 @@ const ReviewProduct = ({ product }) => {
                             </>
                         )}
                     </div>
-                    {product.starsNumber !== 0 && (
+                    {product?.starsNumber !== 0 && (
                         <div className="product-rating-overview__filters col-12">
                             <div className="row gap-3">
                                 <Button

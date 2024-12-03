@@ -11,7 +11,7 @@ const Sidebar = ({ listImg,item }) => {
         setActive(item?.id);
         setSlider(item?.urlImageLarge);
     };
-    console.log(item)
+  
     return (
         <div className="content-left col-3 ms-3">
             <div className="product-img ps-4">

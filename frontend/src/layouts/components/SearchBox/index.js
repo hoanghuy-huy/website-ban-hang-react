@@ -33,7 +33,7 @@ const SearchBox = () => {
     const valueDebounce = useDebounce(searchValue, 600);
     const listKeywordSearch = useSelector((state) => state.products.listKeywordSearch);
     const refInput = useRef();
-    console.log(listKeywordSearch);
+   
     const [loadingApi, setLoadingApi] = useState(false);
 
     const labels = [

@@ -21,6 +21,8 @@ import VoucherMini from '../CartPage/VoucherMini';
 import ModalVouCher from '../CartPage/ModalMouCher';
 import { getAllVoucher, handleSelectedVoucher } from '~/redux/features/voucherSlice';
 import BackdropComp from '~/components/BackDropComp';
+import validator from 'validator';
+
 // const voucherList = [
 //     {
 //         id: 1,
@@ -56,6 +58,7 @@ import BackdropComp from '~/components/BackDropComp';
 const PaymentPage = () => {
     const { vouchers } = useSelector((state) => state.voucher.voucherList);
     const loading = useSelector((state) => state.order.loading);
+    const email = useSelector((state) => state.account.account.email);
     const navigate = useNavigate();
     const listMethodDelivery = [
         {
@@ -168,8 +171,8 @@ const PaymentPage = () => {
             toast.info('Chưa có địa chỉ');
             return;
         }
-        if(itemsToOrder.length < 0) {
-            toast.error('Có lỗi xảy ra vui lòng thử lại')
+        if (itemsToOrder.length < 0) {
+            toast.error('Có lỗi xảy ra vui lòng thử lại');
             return;
         }
         let order = {};
@@ -227,13 +230,15 @@ const PaymentPage = () => {
                 userId: userId,
                 productList: productList,
                 buildDataToSendEmail,
+                userId,
             }),
         );
-
-        await axios.post('http://localhost:3000/api/v1/sendEmail', {
-            dataToSendEmail: buildDataToSendEmail,
-            userId: userId,
-        });
+        if (validator.isEmail(email)) {
+            await axios.post('http://localhost:3000/api/v1/sendEmail', {
+                dataToSendEmail: buildDataToSendEmail,
+                userId: userId,
+            });
+        }
     };
 
     // note

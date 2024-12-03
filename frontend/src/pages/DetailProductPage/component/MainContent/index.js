@@ -7,7 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import ComparisonProduct from './ComparisonProduct';
-import { handleDeleteItemCompare, handleShowFromCompare } from '~/redux/features/detailProductSlice';
+import {
+    handleAddItemCompare,
+    handleAddItemCompareDefault,
+    handleDeleteItemCompare,
+    handleShowFromCompare,
+} from '~/redux/features/detailProductSlice';
 import Button from '~/components/Button/Button';
 import './MainContent.scss';
 import ModalAddProductToCompare from './ModalAddProductToCompare';
@@ -17,6 +22,8 @@ import { Rating } from '@mui/material';
 import ReviewProduct from '../ReviewProduct';
 import { getAttributeProductApi } from '~/redux/features/productSlice/productSlice';
 import ComparisonProductBox from '../ComparisonProduct';
+import _ from 'lodash';
+
 const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     const dispatch = useDispatch();
     const { ProductImages } = item && item.ProductImages ? item : '';
@@ -25,6 +32,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     );
 
     const productAttribute = useSelector((state) => state.products.productAttribute);
+
     const checkedCompare = () => {
         const check = listProductToCompare.some((product) => product?.id === item?.id);
 
@@ -33,7 +41,9 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
 
     useEffect(() => {
         dispatch(getAttributeProductApi({ productId: item?.id }));
-        console.log(productAttribute);
+        let _data = _.cloneDeep(item);
+        _data.attr = productAttribute;
+        dispatch(handleAddItemCompareDefault(_data));
     }, []);
 
     if (!item) {
@@ -63,7 +73,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                     Thương hiệu:
                                     <Link to="#brand">{item?.brandName}</Link>
                                 </div>
-                                {checkedCompare() ? (
+                                {/* {checkedCompare() ? (
                                     <div
                                         className="comparison-icon d-flex align-items-center ms-1 gap-1"
                                         onClick={() => dispatch(handleDeleteItemCompare(item))}
@@ -79,7 +89,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                         <FontAwesomeIcon icon={faPlus} />
                                         <span>So sánh</span>
                                     </div>
-                                )}
+                                )} */}
                             </div>
                             <div className="title-styled">{item?.name}</div>
                             <div className="rating-styled">
@@ -142,7 +152,17 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                                         return (
                                             <div className="item">
                                                 <span className="left">{attr.name}</span>
-                                                <span className="right">{attr.value ?? '--'}</span>
+                                                <span
+                                                    className="right"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            attr.value !== null &&
+                                                            attr.value !== undefined &&
+                                                            attr.value !== '0'
+                                                                ? attr.value
+                                                                : '--',
+                                                    }}
+                                                />
                                             </div>
                                         );
                                     })}
@@ -156,7 +176,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
             {/* Review Product Box */}
             <ReviewProduct product={item} />
 
-            {showFormCompare && <ComparisonProduct />}
+            {/* {showFormCompare && <ComparisonProduct />}
             {listProductToCompare.length > 0 && showFormShrinkCompare && !showFormCompare && (
                 <div className="shrink-compare-form">
                     <div className="show-more" onClick={() => dispatch(handleShowFromCompare())}>
@@ -165,9 +185,7 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
                         </Button>
                     </div>
                 </div>
-            )}
-
-            <ModalAddProductToCompare />
+            )} */}
         </div>
     );
 };
