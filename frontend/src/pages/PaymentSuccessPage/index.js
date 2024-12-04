@@ -7,7 +7,9 @@ import { convertPrice } from '~/utils/convert';
 
 const PaymentSuccessPage = () => {
     const { totalPrice, orderId } = useSelector((state) => state.order);
-    console.log(totalPrice, orderId);
+    if (!totalPrice) {
+        <div>Loading...</div>;
+    }
     return (
         <main className="PaymentSuccessPage">
             <div className="PaymentSuccessPageContainer">
@@ -35,7 +37,9 @@ const PaymentSuccessPage = () => {
                                 </div>
                                 <div className="summary-item">
                                     <div className="summary-item__label">Tổng cộng</div>
-                                    <div className="summary-item__value summary-item__value--large">{convertPrice(totalPrice)} ₫</div>
+                                    <div className="summary-item__value summary-item__value--large">
+                                        {convertPrice(totalPrice)} ₫
+                                    </div>
                                 </div>
                                 <div className="success-content__button">
                                     <Link to={'/'}>

@@ -702,7 +702,7 @@ let handleTotalProductSold = () => {
     try {
       const countProductSold = await db.OrderDetail.sum("quantity", {
         where: {
-          [Op.and]: [{ status: 1 }, { returnItem: null }],
+          [Op.and]: [{ status: 1 }],
         },
       });
 
@@ -723,7 +723,7 @@ let handleTotalRevenue = () => {
     try {
       let totalPrice = await db.OrderDetail.sum("totalPrice", {
         where: {
-          [Op.and]: [{ status: 1 }, { returnItem: null }],
+          [Op.and]: [{ status: 1 }],
         },
       });
       resolve({
@@ -1009,7 +1009,6 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
               targetDate.getFullYear()
             ),
             { status: 1 },
-            { returnItem: null },
           ],
         },
       });
@@ -1039,10 +1038,6 @@ let handleGetRevenueByDay = ({ dateAgo }) => {
       const totalProductSold = await db.OrderDetail.sum("quantity", {
         where: {
           [Op.and]: [
-            //  !!year && db.sequelize.where(
-            //      db.sequelize.fn("YEAR", db.sequelize.col("createdAt")),
-            //     year
-            //   ),
             !!dateAgo &&
               db.sequelize.where(
                 db.sequelize.fn("DAY", db.sequelize.col("updatedAt")),
@@ -1094,7 +1089,6 @@ let handleGetMonthlyRevenue = ({}) => {
               currentMonth
             ),
             { status: 1 },
-            { returnItem: null },
           ],
         },
       });
@@ -1118,7 +1112,7 @@ let handleGetMonthlyReturn = ({}) => {
 
       const currentMonth = today.getMonth() + 1;
 
-      let totalProductReturn = await db.OrderDetail.sum("quantity", {
+      let totalProductReturn = await db.OrderDetail.sum("returnItem", {
         where: {
           [Op.and]: [
             db.sequelize.where(
@@ -1126,7 +1120,7 @@ let handleGetMonthlyReturn = ({}) => {
               currentMonth
             ),
             { status: 1 },
-            { returnItem: 1 },
+            { statusReturn: 1 },
           ],
         },
       });
@@ -1156,7 +1150,6 @@ let handleGetMonthlySold = ({}) => {
               db.sequelize.fn("MONTH", db.sequelize.col("updatedAt")),
               currentMonth
             ),
-            { returnItem: null },
             { status: 1 },
           ],
         },

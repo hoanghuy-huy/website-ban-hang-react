@@ -222,6 +222,7 @@ const PaymentPage = () => {
             userId: userId,
             deliveryMethodFee: order.deliveryMethodFee,
         };
+        
         await dispatch(
             createNewOrderApi({
                 order,
