@@ -12,6 +12,7 @@ import 'nprogress/nprogress.css';
 import { useDispatch } from 'react-redux';
 import { fetchDataAccount } from './redux/features/accountSlice';
 import { AdminRoute } from './routes/AdminRoute';
+import CustomerChatBox from './components/CustomerChatBox';
 function App() {
     const user = true;
     const dispatch = useDispatch();
@@ -123,6 +124,7 @@ function App() {
                 pauseOnHover
                 theme="dark"
             />
+            <CustomerChatBox />
         </>
     );
 }

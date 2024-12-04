@@ -45,9 +45,13 @@ import EditPasswordPage from '~/pages/EditPasswordPage';
 import UserAddressPage from '~/pages/UserAddressPage';
 import ReviewPage from '~/pages/ReviewPage';
 import ReturnOrderPageAdmin from '~/pages/ReturnOrderPageAdmin';
+import ChatBox from '~/pages/ChatBox';
+import AdminChat from '~/pages/AdminChat';
 
 //Public Routes
 const publicRoutes = [
+    { path: '/chat-admin', component: AdminChat, layout: null },
+    { path: '/chat', component: ChatBox, layout: null },
     { path: '/search', component: SearchPage, layout: LayoutSearchProduct },
     { path: routes.home, component: Home, layout: MainLayout },
     { path: routes.product, component: ProductPage, layout: LayoutCategoryProduct },
