@@ -50,7 +50,6 @@ import AdminChat from '~/pages/AdminChat';
 
 //Public Routes
 const publicRoutes = [
-    { path: '/chat-admin', component: AdminChat, layout: null },
     { path: '/chat', component: ChatBox, layout: null },
     { path: '/search', component: SearchPage, layout: LayoutSearchProduct },
     { path: routes.home, component: Home, layout: MainLayout },
@@ -87,6 +86,7 @@ const privateRoutes = [
 ];
 
 const adminRoutes = [
+    { path: '/admin/chat', component: AdminChat, layout: LayoutClientNoSidebar },
     { path: '/admin/return-order', component: ReturnOrderPageAdmin, layout: AdminLayout },
     { path: '/admin/product', component: ProductAdminPage, layout: AdminLayout },
     { path: '/admin/dash-board', component: DashBoardPage, layout: AdminLayout },

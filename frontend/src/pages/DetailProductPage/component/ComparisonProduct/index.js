@@ -26,6 +26,11 @@ function ComparisonProductBox({ defaultProductAttribute, defaultItem }) {
 
         let productId = item.id;
         if (auth) {
+            if (item && item.inventoryNumber <= 0) {
+                toast.error(`Hết hàng`);
+                return;
+            }
+
             if (cartItem && cartItem.quantity >= 10) {
                 toast.error(
                     `Bạn không thể thêm trên 10 sản phẩm và trong giỏ hàng của bạn đang có ${cartItem.quantity}`,

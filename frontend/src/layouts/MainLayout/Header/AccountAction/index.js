@@ -57,6 +57,9 @@ const AccountActions = (props) => {
                                                 <Link to={'/admin/order'}>
                                                     <div className="account-menu__item py-1">Quản lý đơn hàng</div>
                                                 </Link>
+                                                <Link to={'/admin/chat'}>
+                                                    <div className="account-menu__item py-1">Chat với khách hàng</div>
+                                                </Link>
                                             </>
                                         ) : (
                                             <>
@@ -68,6 +71,9 @@ const AccountActions = (props) => {
                                                 </Link>
                                                 <Link to={'/account/return-order'}>
                                                     <div className="account-menu__item py-1">Quản lý trả hàng</div>
+                                                </Link>
+                                                <Link to={'/account/address'}>
+                                                    <div className="account-menu__item py-1">Quản lý địa chỉ</div>
                                                 </Link>
                                                 <Link to={'/account/review-product'}>
                                                     <div className="account-menu__item py-1">Đánh giá sản phẩm</div>

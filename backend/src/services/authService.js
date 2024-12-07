@@ -87,9 +87,6 @@ class authService {
       // hash password
       let hashPass = this.hashPassword(rawData.password);
 
-      let defaultGroupUser = await db.Group.findOne({
-        where: { name: "customer" },
-      });
       console.log(rawData);
       // Create new user
       await db.User.create({
@@ -137,8 +134,8 @@ class authService {
             email: user.email,
             username: user.username,
             groupWithRoleUser: roles,
-            groupId: user.groupId || 2,
-            userGroup: group.name || "customer",
+            groupId: user.groupId ? user.groupId : 2,
+            userGroup: group?.name ? group.name : "customer",
           };
 
           let token = createToken(payload);

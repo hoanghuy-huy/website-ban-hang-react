@@ -74,17 +74,40 @@ $button-color: white;
                         padding: 8px;
                         margin: 5px 0;
                         border-radius: 5px;
-                        word-wrap: break-word; 
-                        max-width: 80%; 
+                        word-wrap: break-word;
+                        max-width: 80%;
 
                         &.message-you {
-                            background-color: #d1e7dd;
-                            align-self: flex-end; 
+                            background-color: rgb(11, 116, 229);
+                            color: rgb(255, 255, 255);
+                            padding: 8px 12px;
+                            border-radius: 8px;
+                            display: inline-block;
+                            font-size: 14px;
+                            line-height: 20px;
+                            white-space: pre-line;
+                            word-break: break-word;
+                            margin: 2px 0;
+                            margin-left: auto;
+                            text-align: right;
+                            justify-content: flex-end;
                         }
 
                         &.message-admin {
-                            background-color: #f1f1f1; 
-                            align-self: flex-start;
+                            background-color: rgb(235, 235, 240);
+                            color: rgb(56, 56, 61);
+                            padding: 8px 12px;
+                            border-radius: 8px;
+                            display: inline-block;
+                            font-size: 14px;
+                            line-height: 20px;
+                            white-space: pre-line;
+                            word-break: break-word;
+                            margin: 2px 0;
+                            margin-right: auto;  
+                            text-align: left;
+                            justify-content: flex-start;
+
                         }
                     }
                 }
@@ -92,7 +115,7 @@ $button-color: white;
                 .message-input {
                     display: flex;
                     padding: 10px;
-                    border-top: 1px solid rgb(235, 235, 240);
+                    border: 1px solid rgb(235, 235, 240);
                     background-color: #fff;
 
                     input {

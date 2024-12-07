@@ -9,7 +9,7 @@ import { PrivateRoute } from './routes/PrivateRoute';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchDataAccount } from './redux/features/accountSlice';
 import { AdminRoute } from './routes/AdminRoute';
 import CustomerChatBox from './components/CustomerChatBox';
@@ -19,6 +19,9 @@ function App() {
     useEffect(() => {
         dispatch(fetchDataAccount({}));
     }, []);
+    const role = useSelector((state) => state.account.account.userGroup);
+    const { loading, auth } = useSelector((state) => state.account);
+
     return (
         <>
             {user.isLoading ? (
@@ -124,7 +127,7 @@ function App() {
                 pauseOnHover
                 theme="dark"
             />
-            <CustomerChatBox />
+            {role !== 'admin' && auth && <CustomerChatBox />}
         </>
     );
 }

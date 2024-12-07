@@ -128,6 +128,16 @@ const Sidebar = () => {
                         </Button>
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink to={'/admin/chat'}>
+                        <Button className="w-100">
+                            <span className="icon">
+                                <AssignmentReturnIcon />
+                            </span>
+                            <span className="text">Chat vói khách hàng</span>
+                        </Button>
+                    </NavLink>
+                </li>
                 {/* <li>
                     <NavLink to={'/admin/roles'}>
                         <Button className="w-100">

@@ -11,38 +11,48 @@ const CustomerChatBox = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const customerId = useSelector((state) => state.account.account.userId); // Lấy customerId từ Redux store
+    const customerId = useSelector((state) => state.account.account.userId); // Get customerId from Redux store
 
     useEffect(() => {
-        // Tham gia kênh chat của khách hàng
+        // Load messages from localStorage
+        const savedMessages = localStorage.getItem(`chatMessages_${customerId}`);
+        if (savedMessages) {
+            setMessages(JSON.parse(savedMessages));
+        }
+
+        // Join the customer's chat channel
         socket.emit('joinCustomer', customerId);
 
-        // Lắng nghe tin nhắn từ admin
+        // Listen for messages from admin
         socket.on('receiveMessageFromAdmin', ({ message }) => {
-            setMessages((prevMessages) => [
-                { sender: 'Admin', message },
-                ...prevMessages
-            ]);
+            setMessages((prevMessages) => {
+                const updatedMessages = [{ sender: 'Admin', message }, ...prevMessages];
+                // Save updated messages to localStorage
+                localStorage.setItem(`chatMessages_${customerId}`, JSON.stringify(updatedMessages));
+                return updatedMessages;
+            });
         });
 
         return () => {
             socket.off('receiveMessageFromAdmin');
         };
-    }, [customerId]); // Chỉ chạy lại khi customerId thay đổi
+    }, [customerId]); // Run again if customerId changes
 
     const sendMessage = () => {
         if (message) {
             socket.emit('sendMessageToAdmin', { customerId, message });
-            setMessages((prevMessages) => [
-                { sender: 'You', message },
-                ...prevMessages
-            ]);
-            setMessage(''); // Đặt lại trường nhập
+            setMessages((prevMessages) => {
+                const updatedMessages = [{ sender: 'You', message }, ...prevMessages];
+                // Save updated messages to localStorage
+                localStorage.setItem(`chatMessages_${customerId}`, JSON.stringify(updatedMessages));
+                return updatedMessages;
+            });
+            setMessage(''); // Clear input field
         }
     };
 
     const toggleChat = () => {
-        setIsChatOpen((prev) => !prev); // Cập nhật trạng thái mở/đóng chat
+        setIsChatOpen((prev) => !prev); // Toggle chat open/close
     };
 
     return (
@@ -56,14 +66,14 @@ const CustomerChatBox = () => {
                         <div className="header-chat-box">
                             <div className="name">Chat với người hỗ trợ</div>
                             <div className="avatar">
-                                <Avatar />
+                                <Avatar />  
                             </div>
                         </div>
                         <div className="message-detail">
                             <div className="message-detail-container">
                                 {messages.map((msg, index) => (
                                     <div key={index} className={`message ${msg.sender === 'You' ? 'message-you' : 'message-admin'}`}>
-                                        <strong>{msg.sender}: </strong>{msg.message}
+                                        <strong> </strong>{msg.message}
                                     </div>
                                 ))}
                             </div>
