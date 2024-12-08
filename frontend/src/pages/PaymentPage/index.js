@@ -13,7 +13,7 @@ import { getAddressDefault } from '~/redux/features/addressSlice';
 import * as paymentService from '~/services/paymentService';
 import _ from 'lodash';
 import './PaymentPage.scss';
-import { createNewOrderApi } from '~/redux/features/orderSlice';
+import { createNewOrderApi, setTempPriceRedux } from '~/redux/features/orderSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -223,6 +223,8 @@ const PaymentPage = () => {
             deliveryMethodFee: order.deliveryMethodFee,
         };
         
+        dispatch(setTempPriceRedux(totalPriceToOrder()));
+
         await dispatch(
             createNewOrderApi({
                 order,
@@ -234,6 +236,8 @@ const PaymentPage = () => {
                 userId,
             }),
         );
+
+
         if (validator.isEmail(email)) {
             await axios.post('http://localhost:3000/api/v1/sendEmail', {
                 dataToSendEmail: buildDataToSendEmail,

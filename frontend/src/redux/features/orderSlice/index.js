@@ -15,7 +15,7 @@ export const createNewOrderApi = createAsyncThunk('order/createNewOrderApi', asy
                 buildDataToSendEmail: data.buildDataToSendEmail,
             }),
         );
-
+        
         window.location.href = '/payment/success';
     } else {
         toast.error('Xảy ra lỗi vui lòng thử lại');
@@ -235,6 +235,7 @@ export const orderSlice = createSlice({
     initialState: {
         loading: false,
         error: false,
+        tempPrice: 0,
         totalRevenueMonthly: null,
         totalProductsReturnMonthly: null,
         totalProductsSoldMonthly: null,
@@ -257,6 +258,9 @@ export const orderSlice = createSlice({
     reducers: {
         handleChoseActionToFetchApiOrder: (state, action) => {
             state.actionFetchApi = action.payload;
+        },
+        setTempPriceRedux: (state, action) => {
+            state.tempPrice = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -592,6 +596,6 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { handleOrderProduct, handleChoseActionToFetchApiOrder } = orderSlice.actions;
+export const { handleOrderProduct, handleChoseActionToFetchApiOrder, setTempPriceRedux } = orderSlice.actions;
 
 export default orderSlice.reducer;

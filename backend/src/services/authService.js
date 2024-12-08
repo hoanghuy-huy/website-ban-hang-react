@@ -311,8 +311,8 @@ class authService {
       const mailOptions = {
         from: "huynhhoanghuy221122@gmail.com",
         to: email,
-        subject: "Your OTP Code",
-        text: `Your OTP code is ${otp}. It is valid for 5 minutes.`,
+        subject: "Mã OTP từ website bán hàng",
+        text: `Mã OTP của bạn là ${otp}.`,
       };
 
       // Gửi email và xử lý lỗi

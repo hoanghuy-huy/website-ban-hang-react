@@ -40,10 +40,12 @@ const MainContent = ({ item, productList, handleFetchData, detailProduct }) => {
     };
 
     useEffect(() => {
-        dispatch(getAttributeProductApi({ productId: item?.id }));
-        let _data = _.cloneDeep(item);
-        _data.attr = productAttribute;
-        dispatch(handleAddItemCompareDefault(_data));
+        if (item) {
+            dispatch(getAttributeProductApi({ productId: item.id }));
+            let _data = _.cloneDeep(item);
+            _data.attr = productAttribute || []; 
+            dispatch(handleAddItemCompareDefault(_data));
+        }
     }, []);
 
     if (!item) {

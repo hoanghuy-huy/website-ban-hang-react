@@ -49,7 +49,7 @@ const BoxBuy = ({ item }) => {
             return;
         }
 
-        if (_quantity >= item?.inventoryNumber) {
+        if (_quantity > item?.inventoryNumber) {
             setShowSnackbar(true);
             setMessageSnackbar(`Số lượng trong kho chỉ còn ${item?.inventoryNumber} sản phẩm`);
             return;
@@ -76,7 +76,7 @@ const BoxBuy = ({ item }) => {
                 return;
             }
 
-            if (cartItem && cartItem.quantity >= item?.inventoryNumber) {
+            if (cartItem && cartItem.quantity > item?.inventoryNumber) {
                 setMessageSnackbar(`Số lượng trong kho chỉ còn ${item?.inventoryNumber} sản phẩm`);
                 setShowSnackbar(true);
 

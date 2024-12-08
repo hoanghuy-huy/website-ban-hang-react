@@ -147,8 +147,8 @@ const ReviewProduct = ({ product }) => {
 
                                         <div className="product-rating__main">
                                             <div className="product-rating__author-name">
-                                                {item.User.username
-                                                    ? item.User.username
+                                                {item?.User?.username
+                                                    ? item?.User?.username
                                                     : 'Khách hàng chưa đặt tên'}{' '}
                                             </div>
                                             <div className="product-rating__rating">
