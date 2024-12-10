@@ -84,7 +84,7 @@ const AdminChat = () => {
                             className={`customer-item ${activeCustomerId === id ? 'active' : ''}`}
                             onClick={() => handleCustomerSelect(id)}
                         >
-                            {customerNames[id] || `Khách hàng chưa đặt tên`}{' '}
+                            {`Khách hàng có id ${id}`}
                             {/* Display customer name or loading */}
                         </div>
                     ))

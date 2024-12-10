@@ -10,7 +10,6 @@ export const AdminRoute = ({ children }) => {
         return children;
     }
     
-    toast.error('Bạn không có quyền truy cập đường dẫn này')
 
     return <Navigate to="/" />;
 };
